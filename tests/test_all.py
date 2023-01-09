@@ -9,11 +9,15 @@ logger = get_logger(mod_fname(__file__))
 
 
 def run_tests():
+    logger.info(f"-------------------")
     logger.info(f"Testing ALL modules")
+    logger.info(f"-------------------")
     test_dex.run_tests.callback()
     test_image.run_tests.callback()
     test_opencv_util.run_tests.callback()
+    logger.info("-----------------------------")
     logger.info("ALL modules passed ALL tests!")
+    logger.info("-----------------------------")
 
 
 if __name__ == "__main__":
