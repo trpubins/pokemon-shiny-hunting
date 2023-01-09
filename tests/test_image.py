@@ -24,6 +24,19 @@ logger = get_logger(mod_fname(__file__))
 from __init__ import TEST_IMG_DIR
 MODULE = "image.py"
 POKEMON_GAME = "Crystal"
+POKEMON = [
+    { "test_img_num":  1, "name":   "Gyarados", "sprite_type": SpriteType.SHINY },
+    { "test_img_num":  2, "name":   "Gyarados", "sprite_type": SpriteType.SHINY },
+    { "test_img_num":  3, "name":   "Gyarados", "sprite_type": SpriteType.SHINY },
+    { "test_img_num":  4, "name":    "Sentret", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num":  5, "name":    "Rattata", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num":  6, "name":     "Pidgey", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num":  7, "name": "Bellsprout", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num":  8, "name":      "Zubat", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num":  9, "name":    "Spearow", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num": 10, "name":    "Metapod", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num": 11, "name":     "Weedle", "sprite_type": SpriteType.NORMAL },
+]
 
 
 def test_1_get_sprite_name():
@@ -111,6 +124,14 @@ def test_7_determine_name():
     name = determine_name(letter_imgs)
     assert(name.lower() == pokemon_name.lower())
     logger.info("Test 7 - success!")
+
+
+def test_8_determine_name_full():
+    logger.info("Test 8 - determine_name_full")
+    # TODO - write test looping through ALL objects in POKEMON list (^line 27)
+    # use the respective battle_img_X.png to crop the pokemon name, convert
+    # to a string and compare to the correct name
+    logger.info("Test 8 - success!")
 
 
 @click.command()
