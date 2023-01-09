@@ -127,3 +127,13 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# macOS
+**/.DS_Store
+**/__MACOSX
+
+# VS Code
+*vscode/
+
+# Pokemon project files
+config.ini
