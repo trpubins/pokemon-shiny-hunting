@@ -1,0 +1,12 @@
+# application
+coloredlogs
+matplotlib
+numpy>=1.19, <1.24
+opencv-python
+pandas
+pillow
+pyautogui
+pydirectinput
+
+# tests
+click
