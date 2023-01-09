@@ -36,6 +36,9 @@ POKEMON = [
     { "test_img_num":  9, "name":    "Spearow", "sprite_type": SpriteType.NORMAL },
     { "test_img_num": 10, "name":    "Metapod", "sprite_type": SpriteType.NORMAL },
     { "test_img_num": 11, "name":     "Weedle", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num": 12, "name":     "Vulpix", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num": 13, "name":  "Nidoran M", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num": 14, "name":  "Nidoran F", "sprite_type": SpriteType.NORMAL },
 ]
 
 
