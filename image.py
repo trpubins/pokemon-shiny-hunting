@@ -57,6 +57,7 @@ def determine_name(letter_imgs: List[cv2.Mat]) -> str:
     for letter_img in letter_imgs:
         letter = determine_letter(letter_img)
         name += letter
+    logger.debug(f"determined name: {name}")
     return name
 
 
@@ -178,10 +179,11 @@ def crop_name_in_battle(battle_img_fn: str, del_png: bool = True) -> List[cv2.Ma
 
         # determine if img contains a letter based on how white it is
         if not is_img_white(img):
-            logger.debug("image contains a letter")
             letter_imgs.append(img)
 
         if del_png:
             os.remove(cropped_fn)
+    
+    logger.debug(f"pokemon name contains {len(letter_imgs)} letters")
 
     return letter_imgs
