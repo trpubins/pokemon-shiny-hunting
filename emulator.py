@@ -8,7 +8,8 @@ import platform
 import pyautogui as gui
 
 from config import EMULATOR_NAME, POKEMON_GAME, RETROARCH_APP_FP
-from controller import EmulatorController, delay, nav_to_game, press_key
+from controller import EmulatorController, press_key
+from helpers.delay import delay
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
@@ -28,9 +29,18 @@ class Emulator():
     def run_game(self):
         """Run the game inside the emulator."""
         self.launch()
-        delay(2)  # ensure sys is opening with proper time to perform navigation
-        nav_to_game()
+
+        logger.debug("navigating to game")
+        if platform.system() == "Darwin":
+            press_key("left", delay_after_press=0.5)
+            press_key("down", presses=2, delay_after_press=0.5)
+            press_key("right", delay_after_press=0.5)
+        elif platform.system() == "Windows":
+            press_key("right", presses=3, in_game=False)
+        press_key("Enter", in_game=False)
         delay(0.5)
+
+        logger.debug(f"run game: Pokémon {POKEMON_GAME}")
         press_key("Enter")
     
     def launch(self):
@@ -43,6 +53,7 @@ class Emulator():
             gui.hotkey("ctrl", "esc")
             gui.write(EMULATOR_NAME)
             gui.press("Enter")
+        delay(3)  # ensure sys is fully open & ready to perform next action
 
     def fast_fwd_on(self):
         """Turn fast forwad ON."""
