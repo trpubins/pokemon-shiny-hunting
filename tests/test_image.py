@@ -141,6 +141,22 @@ def test_8_determine_name_full():
     logger.info("Test 8 - success!")
 
 
+def test_9_determine_sprite_type_full():
+    logger.info("Test 9 - determine_sprite_type_full")
+    for pokemon in POKEMON:
+        n: int = pokemon["test_img_num"]
+        name: str = pokemon["name"]
+        type_: str = pokemon["sprite_type"]
+        battle_img_fn = os.path.join(TEST_IMG_DIR, f"battle_img_{n}.png")
+        letter_imgs = crop_name_in_battle(battle_img_fn)
+        pokemon_name = determine_name(letter_imgs)
+        assert(pokemon_name == name.lower())
+        sprite_img = crop_pokemon_in_battle(battle_img_fn, del_png=False)
+        sprite_type = determine_sprite_type(name=pokemon_name, game=POKEMON_GAME, img=sprite_img)
+        assert(type_ == sprite_type)
+    logger.info("Test 9 - success!")
+
+
 @click.command()
 @click.option("-n", "--test-number", required=False, type=int,
               help="The test number to run.")
