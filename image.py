@@ -79,6 +79,16 @@ def determine_letter(letter_img: cv2.Mat) -> str:
         if min_diff is None or diff < min_diff:
             min_diff = diff
             letter = os.path.basename(file).replace(".png", "")
+            if "_" in letter:
+                if "." in letter:
+                    # period symbol
+                    letter = letter.replace("_._", ". ")
+                elif "\'" in letter:
+                    # apostraphe symbol
+                    letter = letter.replace("_", "")
+                else:
+                    # male/female symbol
+                    letter = letter.replace("_", " ")
     return letter
 
 
