@@ -118,22 +118,26 @@ def test_6_crop_name_in_battle():
 
 def test_7_determine_name():
     logger.info("Test 7 - determine_name")
-    pokemon_name = "Gyarados"
+    name = "Gyarados"
     letter_imgs = list()
-    for i,char in enumerate(pokemon_name):
+    for i,char in enumerate(name):
         input_img_fn = os.path.join(TEST_IMG_DIR, f"char_{i}.png")
         input_img = cv2.imread(input_img_fn)
         letter_imgs.append(input_img)
-    name = determine_name(letter_imgs)
-    assert(name.lower() == pokemon_name.lower())
+    pokemon_name = determine_name(letter_imgs)
+    assert(pokemon_name == name.lower())
     logger.info("Test 7 - success!")
 
 
 def test_8_determine_name_full():
     logger.info("Test 8 - determine_name_full")
-    # TODO - write test looping through ALL objects in POKEMON list (^line 27)
-    # use the respective battle_img_X.png to crop the pokemon name, convert
-    # to a string and compare to the correct name
+    for pokemon in POKEMON:
+        n: int = pokemon["test_img_num"]
+        name: str = pokemon["name"]
+        battle_img_fn = os.path.join(TEST_IMG_DIR, f"battle_img_{n}.png")
+        letter_imgs = crop_name_in_battle(battle_img_fn)
+        pokemon_name = determine_name(letter_imgs)
+        assert(pokemon_name == name.lower())
     logger.info("Test 8 - success!")
 
 
