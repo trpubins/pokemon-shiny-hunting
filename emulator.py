@@ -55,6 +55,16 @@ class Emulator():
             gui.press("Enter")
         delay(3)  # ensure sys is fully open & ready to perform next action
 
+    def reset(self):
+        """Reset the emulator."""
+        self.cont.press_reset_btn()
+        logger.debug("emulator reset")
+    
+    def take_screenshot(self):
+        """Take a screenshot in the emulator."""
+        self.cont.press_screenshot_btn()
+        logger.debug("screenshot taken")
+    
     def fast_fwd_on(self):
         """Turn fast forwad ON."""
         if self.state.is_fast_fwd_off():
@@ -68,16 +78,6 @@ class Emulator():
             self.cont.toggle_fast_fwd()
             self.state.fast_fwd_off()
         logger.debug("fast forward is OFF")
-    
-    def reset(self):
-        """Reset the emulator."""
-        self.cont.press_reset_btn()
-        logger.debug("emulator reset")
-    
-    def take_screenshot(self):
-        """Take a screenshot in the emulator."""
-        self.cont.press_screenshot_btn()
-        logger.debug("screenshot taken")
 
 
 class EmulatorState():
