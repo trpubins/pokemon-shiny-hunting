@@ -25,9 +25,9 @@ from __init__ import TEST_IMG_DIR
 MODULE = "image.py"
 POKEMON_GAME = "Crystal"
 POKEMON = [
-    { "test_img_num":  1, "name":   "Gyarados", "sprite_type": SpriteType.SHINY },
-    { "test_img_num":  2, "name":   "Gyarados", "sprite_type": SpriteType.SHINY },
-    { "test_img_num":  3, "name":   "Gyarados", "sprite_type": SpriteType.SHINY },
+    { "test_img_num":  1, "name":   "Gyarados", "sprite_type":  SpriteType.SHINY },
+    { "test_img_num":  2, "name":   "Gyarados", "sprite_type":  SpriteType.SHINY },
+    { "test_img_num":  3, "name":   "Gyarados", "sprite_type":  SpriteType.SHINY },
     { "test_img_num":  4, "name":    "Sentret", "sprite_type": SpriteType.NORMAL },
     { "test_img_num":  5, "name":    "Rattata", "sprite_type": SpriteType.NORMAL },
     { "test_img_num":  6, "name":     "Pidgey", "sprite_type": SpriteType.NORMAL },
@@ -39,6 +39,8 @@ POKEMON = [
     { "test_img_num": 12, "name":     "Vulpix", "sprite_type": SpriteType.NORMAL },
     { "test_img_num": 13, "name":  "Nidoran M", "sprite_type": SpriteType.NORMAL },
     { "test_img_num": 14, "name":  "Nidoran F", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num": 15, "name":   "Mr. Mime", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num": 16, "name": "Farfetch'd", "sprite_type": SpriteType.NORMAL },
 ]
 
 
