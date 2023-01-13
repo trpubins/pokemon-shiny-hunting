@@ -8,13 +8,12 @@ from email import encoders
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
-document = os.path.join('tests','test_files','test_images', 'battle_img_1.png')
 from config import USERNAME, RECEIVER_EMAIL, SENDER_EMAIL, PASSWORD
 POKEMON = "Gyarados"
 port = 465
 
 
-def send_notification(receiver_email: str, send: bool=True):
+def send_notification(receiver_email: str, document: str, send: bool=True):
     '''sends emails to the account of your choice if and when the system locates a shiny'''
     #Establishes the message to fill in each requirement of the email
     message = MIMEMultipart()
@@ -62,4 +61,5 @@ def send_notification(receiver_email: str, send: bool=True):
         logger.info("Message ready for sending")
 
 if __name__ == "__main__":
-    send_notification(RECEIVER_EMAIL)
+    document = os.path.join('tests','test_files','test_images', 'battle_img_1.png')
+    send_notification(RECEIVER_EMAIL, document, send=False)
