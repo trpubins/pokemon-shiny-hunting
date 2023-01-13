@@ -2,13 +2,13 @@
 
 import logging
 import platform
-import time
 
 import pyautogui as gui           #pyautogui is great for hotkeys and utilizing special characters on the system level, but it cannot register output in the applications
 if platform.system() == "Windows":
     import pydirectinput as inp   #pydirect input is perfect for controlling common button presses with the emulator development
 
 from config import RETROARCH_CFG_FP
+from helpers.delay import delay
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
@@ -62,90 +62,65 @@ class EmulatorController():
                 else:
                     pass
     
-    def press_a(self):
-        self._press_btn_emulator(self.a_btn)
-        logger.debug(f"pressed a button")
+    def press_a(self, presses: int = 1, delay_after_press: float = None):
+        press_key(self.a_btn, presses, delay_after_press=delay_after_press)
+        logger.debug(f"pressed a button {presses}x")
     
-    def press_b(self):
-        self._press_btn_emulator(self.b_btn)
-        logger.debug(f"pressed b button")
+    def press_b(self, presses: int = 1, delay_after_press: float = None):
+        press_key(self.b_btn, presses, delay_after_press=delay_after_press)
+        logger.debug(f"pressed b button {presses}x")
     
-    def press_start(self):
-        self._press_btn_emulator(self.start_btn)
+    def press_start(self, delay_after_press: float = None):
+        press_key(self.start_btn, delay_after_press=delay_after_press)
         logger.debug(f"pressed start button")
     
-    def press_select(self):
-        self._press_btn_emulator(self.select_btn)
+    def press_select(self, delay_after_press: float = None):
+        press_key(self.select_btn, delay_after_press=delay_after_press)
         logger.debug(f"pressed select button")
     
-    def move_up(self):
-        self._press_btn_emulator(self.up_btn)
-        logger.debug(f"moved up")
+    def move_up(self, presses: int = 1, delay_after_press: float = None):
+        press_key(self.up_btn, presses, delay_after_press=delay_after_press)
+        logger.debug(f"moved up {presses}x")
     
-    def move_down(self):
-        self._press_btn_emulator(self.down_btn)
-        logger.debug(f"moved down")
+    def move_down(self, presses: int = 1, delay_after_press: float = None):
+        press_key(self.down_btn, presses, delay_after_press=delay_after_press)
+        logger.debug(f"moved down {presses}x")
     
-    def move_left(self):
-        self._press_btn_emulator(self.left_btn)
-        logger.debug(f"moved left")
+    def move_left(self, presses: int = 1, delay_after_press: float = None):
+        press_key(self.left_btn, presses, delay_after_press=delay_after_press)
+        logger.debug(f"moved left {presses}x")
     
-    def move_right(self):
-        self._press_btn_emulator(self.right_btn)
-        logger.debug(f"moved right")
+    def move_right(self, presses: int = 1, delay_after_press: float = None):
+        press_key(self.right_btn, presses, delay_after_press=delay_after_press)
+        logger.debug(f"moved right {presses}x")
     
-    def toggle_fast_fwd(self):
-        self._press_btn_emulator(self.fast_fwd_btn)
+    def toggle_fast_fwd(self, delay_after_press: float = None):
+        press_key(self.fast_fwd_btn, delay_after_press=delay_after_press)
         logger.debug(f"toggled fast forward")
 
-    def press_reset_btn(self):
-        self._press_btn_emulator(self.reset_btn)
+    def press_reset_btn(self, delay_after_press: float = None):
+        press_key(self.reset_btn, delay_after_press=delay_after_press)
         logger.debug(f"pressed reset button")
     
-    def press_screenshot_btn(self):
-        self._press_btn_emulator(self.screenshot_btn)
+    def press_screenshot_btn(self, delay_after_press: float = None):
+        press_key(self.screenshot_btn, delay_after_press=delay_after_press)
         logger.debug(f"pressed screenshot button")
-    
-    def _press_btn_emulator(self, btn: str):
-        if platform.system() == "Darwin":
-            _press_mac_key(btn)
-        elif platform.system() == "Windows":
-            inp.typewrite(btn)
 
 
-def nav_to_game():
-    logger.debug("navigating to game")
-    if platform.system() == "Darwin":
-        press_key("left")
-        delay(0.5)
-        press_key("down", presses=2)
-        delay(0.5)
-        press_key("right")
-        delay(0.5)
-        press_key("enter")
-    elif platform.system() == "Windows":
-        press_key("right", presses=3)
-        press_key("Enter")
-
-
-def delay(sec: int):
-    logger.debug(f"delay {sec}s")
-    time.sleep(sec)
-
-
-def press_key(key: str, presses: int = 1):
-    if platform.system() == "Darwin":
-        _press_mac_key(key, presses)
-    elif platform.system() == "Windows":
-        _press_win_key(key, presses)
-
-
-def _press_win_key(key: str, presses: int = 1):
-    inp.press(key, presses=presses)
-
-
-def _press_mac_key(key: str, presses: int = 1):
+def press_key(key: str,
+              presses: int = 1,
+              delay_after_press: float = None,
+              in_game: bool = True):
+    """Virtually press the specified key."""
     for i in range(presses):
-        gui.keyDown(key)
-        gui.keyUp(key)
+        if platform.system() == "Darwin":
+            gui.keyDown(key)
+            gui.keyUp(key)
+        elif platform.system() == "Windows":
+            if in_game:
+                inp.typewrite(key)
+            else:
+                inp.press(key)
         logger.debug(f"pressed key: {key}")
+        if delay_after_press is not None:
+            delay(delay_after_press)

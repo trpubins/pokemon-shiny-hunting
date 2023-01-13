@@ -48,10 +48,17 @@ By default, a given test script executes all the tests in that script. Optionall
 
 ```bash
 # runs all tests in the specified script
-python tests/test_dex.py
+python tests/test_image.py
 ```
 
 ```bash
 # runs only test 4 in the specified script
-python tests/test_dex.py --test-number 4
+python tests/test_image.py --test-number 4
+```
+
+You can also run all test scripts at once with:
+
+```bash
+# runs all test scripts
+python tests/test_all.py
 ```
