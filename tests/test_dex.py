@@ -34,7 +34,7 @@ def test_2_gen_2_dex():
 @click.option("-n", "--test-number", required=False, type=int,
               help="The test number to run.")
 def run_tests(test_number: int = None):
-    logger.info(f"Testing {MODULE}")
+    logger.info(f"----- Testing {MODULE} -----")
     
     if test_number is None:
         test_util.run_tests(module_name=__name__)
@@ -44,7 +44,7 @@ def run_tests(test_number: int = None):
         except ValueError as e:
             logger.error(f"Invalid test_number specified: {test_number}")
             raise e
-    logger.info("All tests pass!")
+    logger.info("----- All tests pass! -----")
 
 
 if __name__ == "__main__":
