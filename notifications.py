@@ -8,13 +8,13 @@ from email import encoders
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
-DOCUMENT = os.path.join('tests','test_files','test_images', 'battle_img_1.png')
+document = os.path.join('tests','test_files','test_images', 'battle_img_1.png')
 from config import USERNAME, RECEIVER_EMAIL, SENDER_EMAIL, PASSWORD
 POKEMON = "Gyarados"
-PORT = 465
+port = 465
 
 
-def send_notification(receiver_email: str):
+def send_notification(receiver_email: str, send: bool=True):
     '''sends emails to the account of your choice if and when the system locates a shiny'''
     #Establishes the message to fill in each requirement of the email
     message = MIMEMultipart()
@@ -42,22 +42,24 @@ def send_notification(receiver_email: str):
 
     message.attach(part)
 
-    with open(DOCUMENT, "rb") as attachment:
+    with open(document, "rb") as attachment:
         file = MIMEBase("application", "octet-stream")
         file.set_payload(attachment.read())
 
     encoders.encode_base64(file)
 
-    file.add_header("Content-Disposition", f"attachment; filename= {DOCUMENT}")
+    file.add_header("Content-Disposition", f"attachment; filename= {document}")
 
     message.attach(file)
 
     context = ssl.create_default_context()
-
-    with smtplib.SMTP_SSL("smtp.gmail.com", PORT, context=context) as server:
-        server.login(SENDER_EMAIL, PASSWORD)
-        server.sendmail(SENDER_EMAIL, receiver_email, message.as_string())
-        logger.info("Email successfully sent")
+    if send:
+        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+            server.login(SENDER_EMAIL, PASSWORD)
+            server.sendmail(SENDER_EMAIL, receiver_email, message.as_string())
+            logger.info("Email successfully sent")
+    else:
+        logger.info("Message ready for sending")
 
 if __name__ == "__main__":
     send_notification(RECEIVER_EMAIL)
