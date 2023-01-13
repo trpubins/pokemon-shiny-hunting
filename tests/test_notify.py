@@ -2,6 +2,8 @@ import os
 
 import click
 import __init__
+
+from image import crop_pokemon_in_battle
 from notifications import (
     USERNAME, 
     RECEIVER_EMAIL, 
@@ -12,7 +14,6 @@ from __init__ import TEST_IMG_DIR
 
 
 from helpers import test_util
-from helpers.opencv_util import compare_img_pixels
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
@@ -25,7 +26,11 @@ def test_1_get_name():
 
 def test_2_get_pic():
     logger.info("Test 2 - Import Image")
-    img = os.path.join(TEST_IMG_DIR, f"battle_img_1.png")
+    img = os.path.join(TEST_IMG_DIR, f"battle_img_10.png")
+    img = crop_pokemon_in_battle(img, del_png=False)
+    im = 'crop.png'
+    send_notification(RECEIVER_EMAIL, im, send=False)
+    logger.info("Test 2 - success!")
 
 
 @click.command()
