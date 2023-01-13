@@ -30,9 +30,28 @@ try:
 except NoOptionError:
     LOG_LEVEL = "INFO"  # default to INFO logging level
 
+try:
+    RECEIVER_EMAIL = config.get(SECTION, "RECEIVER_EMAIL")
+    SENDER_EMAIL = config.get(SECTION, "SENDER_EMAIL")
+    PASSWORD = config.get(SECTION, "PASSWORD")
+except NoOptionError:
+    RECEIVER_EMAIL = None
+    SENDER_EMAIL = None
+    PASSWORD = None
+try:
+    USERNAME = config.get(SECTION, "USERNAME")
+except NoOptionError:
+    USERNAME = None
+
+
+
 logger.info(f"RETROARCH_DIR: {RETROARCH_DIR}")
 logger.info(f"RETROARCH_CFG_FP: {RETROARCH_CFG_FP}")
 logger.info(f"RETROARCH_SCREENSHOTS_DIR: {RETROARCH_SCREENSHOTS_DIR}")
 logger.info(f"RETROARCH_APP_FP: {RETROARCH_APP_FP}")
 logger.info(f"POKEMON_GAME: {POKEMON_GAME}")
 logger.info(f"LOG_LEVEL: {LOG_LEVEL}")
+logger.info(f"USERNAME: {USERNAME}")
+logger.info(f"SENDER_EMAIL: {SENDER_EMAIL}")
+logger.info(f"PASSWORD: {PASSWORD}")
+logger.info(f"RECEIVER_EMAIL: {RECEIVER_EMAIL}")
