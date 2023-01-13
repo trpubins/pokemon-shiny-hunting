@@ -41,7 +41,7 @@ class Emulator():
         delay(0.5)
 
         logger.debug(f"run game: Pokémon {POKEMON_GAME}")
-        press_key("Enter")
+        press_key("Enter", in_game=False)
     
     def launch(self):
         """Launch the emulator application."""
