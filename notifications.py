@@ -5,12 +5,14 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
 
-DOCUMENT = os.path.join('images', 'test_images', 'battle_img_1.png')
-NAME = "Tyranitar"
+from helpers.log import get_logger, mod_fname
+logger = get_logger(mod_fname(__file__))
+
+DOCUMENT = os.path.join('tests','test_files','test_images', 'battle_img_1.png')
+from config import USERNAME, RECEIVER_EMAIL, SENDER_EMAIL, PASSWORD
 POKEMON = "Gyarados"
 PORT = 465
-SENDER_EMAIL = "pokepy155@gmail.com"
-PASSWORD = "iieszmlurcusscoa"
+
 
 def send_notification(receiver_email: str):
     '''sends emails to the account of your choice if and when the system locates a shiny'''
@@ -24,7 +26,7 @@ def send_notification(receiver_email: str):
     html = f"""
     <html>
         <body>
-            <p>Hi {NAME},<br>
+            <p>Hi {USERNAME},<br>
                 I hope you're sitting down, because the news of a lifetime is coming upon you.<br>
             </p>
             <p>
@@ -55,7 +57,7 @@ def send_notification(receiver_email: str):
     with smtplib.SMTP_SSL("smtp.gmail.com", PORT, context=context) as server:
         server.login(SENDER_EMAIL, PASSWORD)
         server.sendmail(SENDER_EMAIL, receiver_email, message.as_string())
+        logger.info("Email successfully sent")
 
 if __name__ == "__main__":
-    receiver_email = "treysauce03@gmail.com"
-    send_notification(receiver_email)
+    send_notification(RECEIVER_EMAIL)
