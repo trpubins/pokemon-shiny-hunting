@@ -5,15 +5,16 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
 
+from pokemon import Pokemon
+
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
 from config import USERNAME, RECEIVER_EMAIL, SENDER_EMAIL, PASSWORD
-POKEMON = "Gyarados"
 port = 465
 
 
-def send_notification(receiver_email: str, document: str, send: bool=True):
+def send_notification(receiver_email: str, pokemon: Pokemon, send: bool=True):
     '''sends emails to the account of your choice if and when the system locates a shiny'''
     #Establishes the message to fill in each requirement of the email
     message = MIMEMultipart()
@@ -30,7 +31,7 @@ def send_notification(receiver_email: str, document: str, send: bool=True):
             </p>
             <p>
                 Thanks in no small part to the ingenuity of our development team, we have been able to afford the luxury of carefree
-                shiny hunting. Upon arrival to your gaming system, you will find the battle in progress of a shiny <b>{POKEMON}</b>! Take great care
+                shiny hunting. Upon arrival to your gaming system, you will find the battle in progress of a shiny <b>{pokemon.name}</b>! Take great care
                 to catch the beast as there are no assurances of another one arriving anytime soon.
             </p>
         </body>
@@ -41,13 +42,13 @@ def send_notification(receiver_email: str, document: str, send: bool=True):
 
     message.attach(part)
 
-    with open(document, "rb") as attachment:
+    with open(pokemon.get_shiny_img_fn(), "rb") as attachment:
         file = MIMEBase("application", "octet-stream")
         file.set_payload(attachment.read())
 
     encoders.encode_base64(file)
 
-    file.add_header("Content-Disposition", f"attachment; filename= {document}")
+    file.add_header("Content-Disposition", f"attachment; filename= {pokemon.get_shiny_img_fn()}")
 
     message.attach(file)
 
@@ -61,5 +62,7 @@ def send_notification(receiver_email: str, document: str, send: bool=True):
         logger.info("Message ready for sending")
 
 if __name__ == "__main__":
-    document = os.path.join('tests','test_files','test_images', 'battle_img_1.png')
-    send_notification(RECEIVER_EMAIL, document, send=False)
+    # document = os.path.join('tests','test_files','test_images', 'battle_img_1.png')
+    pokemon = Pokemon("Gyarados")
+
+    send_notification(RECEIVER_EMAIL, pokemon, send=True)
