@@ -1,6 +1,7 @@
 import os
 
 import click
+
 import __init__
 
 from image import crop_pokemon_in_battle
@@ -9,20 +10,19 @@ from notifications import (
     RECEIVER_EMAIL, 
     send_notification
 )
-from test_image import POKEMON
-from __init__ import TEST_IMG_DIR
-
-
 from helpers import test_util
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
+from tests.__init__ import TEST_IMG_DIR
 MODULE = "notifications.py"
+
 
 def test_1_get_name():
     logger.info("Test 1 - Get Username")
     logger.info(f"Hello {USERNAME}")
     logger.info("Test 1 - success!")
+
 
 def test_2_get_pic():
     logger.info("Test 2 - Import Image")
