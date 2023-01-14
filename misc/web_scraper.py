@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 import requests
 
 from dex import gen_2_dex
-from image import create_pokemon_sprite_fn, get_sprite_name
+from pokemon import create_pokemon_sprite_fn, get_sprite_name
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
