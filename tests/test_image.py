@@ -7,54 +7,30 @@ import __init__
 
 from dex import gen_2_dex
 from image import (
-    SPRITES_DIR,
-    SpriteType,
-    create_pokemon_sprite_fn,
     crop_name_in_battle,
     crop_pokemon_in_battle,
     determine_name,
     determine_sprite_type,
-    get_sprite_name,
 )
+from pokemon import Pokemon, SpriteType
 from helpers import test_util
 from helpers.opencv_util import compare_img_pixels
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
-from __init__ import TEST_IMG_DIR
+from __init__ import POKEMON_LIST, TEST_IMG_DIR
 MODULE = "image.py"
 POKEMON_GAME = "Crystal"
-POKEMON = [
-    { "test_img_num":  1, "name":   "Gyarados", "sprite_type":  SpriteType.SHINY },
-    { "test_img_num":  2, "name":   "Gyarados", "sprite_type":  SpriteType.SHINY },
-    { "test_img_num":  3, "name":   "Gyarados", "sprite_type":  SpriteType.SHINY },
-    { "test_img_num":  4, "name":    "Sentret", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num":  5, "name":    "Rattata", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num":  6, "name":     "Pidgey", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num":  7, "name": "Bellsprout", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num":  8, "name":      "Zubat", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num":  9, "name":    "Spearow", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num": 10, "name":    "Metapod", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num": 11, "name":     "Weedle", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num": 12, "name":     "Vulpix", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num": 13, "name":  "Nidoran M", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num": 14, "name":  "Nidoran F", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num": 15, "name":   "Mr. Mime", "sprite_type": SpriteType.NORMAL },
-    { "test_img_num": 16, "name": "Farfetch'd", "sprite_type": SpriteType.NORMAL },
-]
 
 
 def test_1_verify_sprite_images_exist():
     logger.info("Test 1 - verify_sprite_images_exist")
     dex = gen_2_dex()
-    for _, row in dex.iterrows():            
-        pokemon_name = row.get("NAME")
-        normal_fn = create_pokemon_sprite_fn(name=pokemon_name,
-                                             game=POKEMON_GAME,
-                                             _type=SpriteType.NORMAL)
-        shiny_fn = create_pokemon_sprite_fn(name=pokemon_name,
-                                            game=POKEMON_GAME,
-                                            _type=SpriteType.SHINY)
+    for _, row in dex.iterrows():
+        name = row.get("NAME")
+        pokemon = Pokemon(name)
+        normal_fn = pokemon.get_normal_img_fn()
+        shiny_fn = pokemon.get_shiny_img_fn()
         assert(os.path.exists(normal_fn))
         logger.debug(f"{normal_fn} exists")
         assert(os.path.exists(shiny_fn))
@@ -76,23 +52,25 @@ def test_2_crop_pokemon_in_battle():
 
 def test_3_determine_sprite_type():
     logger.info("Test 3 - determine_sprite_type")
-    for i in range(3):
-        n = i + 1
+    for pokemon_obj in POKEMON_LIST[:3]:
+        n: int = pokemon_obj["test_img_num"]
+        type_: SpriteType = pokemon_obj["sprite_type"]
+        pokemon = Pokemon(pokemon_obj["name"])
         input_img_fn = os.path.join(TEST_IMG_DIR, f"cropped_poke_battle_img_{n}.png")
         input_img = cv2.imread(input_img_fn)
-        sprite_type = determine_sprite_type(name="Gyarados", game=POKEMON_GAME, img=input_img)
-        assert(sprite_type == SpriteType.SHINY)
+        sprite_type = determine_sprite_type(pokemon, img=input_img)
+        assert(sprite_type == type_)
     logger.info("Test 3 - success!")
 
 
 def test_4_crop_name_in_battle():
     logger.info("Test 4 - crop_name_in_battle")
-    for i in range(3):
-        n = i + 1
+    for pokemon_obj in POKEMON_LIST[:3]:
+        n: int = pokemon_obj["test_img_num"]
+        pokemon = Pokemon(pokemon_obj["name"])
         input_img_fn = os.path.join(TEST_IMG_DIR, f"battle_img_{n}.png")
-        letter_imgs = crop_name_in_battle(input_img_fn, del_png=False)
-        pokemon_name = "Gyarados"
-        assert(len(letter_imgs) == len(pokemon_name))
+        letter_imgs = crop_name_in_battle(input_img_fn)
+        assert(len(letter_imgs) == len(pokemon.name))
     logger.info("Test 4 - success!")
 
 
@@ -111,9 +89,9 @@ def test_5_determine_name():
 
 def test_6_determine_name_full():
     logger.info("Test 6 - determine_name_full")
-    for pokemon in POKEMON:
-        n: int = pokemon["test_img_num"]
-        name: str = pokemon["name"]
+    for pokemon_obj in POKEMON_LIST:
+        n: int = pokemon_obj["test_img_num"]
+        name: str = pokemon_obj["name"]
         battle_img_fn = os.path.join(TEST_IMG_DIR, f"battle_img_{n}.png")
         letter_imgs = crop_name_in_battle(battle_img_fn)
         pokemon_name = determine_name(letter_imgs)
@@ -123,17 +101,17 @@ def test_6_determine_name_full():
 
 def test_7_determine_sprite_type_full():
     logger.info("Test 7 - determine_sprite_type_full")
-    for pokemon in POKEMON:
-        n: int = pokemon["test_img_num"]
-        name: str = pokemon["name"]
-        type_: str = pokemon["sprite_type"]
+    for pokemon_obj in POKEMON_LIST:
+        n: int = pokemon_obj["test_img_num"]
+        type_: SpriteType = pokemon_obj["sprite_type"]
+        pokemon = Pokemon(pokemon_obj["name"])
         battle_img_fn = os.path.join(TEST_IMG_DIR, f"battle_img_{n}.png")
         letter_imgs = crop_name_in_battle(battle_img_fn)
         pokemon_name = determine_name(letter_imgs)
-        assert(pokemon_name == name.lower())
+        assert(pokemon_name == pokemon.name.lower())
         sprite_img = crop_pokemon_in_battle(battle_img_fn, del_png=False)
-        sprite_type = determine_sprite_type(name=pokemon_name, game=POKEMON_GAME, img=sprite_img)
-        assert(type_ == sprite_type)
+        sprite_type = determine_sprite_type(pokemon, img=sprite_img)
+        assert(sprite_type == type_)
     logger.info("Test 7 - success!")
 
 
