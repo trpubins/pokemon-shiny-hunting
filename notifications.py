@@ -5,6 +5,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
 
+from image import get_latest_screenshot_fn
 from pokemon import Pokemon
 
 from helpers.log import get_logger, mod_fname
@@ -41,16 +42,17 @@ def send_notification(receiver_email: str, pokemon: Pokemon, send: bool=True):
     part = MIMEText(html, "html")
 
     message.attach(part)
+    files = [get_latest_screenshot_fn(), pokemon.get_shiny_img_fn()]
+    for each_file in files:
+        with open(each_file, "rb") as attachment:
+            file = MIMEBase("application", "octet-stream")
+            file.set_payload(attachment.read())
 
-    with open(pokemon.get_shiny_img_fn(), "rb") as attachment:
-        file = MIMEBase("application", "octet-stream")
-        file.set_payload(attachment.read())
+        encoders.encode_base64(file)
 
-    encoders.encode_base64(file)
+        file.add_header("Content-Disposition", f"attachment; filename= {pokemon.get_shiny_img_fn()}")
 
-    file.add_header("Content-Disposition", f"attachment; filename= {pokemon.get_shiny_img_fn()}")
-
-    message.attach(file)
+        message.attach(file)
 
     context = ssl.create_default_context()
     if send:
@@ -64,5 +66,4 @@ def send_notification(receiver_email: str, pokemon: Pokemon, send: bool=True):
 if __name__ == "__main__":
     # document = os.path.join('tests','test_files','test_images', 'battle_img_1.png')
     pokemon = Pokemon("Gyarados")
-
     send_notification(RECEIVER_EMAIL, pokemon, send=True)
