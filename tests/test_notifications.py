@@ -1,10 +1,7 @@
-import os
-
 import click
 
 import __init__
 
-from image import crop_pokemon_in_battle
 from pokemon import Pokemon
 from notifications import (
     USERNAME, 
@@ -27,9 +24,6 @@ def test_1_get_name():
 
 def test_2_get_pic():
     logger.info("Test 2 - Import Image")
-    # img = os.path.join(TEST_IMG_DIR, f"battle_img_10.png")
-    # img = crop_pokemon_in_battle(img, del_png=False)
-    # im = 'crop.png'
     pokemon = Pokemon("Farfetch'd")
     send_notification(RECEIVER_EMAIL, pokemon, send=True)
     logger.info("Test 2 - success!")
