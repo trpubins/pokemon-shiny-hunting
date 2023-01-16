@@ -20,6 +20,7 @@ logger = logging.getLogger(mod_fname(__file__))
 
 
 LETTERS_DIR = os.path.join("images", "letters")
+STATUS_DIR = os.path.join("images", "status")
 
 
 def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
@@ -79,7 +80,20 @@ def determine_letter(letter_img: cv2.Mat) -> str:
                     letter = letter.replace("_", " ")
     return letter
 
+def determine_capture_status(pokemon: Pokemon, img: cv2.Mat) -> bool:
+    normal_img = cv2.imread(pokemon.get_normal_img_fn())
+    shiny_img = cv2.imread(pokemon.get_shiny_img_fn())
+    img = cv2.resize(img, (get_img_width(normal_img), get_img_height(normal_img)))
 
+    # use color differences to determine sprite type
+    diff_normal = compare_img_color(img, normal_img)
+    diff_shiny = compare_img_color(img, shiny_img)
+    
+    if diff_normal > 15 and diff_shiny > 15:
+        return True
+    else:
+        return False
+        
 def get_screenshots() -> List[str]:
     """Retrieve all screenshots sorted by creation time."""
     # only grab PNG files

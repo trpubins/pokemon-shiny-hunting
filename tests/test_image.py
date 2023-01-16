@@ -9,6 +9,7 @@ from dex import gen_2_dex
 from image import (
     crop_name_in_battle,
     crop_pokemon_in_battle,
+    determine_capture_status,
     determine_name,
     determine_sprite_type,
 )
@@ -114,6 +115,20 @@ def test_7_determine_sprite_type_full():
         assert(sprite_type == type_)
     logger.info("Test 7 - success!")
 
+def test_8_check_capture_status():
+    logger.info("Test 8 - check_capture_status")
+    checks = ['failure_1', 'failure_2', 'failure_3', 'success']
+    for check in checks:
+        input_img_fn = os.path.join(TEST_IMG_DIR, f'capture_{check}.png')
+        logger.info(f"testing capture_{check}")
+        status = crop_pokemon_in_battle(input_img_fn)
+        pokemon = Pokemon("Suicune")
+        captured = determine_capture_status(pokemon, status)
+        if captured:
+            logger.info("Pokemon caught!")
+        else:
+            logger.info("Capture failed!")
+    logger.info("Test 8 - success!")
 
 @click.command()
 @click.option("-n", "--test-number", required=False, type=int,
