@@ -21,6 +21,13 @@ class Encounter():
         else:
             self.cont.press_a(presses=2, delay_after_press=2)
 
+    def catch_pokemon(self):
+        self.em.fast_fwd_off()
+        self.cont.move_down()
+        self.cont.press_a()
+        self.cont.move_right()
+        self.cont.press_a(presses=2)
+
 if __name__ == "__main__":
     en = Encounter()
     en.em.run_game()
