@@ -1,5 +1,10 @@
-from helpers.delay import delay
+import logging
+
 from emulator import Emulator
+
+from helpers.delay import delay
+from helpers.log import mod_fname
+logger = logging.getLogger(mod_fname(__file__))
 
 class Encounter():
     static_encounter = ["Sudowoodo", "Suicune", "Lugia", "Ho-Oh", "Celebi"]
@@ -11,7 +16,8 @@ class Encounter():
     def start_game(self):
         delay(1)
         self.em.fast_fwd_on()
-        self.cont.press_a(presses=3, delay_after_press=0.25)
+        self.cont.press_a(presses=3, delay_after_press=0.5)
+        logger.info("start menu finished")
 
     def encounter_static(self, pokemon: str):
         if pokemon == "Suicune":
@@ -20,6 +26,8 @@ class Encounter():
             self.cont.press_a()
         else:
             self.cont.press_a(presses=2, delay_after_press=2)
+        logger.info("battle commenced")
+            
 
     def catch_pokemon(self):
         self.em.fast_fwd_off()
