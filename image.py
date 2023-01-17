@@ -20,6 +20,7 @@ logger = logging.getLogger(mod_fname(__file__))
 
 
 LETTERS_DIR = os.path.join("images", "letters")
+MENU_DIR = os.path.join("images", "menus")
 STATUS_DIR = os.path.join("images", "status")
 
 
@@ -80,7 +81,15 @@ def determine_letter(letter_img: cv2.Mat) -> str:
                     letter = letter.replace("_", " ")
     return letter
 
-def determine_capture_status(pokemon: Pokemon, img: cv2.Mat) -> bool:
+def determine_capture_status(pokemon: Pokemon, battle_img: cv2.Mat = None) -> bool:
+    '''Checks if sprite is equal to pokemon or pokeball'''
+    #set up for testing within test_image folder
+    if battle_img is None:
+        img = get_latest_screenshot_fn()
+        img = crop_pokemon_in_battle(img)
+    else:
+        img = battle_img
+
     normal_img = cv2.imread(pokemon.get_normal_img_fn())
     shiny_img = cv2.imread(pokemon.get_shiny_img_fn())
     img = cv2.resize(img, (get_img_width(normal_img), get_img_height(normal_img)))
@@ -89,11 +98,13 @@ def determine_capture_status(pokemon: Pokemon, img: cv2.Mat) -> bool:
     diff_normal = compare_img_color(img, normal_img)
     diff_shiny = compare_img_color(img, shiny_img)
     
+    # if both sprites do not closely resemble screenshot sprite, then catch was successful
     if diff_normal > 15 and diff_shiny > 15:
-        return True
+        captured = True
     else:
-        return False
-        
+        captured = False
+    return captured
+
 def get_screenshots() -> List[str]:
     """Retrieve all screenshots sorted by creation time."""
     # only grab PNG files
@@ -112,6 +123,48 @@ def get_latest_screenshot_fn() -> str:
         logger.warning("No screenshots exist")
         return None
     return files[-1]  # last element in list is most recent
+
+def crop_menu(img_fn: str, del_png: bool = True) -> str:
+    im = Image.open(img_fn)
+
+    menus = [
+        {"menu": "start", "top": 0, "bottom": 0.45, "left": 0, "right": 0.85},
+        {"menu": "continue", "top": 0.45, "bottom": 1, "left": 0.2, "right": 1},
+        {"menu": "pause", "top": 0, "bottom": 1, "left": 0.5, "right": 1},
+        {"menu": "items", "top": 0.05, "bottom": 0.6, "left": 0, "right": 0.25},
+        {"menu": "battle", "top": 0.7, "bottom": 1, "left": 0.4, "right": 1},
+    ]
+
+    diff = 1000
+    for menu in menus:
+        # open the known menu item for comparison
+        path =os.path.join(MENU_DIR, 'menu_' + menu['menu'] + '.png')
+        normal_menu = cv2.imread(path)
+
+        # defines the borders for each menu type
+        top = im.height * menu['top']
+        bot = im.height * menu['bottom']
+        left = im.width * menu['left']
+        right = im.width * menu['right']
+
+        im1 = im.crop((left, top, right, bot))
+        im1.save('menu.png')
+
+        # im1 converted to OpenCV object
+        im1 = cv2.imread('menu.png')
+        im1 = cv2.resize(im1, (get_img_width(normal_menu), get_img_height(normal_menu)))
+
+        diff_menu = compare_img_color(im1, normal_menu)
+        if diff_menu < diff:
+            diff = diff_menu
+            menu_check = menu['menu']
+        
+
+        if del_png:
+            os.remove('menu.png')
+
+    return menu_check
+
 
 
 def crop_pokemon_in_battle(battle_img_fn: str, del_png: bool = True) -> cv2.Mat:
