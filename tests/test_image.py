@@ -7,6 +7,7 @@ import __init__
 
 from dex import gen_2_dex
 from image import (
+    crop_menu,
     crop_name_in_battle,
     crop_pokemon_in_battle,
     determine_capture_status,
@@ -129,6 +130,17 @@ def test_8_check_capture_status():
         else:
             logger.info("Capture failed!")
     logger.info("Test 8 - success!")
+
+def test_9_determine_menu():
+    logger.info("Test 9 - determine_menu")
+    checks = ['battle', 'continue', 'items', 'pause', 'start']
+    for check in checks:
+        input_img_fn = os.path.join(TEST_IMG_DIR, f'menu_{check}.png')
+        logger.info(f"testing menu_{check}")
+        menu = crop_menu(input_img_fn)
+        logger.info(f'Menu check for {input_img_fn}: {menu}')
+        assert(check.lower() == menu.lower())
+    logger.info("Test 9 - success!")
 
 @click.command()
 @click.option("-n", "--test-number", required=False, type=int,
