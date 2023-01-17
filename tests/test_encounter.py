@@ -15,7 +15,8 @@ def throw_masterball(pokemon: str):
     test = SpriteType.NORMAL
     captured = False
     counter = 0
-    while test != SpriteType.SHINY and counter <= 3:
+    max_count = 1
+    while test != SpriteType.SHINY and counter <= max_count:
         en.start_game()
         en.encounter_static(pokemon)
         en.em.take_screenshot()
@@ -32,17 +33,15 @@ def throw_masterball(pokemon: str):
         if test == SpriteType.SHINY:
             logger.info("Shiny Found!")
             break
-        elif counter > 1:
+        elif counter > max_count:
             break
         else:
             en.em.reset()
     while not captured:
         en.catch_pokemon()
-        delay(3)
+        delay(2)
         en.em.take_screenshot()
-        shot = im.get_latest_screenshot_fn()
-        sprite = im.crop_pokemon_in_battle(shot)
-        captured = im.determine_capture_status(monster, sprite)
+        captured = im.determine_capture_status(monster)
     logger.info("Capture Successful")
 
 if __name__ == "__main__":

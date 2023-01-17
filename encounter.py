@@ -35,6 +35,7 @@ class Encounter():
         self.cont.press_a()
         self.cont.move_right()
         self.cont.press_a(presses=2)
+        self.em.fast_fwd_on()
 
 if __name__ == "__main__":
     en = Encounter()
