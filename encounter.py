@@ -7,7 +7,17 @@ from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 class Encounter():
-    static_encounter = ["Sudowoodo", "Suicune", "Lugia", "Ho-Oh", "Celebi"]
+    static_encounter = [
+        {"name": "Electrode", "max_moves": 70, "explode": True},
+        {"name": "Gyarados", "max_moves": 85, "explode": False},
+        {"name": "Lapras", "max_moves": 100, "explode": False},
+        {"name": "Snorlax", "max_moves": 60, "explode": False},
+        {"name": "Sudowoodo", "max_moves": 60, "explode": False},
+        {"name": "Suicune", "max_moves": 95, "explode": False},
+        {"name": "Lugia", "max_moves": 65, "explode": False},
+        {"name": "Ho-Oh", "max_moves": 65, "explode": False},
+        {"name": "Celebi", "max_moves": 50, "explode": False},
+        ]
 
     def __init__(self):
         self.em = Emulator()
@@ -36,6 +46,7 @@ class Encounter():
         self.cont.move_right()
         self.cont.press_a(presses=2)
         self.em.fast_fwd_on()
+
 
 if __name__ == "__main__":
     en = Encounter()
