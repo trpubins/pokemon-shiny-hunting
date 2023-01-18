@@ -76,6 +76,9 @@ def determine_letter(letter_img: cv2.Mat) -> str:
                 elif "\'" in letter:
                     # apostraphe symbol
                     letter = letter.replace("_", "")
+                elif "e" in letter:
+                    # e in pokemon and pokeball
+                    letter = letter.replace("_", "")
                 else:
                     # male/female symbol
                     letter = letter.replace("_", " ")
@@ -147,7 +150,8 @@ def crop_bag_items(img_fn: str, del_png: bool = True) -> list:
         item_name.save('item.png')
         letter_imgs = crop_item_name('item.png')
         item_name = determine_name(letter_imgs)
-        items.append(item_name)
+        if item_name != '' and item_name != 'cancel':
+            items.append(item_name)
     # item_quant.show()
     return items
 
@@ -300,12 +304,24 @@ def crop_name_in_battle(battle_img_fn: str, del_png: bool = True) -> List[cv2.Ma
     return letter_imgs
 
 def sharpen_letter(image: Image) -> Image:
-    white = (200, 200, 200)
-    for x in range(image.width):
-        for y in range(image.height):
+    white = (150, 150, 150)
+    width = image.width
+    height = image.height
+    for y in range(height):
+        counter_x = 0
+        for x in range(width):
             coordinate = x, y
-            if image.getpixel(coordinate) < white:
-                image.putpixel(coordinate, (0, 0, 0))
-            else:
-                image.putpixel(coordinate, (255, 255, 255))
+            try:
+                if image.getpixel(coordinate) < white:
+                    image.putpixel(coordinate, (0, 0, 0))
+                else:
+                    image.putpixel(coordinate, (255, 255, 255))
+                    counter_x += 1
+                if counter_x == image.width:
+                    if y < height * 0.5:
+                        image = image.crop((0, y, image.width, image.height))
+                    else:
+                        image = image.crop((0, 0, image.width, y))
+            except:
+                break
     return image
