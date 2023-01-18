@@ -7,6 +7,7 @@ import __init__
 
 from dex import gen_2_dex
 from image import (
+    crop_bag_items,
     crop_menu,
     crop_name_in_battle,
     crop_pokemon_in_battle,
@@ -141,6 +142,14 @@ def test_9_determine_menu():
         logger.info(f'Menu check for {input_img_fn}: {menu}')
         assert(check.lower() == menu.lower())
     logger.info("Test 9 - success!")
+
+def test_10_get_bag_items():
+    logger.info("Test 10 - get bag items")
+    check = 'items'
+    input_img_fn = os.path.join(TEST_IMG_DIR, f'menu_{check}.png')
+    items = crop_bag_items(input_img_fn)
+    print(items)
+    logger.info("Test 10 - success!")
 
 @click.command()
 @click.option("-n", "--test-number", required=False, type=int,
