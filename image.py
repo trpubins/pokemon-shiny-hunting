@@ -124,6 +124,33 @@ def get_latest_screenshot_fn() -> str:
         return None
     return files[-1]  # last element in list is most recent
 
+def crop_bag_items(img_fn: str, del_png: bool = True) -> list:
+    im = Image.open(img_fn)
+    max_items = 3
+    items = []
+    # crop to only the item portion of the screen
+    left = im.width * .4
+    right = im.width
+    bot = im.height * .675
+    top = im.height * .1
+    im = im.crop((left, top, right, bot))
+    
+    item_height = .195
+    # create a box for each item separated by its name and quantity
+    for item in range(max_items):
+        item_top = im.height * item_height * item
+        item_bot = im.height * .2 * (item + 1)
+        box = im.crop((0, item_top, im.width, item_bot))
+        item_name = box.crop((0, box.height * .05, box.width, box.height * .5))
+        # item_name.show()
+        item_quant = box.crop((box.width * .825, box.height * .5, box.width, box.height))
+        item_name.save('item.png')
+        letter_imgs = crop_item_name('item.png')
+        item_name = determine_name(letter_imgs)
+        items.append(item_name)
+    # item_quant.show()
+    return items
+
 def crop_menu(img_fn: str, del_png: bool = True) -> str:
     im = Image.open(img_fn)
 
@@ -193,6 +220,46 @@ def crop_pokemon_in_battle(battle_img_fn: str, del_png: bool = True) -> cv2.Mat:
 
     return img
 
+def crop_item_name(battle_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
+    """Crop name of a Pokémon in battle."""
+    im = Image.open(battle_img_fn)
+
+    # generation II games have maximum 10 chars for items
+    max_chars = 12
+    letter_imgs = list()
+    for i in range(max_chars):
+        # percentages used in calcs were determined empirically
+        # valid only for generation II games
+        char_width = im.width*(0.0725)
+        char_height = im.height
+        char_space = char_width/7
+        
+        left = i*(char_width + char_space)
+        right = left + char_width
+        top = 0
+        bottom = char_height
+
+        # crop image and save to disk
+        im_char = im.crop((left, top, right, bottom))
+        im_char = sharpen_letter(im_char)
+        cropped_fn = f"char_{str(i)}.png"
+        im_char.save(cropped_fn)
+        
+        # im_char.show()
+
+        # load into OpenCV obj
+        img = cv2.imread(cropped_fn)
+
+        # determine if img contains a letter based on how white it is
+        if not is_img_white(img):
+            letter_imgs.append(img)
+
+        if del_png:
+            os.remove(cropped_fn)
+    
+    logger.debug(f"pokemon name contains {len(letter_imgs)} letters")
+
+    return letter_imgs
 
 def crop_name_in_battle(battle_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
     """Crop name of a Pokémon in battle."""
@@ -231,3 +298,12 @@ def crop_name_in_battle(battle_img_fn: str, del_png: bool = True) -> List[cv2.Ma
     logger.debug(f"pokemon name contains {len(letter_imgs)} letters")
 
     return letter_imgs
+
+def sharpen_letter(image: Image) -> Image:
+    white = (220, 220, 220)
+    for x in range(image.width):
+        for y in range(image.height):
+            coordinate = x, y
+            if image.getpixel(coordinate) < white:
+                image.putpixel(coordinate, (0, 0, 0))
+    return image
