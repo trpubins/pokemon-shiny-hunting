@@ -145,8 +145,8 @@ def test_9_determine_menu():
 
 def test_10_get_bag_items():
     logger.info("Test 10 - get bag items")
-    check = 'items'
-    input_img_fn = os.path.join(TEST_IMG_DIR, f'menu_{check}.png')
+    check = 'ball'
+    input_img_fn = os.path.join(TEST_IMG_DIR, f'items_{check}.png')
     items = crop_bag_items(input_img_fn)
     print(items)
     logger.info("Test 10 - success!")

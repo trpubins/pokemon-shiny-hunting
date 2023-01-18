@@ -126,7 +126,7 @@ def get_latest_screenshot_fn() -> str:
 
 def crop_bag_items(img_fn: str, del_png: bool = True) -> list:
     im = Image.open(img_fn)
-    max_items = 3
+    max_items = 5
     items = []
     # crop to only the item portion of the screen
     left = im.width * .4
@@ -300,10 +300,12 @@ def crop_name_in_battle(battle_img_fn: str, del_png: bool = True) -> List[cv2.Ma
     return letter_imgs
 
 def sharpen_letter(image: Image) -> Image:
-    white = (220, 220, 220)
+    white = (200, 200, 200)
     for x in range(image.width):
         for y in range(image.height):
             coordinate = x, y
             if image.getpixel(coordinate) < white:
                 image.putpixel(coordinate, (0, 0, 0))
+            else:
+                image.putpixel(coordinate, (255, 255, 255))
     return image
