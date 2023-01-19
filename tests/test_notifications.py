@@ -2,30 +2,30 @@ import click
 
 import __init__
 
+from image import get_latest_screenshot_fn
 from pokemon import Pokemon
-from notifications import (
-    USERNAME, 
-    RECEIVER_EMAIL, 
-    send_notification
-)
+from notifications import USERNAME, send_notification
 from helpers import test_util
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
-from tests.__init__ import TEST_IMG_DIR
 MODULE = "notifications.py"
 
 
-def test_1_get_name():
-    logger.info("Test 1 - Get Username")
+def test_1_get_username():
+    logger.info("Test 1 - get_username")
     logger.info(f"Hello {USERNAME}")
     logger.info("Test 1 - success!")
 
 
-def test_2_get_pic():
-    logger.info("Test 2 - Import Image")
-    pokemon = Pokemon("Farfetch'd")
-    send_notification(RECEIVER_EMAIL, pokemon, send=True)
+def test_2_draft_email():
+    logger.info("Test 2 - draft_email")
+    pokemon = Pokemon("Gyarados")
+    send_notification(pokemon,
+                      n_attempts=5000,
+                      shiny_found=True,
+                      attachments=[get_latest_screenshot_fn()],
+                      send=False)
     logger.info("Test 2 - success!")
 
 
