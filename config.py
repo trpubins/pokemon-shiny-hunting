@@ -36,11 +36,11 @@ except NoOptionError:
 try:
     RECEIVER_EMAIL = config.get(SECTION, "RECEIVER_EMAIL")
     SENDER_EMAIL = config.get(SECTION, "SENDER_EMAIL")
-    PASSWORD = config.get(SECTION, "PASSWORD")
+    SENDER_EMAIL_PASS = config.get(SECTION, "SENDER_EMAIL_PASS")
 except NoOptionError:
     RECEIVER_EMAIL = None
     SENDER_EMAIL = None
-    PASSWORD = None
+    SENDER_EMAIL_PASS = None
 
 
 logger.info(f"RETROARCH_DIR: {RETROARCH_DIR}")
@@ -52,4 +52,4 @@ logger.info(f"LOG_LEVEL: {LOG_LEVEL}")
 logger.info(f"USERNAME: {USERNAME}")
 logger.info(f"RECEIVER_EMAIL: {RECEIVER_EMAIL}")
 logger.info(f"SENDER_EMAIL: {SENDER_EMAIL}")
-logger.info(f"PASSWORD: {PASSWORD}")
+logger.info(f"SENDER_EMAIL_PASS: {SENDER_EMAIL_PASS}")

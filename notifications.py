@@ -8,7 +8,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
 
-from config import USERNAME, RECEIVER_EMAIL, SENDER_EMAIL, PASSWORD
+from config import USERNAME, RECEIVER_EMAIL, SENDER_EMAIL, SENDER_EMAIL_PASS
 from pokemon import Pokemon
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
@@ -22,7 +22,7 @@ def send_notification(pokemon: Pokemon,
                       shiny_found: bool,
                       to_email: str = RECEIVER_EMAIL,
                       from_email: str = SENDER_EMAIL,
-                      from_pass: str = PASSWORD,
+                      from_pass: str = SENDER_EMAIL_PASS,
                       username: str = USERNAME,
                       attachments: List[str] = [],
                       send: bool = True):
