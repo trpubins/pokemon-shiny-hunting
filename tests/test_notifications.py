@@ -18,8 +18,8 @@ def test_1_get_username():
     logger.info("Test 1 - success!")
 
 
-def test_2_draft_email():
-    logger.info("Test 2 - draft_email")
+def test_2_draft_email_shiny_found():
+    logger.info("Test 2 - draft_email_shiny_found")
     pokemon = Pokemon("Gyarados")
     send_notification(pokemon,
                       n_attempts=5000,
@@ -27,6 +27,16 @@ def test_2_draft_email():
                       attachments=[get_latest_screenshot_fn()],
                       send=False)
     logger.info("Test 2 - success!")
+
+
+def test_3_draft_email_shiny_not_found():
+    logger.info("Test 3 - draft_email_shiny_not_found")
+    pokemon = Pokemon("Charizard")
+    send_notification(pokemon,
+                      n_attempts=8000,
+                      shiny_found=False,
+                      send=False)
+    logger.info("Test 3 - success!")
 
 
 @click.command()
