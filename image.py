@@ -21,6 +21,7 @@ logger = logging.getLogger(mod_fname(__file__))
 
 LETTERS_DIR = os.path.join("images", "letters")
 MENU_DIR = os.path.join("images", "menus")
+NUM_DIR = os.path.join("images", "numbers")
 STATUS_DIR = os.path.join("images", "status")
 
 
@@ -40,7 +41,6 @@ def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
     logger.debug(f"{pokemon} is more similar to {sprite_type}")
     return sprite_type
 
-
 def determine_name(letter_imgs: List[cv2.Mat]) -> str:
     """Determine the Pokémon name based on images of each letter."""
     name = str()
@@ -49,7 +49,6 @@ def determine_name(letter_imgs: List[cv2.Mat]) -> str:
         name += letter
     logger.debug(f"determined name: {name}")
     return name
-
 
 def determine_letter(letter_img: cv2.Mat) -> str:
     """Determine the letter described in the image based on
@@ -83,6 +82,35 @@ def determine_letter(letter_img: cv2.Mat) -> str:
                     # male/female symbol
                     letter = letter.replace("_", " ")
     return letter
+
+def determine_quantity(num_imgs: List[cv2.Mat]) -> int:
+    """Determine the quantity of items in the bag."""
+    num = str()
+    for num_img in num_imgs:
+        val = determine_number(num_img)
+        num += val
+    logger.debug(f"determined name: {num}")
+    return int(num)
+
+def determine_number(num_img: cv2.Mat) -> str:
+    """Determine the number described in the image based on
+    pixel comparison using an image database between 0-9."""
+    # grab PNG files from numbers image db
+    glob_pattern = os.path.join(NUM_DIR, "*.png")
+    files = list(filter(os.path.isfile, glob.glob(glob_pattern)))
+    
+    # compare image to each number
+    min_diff = None
+    number = str()
+    for file in files:
+        alpha_img = cv2.imread(file)
+        diff = compare_img_pixels(num_img,
+                                  alpha_img,
+                                  img_resize=IMG_SIZE_VERY_SMALL)
+        if min_diff is None or diff < min_diff:
+            min_diff = diff
+            number = os.path.basename(file).replace(".png", "")
+    return number
 
 def determine_capture_status(pokemon: Pokemon, battle_img: cv2.Mat = None) -> bool:
     '''Checks if sprite is equal to pokemon or pokeball'''
@@ -118,7 +146,6 @@ def get_screenshots() -> List[str]:
     files.sort(key=os.path.getctime)
     return files
 
-
 def get_latest_screenshot_fn() -> str:
     """Retrieve the most recent screenshot."""
     files = get_screenshots()
@@ -146,13 +173,21 @@ def crop_bag_items(img_fn: str, del_png: bool = True) -> list:
         box = im.crop((0, item_top, im.width, item_bot))
         item_name = box.crop((0, box.height * .05, box.width, box.height * .5))
         # item_name.show()
-        item_quant = box.crop((box.width * .825, box.height * .5, box.width, box.height))
         item_name.save('item.png')
         letter_imgs = crop_item_name('item.png')
         item_name = determine_name(letter_imgs)
         if item_name != '' and item_name != 'cancel':
             items.append(item_name)
-    # item_quant.show()
+        
+        item_quant = box.crop((box.width * .825, box.height * .5, box.width, box.height))
+        item_quant.save('quant.png')
+        # item_quant.show()
+        num_imgs = crop_item_quantity('quant.png')
+    
+    if del_png:
+        os.remove('item.png')
+        os.remove('quant.png')
+    
     return items
 
 def crop_menu(img_fn: str, del_png: bool = True) -> str:
@@ -196,8 +231,6 @@ def crop_menu(img_fn: str, del_png: bool = True) -> str:
 
     return menu_check
 
-
-
 def crop_pokemon_in_battle(battle_img_fn: str, del_png: bool = True) -> cv2.Mat:
     """Crop square image of a Pokémon in battle."""
     im = Image.open(battle_img_fn)
@@ -225,7 +258,7 @@ def crop_pokemon_in_battle(battle_img_fn: str, del_png: bool = True) -> cv2.Mat:
     return img
 
 def crop_item_name(battle_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
-    """Crop name of a Pokémon in battle."""
+    """Crop name of an item in bag."""
     im = Image.open(battle_img_fn)
 
     # generation II games have maximum 10 chars for items
@@ -245,7 +278,7 @@ def crop_item_name(battle_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
 
         # crop image and save to disk
         im_char = im.crop((left, top, right, bottom))
-        im_char = sharpen_letter(im_char)
+        im_char = sharpen_pic(im_char)
         cropped_fn = f"char_{str(i)}.png"
         im_char.save(cropped_fn)
         
@@ -264,6 +297,45 @@ def crop_item_name(battle_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
     logger.debug(f"pokemon name contains {len(letter_imgs)} letters")
 
     return letter_imgs
+
+def crop_item_quantity(bag_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
+    im = Image.open(bag_img_fn)
+
+    max_num = 2
+    num_imgs = list()
+    for i in range(max_num):
+        # percentages used in calcs were determined empirically
+        # valid only for generation II games
+        char_width = im.width*(0.5)
+        char_height = im.height
+        char_space = char_width/8
+        
+        left = i*(char_width + char_space)
+        right = left + char_width
+        top = 0
+        bottom = char_height
+
+        # crop image and save to disk
+        im_char = im.crop((left, top, right, bottom))
+        im_char = sharpen_pic(im_char)
+        cropped_fn = f"char_{str(i)}.png"
+        im_char.save(cropped_fn)
+        
+        im_char.show()
+
+        # load into OpenCV obj
+        img = cv2.imread(cropped_fn)
+
+        # determine if img contains a letter based on how white it is
+        if not is_img_white(img):
+            num_imgs.append(img)
+
+        if del_png:
+            os.remove(cropped_fn)
+    
+    logger.debug(f"pokemon name contains {len(num_imgs)} letters")
+
+    return num_imgs
 
 def crop_name_in_battle(battle_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
     """Crop name of a Pokémon in battle."""
@@ -303,7 +375,7 @@ def crop_name_in_battle(battle_img_fn: str, del_png: bool = True) -> List[cv2.Ma
 
     return letter_imgs
 
-def sharpen_letter(image: Image) -> Image:
+def sharpen_pic(image: Image) -> Image:
     white = (150, 150, 150)
     width = image.width
     height = image.height
