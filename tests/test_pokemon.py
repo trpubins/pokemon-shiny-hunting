@@ -25,12 +25,12 @@ def test_1_get_sprite_name():
 
 def test_2_create_pokemon_sprite_fn():
     logger.info("Test 2 - create_pokemon_sprite_fn")
-    normal_fn = create_pokemon_sprite_fn(name="Gyarados",
-                                         game="Crystal",
+    normal_fn = create_pokemon_sprite_fn(game="Crystal",
+                                         name= "Gyarados",
                                          _type=SpriteType.NORMAL)
     assert(normal_fn == os.path.join(SPRITES_DIR, "crystal", SpriteType.NORMAL, "130_gyarados.png"))
-    shiny_fn = create_pokemon_sprite_fn(name="Gyarados",
-                                        game="Crystal",
+    shiny_fn = create_pokemon_sprite_fn(game="Crystal",
+                                        name= "Gyarados",
                                         _type=SpriteType.SHINY)
     assert(shiny_fn == os.path.join(SPRITES_DIR, "crystal", SpriteType.SHINY, "130_gyarados.png"))
     logger.info("Test 2 - success!")

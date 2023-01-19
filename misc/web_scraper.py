@@ -79,8 +79,8 @@ def find_sprite_urls(pokemon_name: str,
 
 def get_sprite(pokemon_name: str, generation: int, game: str, dirs: Tuple[str, str]):
     normal_dir, shiny_dir = dirs
-    normal_fp = create_pokemon_sprite_fn(pokemon_name, game, _dir=normal_dir)
-    shiny_fp = create_pokemon_sprite_fn(pokemon_name, game, _dir=shiny_dir)
+    normal_fp = create_pokemon_sprite_fn(game, pokemon_name, _dir=normal_dir)
+    shiny_fp = create_pokemon_sprite_fn(game, pokemon_name, _dir=shiny_dir)
 
     if os.path.exists(normal_fp) and os.path.exists(shiny_fp):
         logger.info(f"image path: {normal_fp}")
