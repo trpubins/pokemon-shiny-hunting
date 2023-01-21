@@ -90,6 +90,8 @@ def determine_quantity(num_imgs: List[cv2.Mat]) -> int:
         val = determine_number(num_img)
         num += val
     logger.debug(f"determined name: {num}")
+    if num == '':
+        num = '1'
     return int(num)
 
 def determine_number(num_img: cv2.Mat) -> str:
@@ -158,6 +160,7 @@ def crop_bag_items(img_fn: str, del_png: bool = True) -> list:
     im = Image.open(img_fn)
     max_items = 5
     items = []
+    quant = []
     # crop to only the item portion of the screen
     left = im.width * .4
     right = im.width
@@ -176,19 +179,24 @@ def crop_bag_items(img_fn: str, del_png: bool = True) -> list:
         item_name.save('item.png')
         letter_imgs = crop_item_name('item.png')
         item_name = determine_name(letter_imgs)
-        if item_name != '' and item_name != 'cancel':
-            items.append(item_name)
+
         
         item_quant = box.crop((box.width * .825, box.height * .5, box.width, box.height))
         item_quant.save('quant.png')
         # item_quant.show()
-        # num_imgs = crop_item_quantity('quant.png')
+        num_imgs = crop_item_quantity('quant.png')
+        item_quant = determine_quantity(num_imgs)
+
+        if item_name != '' and item_name != 'cancel':
+            items.append(item_name)
+            quant.append(item_quant)
+        
     
     if del_png:
         os.remove('item.png')
         os.remove('quant.png')
     
-    return items
+    return items, quant
 
 def crop_menu(img_fn: str, del_png: bool = True) -> str:
     im = Image.open(img_fn)
@@ -318,12 +326,11 @@ def crop_item_quantity(bag_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
         # crop image and save to disk
         im_char = im.crop((left, top, right, bottom))
 
-        cropped_fn = f"char_{str(i)}.png"
-        im_char.save(cropped_fn)
-
-        # im_char.show()
         im_char = remove_line_in_pic(im_char)
         # im_char.show()
+
+        cropped_fn = f"char_{str(i)}.png"
+        im_char.save(cropped_fn)
 
         # load into OpenCV obj
         img = cv2.imread(cropped_fn)
@@ -425,22 +432,8 @@ def remove_line_in_pic(image: Image.Image) -> Image.Image:
     img = image.crop((left, top, right, bottom))
     return img
 
-def compress(im: str) -> Image.Image:
-    image = Image.open(im)
-    width, height = image.size
-    for y in range(height):
-        row_avg = (0, 0, 0)
-        for x in range(width):
-            coordinate = x, y
-            px = image.getpixel(coordinate)
-            row_avg = tuple(map(sum, zip(row_avg, px)))
-        row_avg = tuple(ele1 // ele2 for ele1, ele2 in zip(row_avg, (width, width, width)))
-        image.putpixel([0, y], row_avg)
-    image = image.crop((0, 0, 1, height))
-    image.save('compressed.png')
-    return image
-
 
 # if __name__ == "__main__":
 #     im = get_latest_screenshot_fn()
-#     crop_item_name('item.png', False)
+#     items = crop_bag_items(im, False)
+#     print(items)
