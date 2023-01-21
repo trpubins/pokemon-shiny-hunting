@@ -9,6 +9,7 @@ import cv2
 from PIL import Image
 
 from config import RETROARCH_SCREENSHOTS_DIR
+from menu import MenuType, get_menu_fn
 from pokemon import Pokemon, SpriteType
 from helpers.opencv_util import (
     IMG_SIZE_VERY_SMALL,
@@ -63,7 +64,8 @@ def determine_letter(letter_img: cv2.Mat) -> str:
         alpha_img = cv2.imread(file)
         diff = compare_img_pixels(letter_img,
                                   alpha_img,
-                                  img_resize=IMG_SIZE_VERY_SMALL)
+                                  resize_width=IMG_SIZE_VERY_SMALL,
+                                  resize_height=IMG_SIZE_VERY_SMALL)
         if min_diff is None or diff < min_diff:
             min_diff = diff
             letter = os.path.basename(file).replace(".png", "")
@@ -74,10 +76,60 @@ def determine_letter(letter_img: cv2.Mat) -> str:
                 elif "\'" in letter:
                     # apostraphe symbol
                     letter = letter.replace("_", "")
+                elif "e" in letter:
+                    # é in Pokémon and Pokéball
+                    letter = letter.replace("_", "")
                 else:
                     # male/female symbol
                     letter = letter.replace("_", " ")
     return letter
+
+
+def determine_menu(img_fn: str, del_png: bool = True) -> MenuType:
+    """Determine the menu type from the provided image.
+    Assumes a menu is open in the image."""
+    # crop locations in dict were determined empirically
+    # valid only for generation II games
+    menus = [
+        {"type":    MenuType.START, "top": 0,    "bottom": 0.45, "left": 0,   "right": 0.85},
+        {"type": MenuType.CONTINUE, "top": 0.45, "bottom": 1,    "left": 0.2, "right": 1},
+        {"type":    MenuType.PAUSE, "top": 0,    "bottom": 1,    "left": 0.5, "right": 1},
+        {"type":    MenuType.ITEMS, "top": 0.05, "bottom": 0.6,  "left": 0,   "right": 0.25},
+        {"type":   MenuType.BATTLE, "top": 0.7,  "bottom": 1,    "left": 0.4, "right": 1},
+    ]
+
+    im = Image.open(img_fn)
+    min_diff = None
+    for menu in menus:
+        # open the known menu item for comparison
+        menu_fp = get_menu_fn(menu["type"])
+        known_menu = cv2.imread(menu_fp)
+
+        # defines the borders for each menu type
+        top = im.height * menu["top"]
+        bot = im.height * menu["bottom"]
+        left = im.width * menu["left"]
+        right = im.width * menu["right"]
+
+        # crop image and save to disk
+        im_cropped = im.crop((left, top, right, bot))
+        cropped_fn = "menu.png"
+        im_cropped.save(cropped_fn)
+
+        # convert to OpenCV object
+        im_cropped = cv2.imread(cropped_fn)
+        
+        resize_width = int(.05*get_img_width(known_menu))
+        resize_height = int(.05*get_img_height(known_menu))
+        diff = compare_img_pixels(im_cropped, known_menu, resize_width, resize_height)
+        if min_diff is None or diff < min_diff:
+            min_diff = diff
+            menu_type: MenuType = menu["type"]
+
+        if del_png:
+            os.remove(cropped_fn)
+
+    return menu_type
 
 
 def get_screenshots() -> List[str]:

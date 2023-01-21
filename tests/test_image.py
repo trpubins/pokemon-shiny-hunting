@@ -1,3 +1,4 @@
+import glob
 import os
 
 import click
@@ -7,11 +8,13 @@ import __init__
 
 from dex import gen_2_dex
 from image import (
+    determine_menu,
     crop_name_in_battle,
     crop_pokemon_in_battle,
     determine_name,
     determine_sprite_type,
 )
+from menu import MenuType
 from pokemon import Pokemon, SpriteType
 from helpers import test_util
 from helpers.opencv_util import compare_img_pixels
@@ -113,6 +116,18 @@ def test_7_determine_sprite_type_full():
         sprite_type = determine_sprite_type(pokemon, img=sprite_img)
         assert(sprite_type == type_)
     logger.info("Test 7 - success!")
+
+
+def test_8_determine_menu():
+    logger.info("Test 8 - determine_menu")
+    glob_pattern = os.path.join(TEST_IMG_DIR, "menu_*.png")
+    menu_test_files = list(filter(os.path.isfile, glob.glob(glob_pattern)))
+    for input_img_fn in menu_test_files:
+        logger.debug(f"testing {os.path.basename(input_img_fn)}")
+        menu = determine_menu(input_img_fn)
+        logger.debug(f"Determined menu type: {menu}")
+        assert(menu in input_img_fn)
+    logger.info("Test 8 - success!")
 
 
 @click.command()
