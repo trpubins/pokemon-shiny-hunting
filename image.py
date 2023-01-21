@@ -182,7 +182,7 @@ def crop_bag_items(img_fn: str, del_png: bool = True) -> list:
         item_quant = box.crop((box.width * .825, box.height * .5, box.width, box.height))
         item_quant.save('quant.png')
         # item_quant.show()
-        num_imgs = crop_item_quantity('quant.png')
+        # num_imgs = crop_item_quantity('quant.png')
     
     if del_png:
         os.remove('item.png')
@@ -278,7 +278,7 @@ def crop_item_name(battle_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
 
         # crop image and save to disk
         im_char = im.crop((left, top, right, bottom))
-        im_char = sharpen_pic(im_char)
+        im_char = remove_line_in_pic(im_char)
         cropped_fn = f"char_{str(i)}.png"
         im_char.save(cropped_fn)
         
@@ -306,9 +306,9 @@ def crop_item_quantity(bag_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
     for i in range(max_num):
         # percentages used in calcs were determined empirically
         # valid only for generation II games
-        char_width = im.width*(0.5)
+        char_width = im.width*(0.465)
         char_height = im.height
-        char_space = char_width/8
+        char_space = char_width/10
         
         left = i*(char_width + char_space)
         right = left + char_width
@@ -317,11 +317,13 @@ def crop_item_quantity(bag_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
 
         # crop image and save to disk
         im_char = im.crop((left, top, right, bottom))
-        im_char = sharpen_pic(im_char)
+
         cropped_fn = f"char_{str(i)}.png"
         im_char.save(cropped_fn)
-        
-        im_char.show()
+
+        # im_char.show()
+        im_char = remove_line_in_pic(im_char)
+        # im_char.show()
 
         # load into OpenCV obj
         img = cv2.imread(cropped_fn)
@@ -375,25 +377,70 @@ def crop_name_in_battle(battle_img_fn: str, del_png: bool = True) -> List[cv2.Ma
 
     return letter_imgs
 
-def sharpen_pic(image: Image) -> Image:
-    white = (150, 150, 150)
-    width = image.width
-    height = image.height
+def remove_line_in_pic(image: Image.Image) -> Image.Image:
+
+    white = (230, 230, 230)
+    width, height = image.size
+    top = 0
+    bottom = height
+    left = 0
+    right = width
     for y in range(height):
-        counter_x = 0
+        rows_avg = (0,0,0)
         for x in range(width):
             coordinate = x, y
-            try:
-                if image.getpixel(coordinate) < white:
-                    image.putpixel(coordinate, (0, 0, 0))
-                else:
-                    image.putpixel(coordinate, (255, 255, 255))
-                    counter_x += 1
-                if counter_x == image.width:
-                    if y < height * 0.5:
-                        image = image.crop((0, y, image.width, image.height))
-                    else:
-                        image = image.crop((0, 0, image.width, y))
-            except:
+            px = image.getpixel(coordinate)
+            rows_avg = tuple(map(sum, zip(rows_avg, px)))
+
+        rows_avg = tuple(ele1 // ele2 for ele1, ele2 in zip(rows_avg, (width, width, width)))
+        if rows_avg >= white:
+            if y < height * .5:
+                top = y + 1
+            else:
+                bottom = y - 1
                 break
+        else:
+            continue
+    
+    for x in range(width):
+        cols_avg = (0,0,0)
+        for y in range(height):
+            coordinate = x, y
+            px = image.getpixel(coordinate)
+            cols_avg = tuple(map(sum, zip(cols_avg, px)))
+
+        cols_avg = tuple(ele1 // ele2 for ele1, ele2 in zip(cols_avg, (height, height, height)))
+        if cols_avg >= white:
+            if x < width * .5:
+                left = x + 1
+            else:
+                right = x - 1
+                break
+        else:
+            continue
+    if left >= right:
+        left = right - 1
+    if top >= bottom:
+        top = bottom - 1
+    img = image.crop((left, top, right, bottom))
+    return img
+
+def compress(im: str) -> Image.Image:
+    image = Image.open(im)
+    width, height = image.size
+    for y in range(height):
+        row_avg = (0, 0, 0)
+        for x in range(width):
+            coordinate = x, y
+            px = image.getpixel(coordinate)
+            row_avg = tuple(map(sum, zip(row_avg, px)))
+        row_avg = tuple(ele1 // ele2 for ele1, ele2 in zip(row_avg, (width, width, width)))
+        image.putpixel([0, y], row_avg)
+    image = image.crop((0, 0, 1, height))
+    image.save('compressed.png')
     return image
+
+
+# if __name__ == "__main__":
+#     im = get_latest_screenshot_fn()
+#     crop_item_name('item.png', False)
