@@ -154,12 +154,12 @@ def test_10_get_bag_items():
     for check in checks:
         image = check['name']
         input_img_fn = os.path.join(TEST_IMG_DIR, f'items_{image}.png')
-        items = crop_bag_items(input_img_fn)
+        items = crop_bag_items(input_img_fn, False)
         print(items)
         for i in range(1, 5):
             test = check[f'item_{i}']
             if test != None:
-                assert(test == items[i - 1])
+                assert(test == items[0][i-1])
     logger.info("Test 10 - success!")
 
 def test_11_get_item_quantity():
