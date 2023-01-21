@@ -8,12 +8,16 @@ Inside the project root directory, create a file named `config.ini`. Below is an
 
 ```ini
 [DEFAULT]
-RETROARCH_DIR: /Users/<UserName>/Library/Application Support/RetroArch
-RETROARCH_CFG_FP: %(RETROARCH_DIR)s/config/retroarch.cfg
-RETROARCH_SCREENSHOTS_DIR: %(RETROARCH_DIR)s/screenshots
-RETROARCH_APP_FP: /Applications/RetroArch.app
-POKEMON_GAME: Crystal
-LOG_LEVEL: DEBUG  # or INFO
+RETROARCH_DIR: /Users/<UserName>/Library/Application Support/RetroArch  # required
+RETROARCH_CFG_FP: %(RETROARCH_DIR)s/config/retroarch.cfg                # required
+RETROARCH_SCREENSHOTS_DIR: %(RETROARCH_DIR)s/screenshots                # required
+RETROARCH_APP_FP: /Applications/RetroArch.app                           # required
+POKEMON_GAME: Crystal                                                   # required
+LOG_LEVEL: DEBUG                                                        # optional, default is INFO
+USERNAME: your-username                                                 # optional, default is User
+RECEIVER_EMAIL: receiver@email.com                                      # optional, default is None
+SENDER_EMAIL: sender@email.com                                          # optional, default is None
+SENDER_EMAIL_PASS: sEndeR-EmaiL-pa22                                    # optional, default is None
 ```
 
 ## Usage

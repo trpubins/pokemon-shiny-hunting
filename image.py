@@ -1,6 +1,5 @@
 """Perform image transformation and image detection."""
 
-from enum import Enum
 import glob
 import logging
 import os
@@ -10,8 +9,8 @@ import cv2
 from PIL import Image
 
 from config import RETROARCH_SCREENSHOTS_DIR
-from dex import get_pokemon_number
-from helpers.opencv_util import ( 
+from pokemon import Pokemon, SpriteType
+from helpers.opencv_util import (
     IMG_SIZE_VERY_SMALL,
     compare_img_color, compare_img_pixels,
     get_img_height, get_img_width, is_img_white
@@ -21,23 +20,12 @@ logger = logging.getLogger(mod_fname(__file__))
 
 
 LETTERS_DIR = os.path.join("images", "letters")
-SPRITES_DIR = os.path.join("images", "sprites")
 
 
-class SpriteType(str, Enum):
-    """Enumeration for sprite types."""
-    NORMAL = "normal"
-    SHINY = "shiny"
-
-
-def determine_sprite_type(name: str, game: str, img: cv2.Mat) -> SpriteType:
+def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
     """Determine the sprite type based on image color comparison."""
-    # retrieve db image filenames
-    normal_fn = create_pokemon_sprite_fn(name, game, SpriteType.NORMAL)
-    shiny_fn = create_pokemon_sprite_fn(name, game, SpriteType.SHINY)
-    
-    normal_img = cv2.imread(normal_fn)
-    shiny_img = cv2.imread(shiny_fn)
+    normal_img = cv2.imread(pokemon.get_normal_img_fn())
+    shiny_img = cv2.imread(pokemon.get_shiny_img_fn())
     img = cv2.resize(img, (get_img_width(normal_img), get_img_height(normal_img)))
 
     # use color differences to determine sprite type
@@ -47,7 +35,7 @@ def determine_sprite_type(name: str, game: str, img: cv2.Mat) -> SpriteType:
         sprite_type = SpriteType.NORMAL
     else:
         sprite_type = SpriteType.SHINY
-    logger.debug(f"{name} is more similar to {sprite_type}")
+    logger.debug(f"{pokemon} is more similar to {sprite_type}")
     return sprite_type
 
 
@@ -90,27 +78,6 @@ def determine_letter(letter_img: cv2.Mat) -> str:
                     # male/female symbol
                     letter = letter.replace("_", " ")
     return letter
-
-
-def create_pokemon_sprite_fn(name: str,
-                             game: str,
-                             _type: SpriteType = None,
-                             _dir: str = SPRITES_DIR,
-                             ext: str = "png"):
-    """Generate the sprite filename from the Pokémon properites."""
-    number = get_pokemon_number(name)
-    base_fn = f"{number:03d}_{get_sprite_name(name)}.{ext}"
-    if _type is None:
-        pokemon_fn = os.path.join(_dir, base_fn)
-    else:
-        pokemon_fn = os.path.join(_dir, game.lower(), _type, base_fn)
-    logger.debug(f"pokemon_fn: {pokemon_fn}")
-    return pokemon_fn
-
-
-def get_sprite_name(name: str):
-    """Retrieve a Pokémon's sprite name."""
-    return name.lower().replace(' ','-').replace('.','').replace('\'','')
 
 
 def get_screenshots() -> List[str]:

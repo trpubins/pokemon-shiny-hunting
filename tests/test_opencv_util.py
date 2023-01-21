@@ -11,7 +11,7 @@ from helpers.opencv_util import compare_img_color, compare_img_pixels
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
-from __init__ import TEST_IMG_DIR
+from tests.__init__ import TEST_IMG_DIR
 MODULE = os.path.join("helpers", "opencv_util.py")
 
 
