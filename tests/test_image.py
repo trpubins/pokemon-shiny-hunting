@@ -145,10 +145,21 @@ def test_9_determine_menu():
 
 def test_10_get_bag_items():
     logger.info("Test 10 - get bag items")
-    check = 'ball'
-    input_img_fn = os.path.join(TEST_IMG_DIR, f'items_{check}.png')
-    items = crop_bag_items(input_img_fn)
-    print(items)
+    checks = [
+        {'name': 'ball', 'item_1': 'masterball', 'item_2': 'greatball', 'item_3': 'pokeball', 'item_4': 'ultraball', 'item_5': None},
+        {'name': 'ball1', 'item_1': 'greatball', 'item_2': None, 'item_3': None, 'item_4': None, 'item_5': None},
+        {'name': 'key', 'item_1': 'squirtbottle', 'item_2': 'redscale', 'item_3': 'basementkey', 'item_4': 'cardkey', 'item_5': 'clearbell'},
+        {'name': 'tm', 'item_1': 'dynamicpunch', 'item_2': 'rollout', 'item_3': 'irontail', 'item_4': 'dragonbreath', 'item_5': 'shadowball'}
+        ]
+    for check in checks:
+        image = check['name']
+        input_img_fn = os.path.join(TEST_IMG_DIR, f'items_{image}.png')
+        items = crop_bag_items(input_img_fn)
+        print(items)
+        for i in range(1, 5):
+            test = check[f'item_{i}']
+            if test != None:
+                assert(test == items[i - 1])
     logger.info("Test 10 - success!")
 
 def test_11_get_item_quantity():
