@@ -21,7 +21,7 @@ from helpers.opencv_util import compare_img_pixels
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
-from tests.__init__ import POKEMON_LIST, TEST_IMG_DIR
+from tests.__init__ import POKEMON_LIST, TEST_IMG_DIR, ITEM_LIST
 MODULE = "image.py"
 POKEMON_GAME = "Crystal"
 
@@ -145,25 +145,17 @@ def test_9_determine_menu():
 
 def test_10_get_bag_items():
     logger.info("Test 10 - get bag items")
-    checks = [
-        {'name': 'ball', 'item_1': 'masterball', 'item_2': 'greatball', 'item_3': 'pokeball', 'item_4': 'ultraball', 'item_5': None},
-        {'name': 'ball1', 'item_1': 'greatball', 'item_2': None, 'item_3': None, 'item_4': None, 'item_5': None},
-        {'name': 'key', 'item_1': 'squirtbottle', 'item_2': 'redscale', 'item_3': 'basementkey', 'item_4': 'cardkey', 'item_5': 'clearbell'},
-        {'name': 'tm', 'item_1': 'dynamicpunch', 'item_2': 'rollout', 'item_3': 'irontail', 'item_4': 'dragonbreath', 'item_5': 'shadowball'}
-        ]
-    for check in checks:
+
+    for check in ITEM_LIST:
         image = check['name']
         input_img_fn = os.path.join(TEST_IMG_DIR, f'items_{image}.png')
         items = crop_bag_items(input_img_fn, False)
-        print(items)
+        logger.info(f'{items}')
         for i in range(1, 5):
             test = check[f'item_{i}']
             if test != None:
-                assert(test == items[0][i-1])
+                assert(test == items[i-1][1][0])
     logger.info("Test 10 - success!")
-
-def test_11_get_item_quantity():
-    logger.info("Test 11 - get item quantity")
 
 @click.command()
 @click.option("-n", "--test-number", required=False, type=int,
