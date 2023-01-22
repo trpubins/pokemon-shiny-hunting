@@ -157,7 +157,9 @@ def get_latest_screenshot_fn() -> str:
     return files[-1]  # last element in list is most recent
 
 def crop_bag_items(img_fn: str, del_png: bool = True) -> list:
+    '''Take screenshot of the bag's inventory on current screen and saves the information for later use when hunting'''
     im = Image.open(img_fn)
+    # max items is chosen as the stable value for items displayed in the bag clearly in any one given screenshot
     max_items = 5
     items = []
     quant = []
@@ -169,6 +171,7 @@ def crop_bag_items(img_fn: str, del_png: bool = True) -> list:
     im = im.crop((left, top, right, bot))
     
     item_height = .195
+    lists = []
     # create a box for each item separated by its name and quantity
     for item in range(max_items):
         item_top = im.height * item_height * item
@@ -187,16 +190,25 @@ def crop_bag_items(img_fn: str, del_png: bool = True) -> list:
         num_imgs = crop_item_quantity('quant.png')
         item_quant = determine_quantity(num_imgs)
 
-        if item_name != '' and item_name != 'cancel':
+        # immediately returns list upon cancel. else create key/value pair with key being the location of the item in the bag and the values
+        # being the item name and its amount in the bag. Key items will always show up as 1 item even though none are listed in the actual
+        # inventory
+        if item_name == '' or item_name == 'cancel':
+            break
+        else:
             items.append(item_name)
             quant.append(item_quant)
         
+            key = f'item_{item + 1}'
+            value = [item_name, item_quant]
+            la = [key, value]
+            lists.append(la)
     
     if del_png:
         os.remove('item.png')
         os.remove('quant.png')
     
-    return items, quant
+    return lists
 
 def crop_menu(img_fn: str, del_png: bool = True) -> str:
     im = Image.open(img_fn)
