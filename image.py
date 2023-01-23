@@ -73,6 +73,9 @@ def determine_letter(letter_img: cv2.Mat) -> str:
                 if "." in letter:
                     # period symbol
                     letter = letter.replace("_._", ". ")
+                elif "-" in letter:
+                    # dash symbol
+                    letter = letter.replace("_", "")
                 elif "\'" in letter:
                     # apostraphe symbol
                     letter = letter.replace("_", "")
