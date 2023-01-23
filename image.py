@@ -40,6 +40,48 @@ def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
     return sprite_type
 
 
+def determine_pack_item_names(pack_img_fn: str, del_png: bool = True) -> List[str]:
+    """Determine the item names from a screenshot inside the pack."""
+    im = Image.open(pack_img_fn)
+
+    max_items = 5  # the max number of items shown in one pack screenshot
+    
+    # crop to only the item portion of the screen
+    # percentages used in calcs were determined empirically
+    # valid only for generation II games
+    item_height = im.height * 1/9
+    left = im.width * 0.4
+    right = im.width
+    top = item_height
+    bot = top + max_items*item_height
+    im = im.crop((left, top, right, bot))
+    cropped_items_fn = "cropped_items.png"
+    im.save(cropped_items_fn)
+    
+    item_names = []
+    for i in range(max_items):
+        # select the item name from the cropped items
+        item_name_height = im.height * 1/9
+        item_top = item_height * i
+        item_bot = item_top + item_height - item_name_height
+        im_item_name = im.crop((0, item_top, im.width, item_bot))
+        item_fn = "item.png"
+        im_item_name.save(item_fn)
+
+        letter_imgs = crop_item_name(im_item_name)
+        item_name = determine_name(letter_imgs)
+        if item_name == "" or item_name == "cancel":
+            break
+        else:
+            item_names.append(item_name)
+        
+    if del_png:
+        os.remove(cropped_items_fn)
+        os.remove(item_fn)
+    
+    return item_names
+
+
 def determine_name(letter_imgs: List[cv2.Mat]) -> str:
     """Determine the Pokémon name based on images of each letter."""
     name = str()
@@ -217,5 +259,42 @@ def crop_name_in_battle(battle_img_fn: str, del_png: bool = True) -> List[cv2.Ma
             os.remove(cropped_fn)
     
     logger.debug(f"pokemon name contains {len(letter_imgs)} letters")
+
+    return letter_imgs
+
+
+def crop_item_name(im_item_name: Image.Image, del_png: bool = True) -> List[cv2.Mat]:
+    """Crop name of an item."""
+    # generation II games have maximum 12 chars for items
+    max_chars = 12
+    letter_imgs = list()
+    for i in range(max_chars):
+        # percentages used in calcs were determined empirically
+        # valid only for generation II games
+        char_width = im_item_name.width*(0.0725)
+        char_height = im_item_name.height
+        char_space = char_width*(0.15)
+        
+        left = i*(char_width + char_space)
+        right = left + char_width
+        top = 0
+        bottom = char_height
+
+        # crop image and save to disk
+        im_char = im_item_name.crop((left, top, right, bottom))
+        cropped_fn = f"item_char_{str(i)}.png"
+        im_char.save(cropped_fn)
+
+        # load into OpenCV obj
+        img = cv2.imread(cropped_fn)
+
+        # determine if img contains a letter based on how white it is
+        if not is_img_white(img):
+            letter_imgs.append(img)
+
+        if del_png:
+            os.remove(cropped_fn)
+    
+    logger.debug(f"item name contains {len(letter_imgs)} letters")
 
     return letter_imgs

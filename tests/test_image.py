@@ -12,6 +12,7 @@ from image import (
     crop_name_in_battle,
     crop_pokemon_in_battle,
     determine_name,
+    determine_pack_item_names,
     determine_sprite_type,
 )
 from menu import MenuType
@@ -128,6 +129,24 @@ def test_8_determine_menu():
         logger.debug(f"Determined menu type: {menu}")
         assert(menu in input_img_fn)
     logger.info("Test 8 - success!")
+
+
+def test_9_determine_pack_item_names():
+    logger.info("Test 9 - determine_pack_item_names")
+    pack_list = {
+        "ball":  ["masterball", "greatball", "pokeball", "ultraball"],
+        "ball1": ["greatball"],
+        "key":   ["squirtbottle", "redscale", "basementkey", "cardkey", "clearbell"],
+        "tm":    ["dynamicpunch", "rollout", "irontail", "dragonbreath", "shadowball"],
+        "tm1":   ["rollout", "shadowball", "mud-slap", "attract", "furycutter"]
+    }
+    for img_name,known_item_names in pack_list.items():
+        input_img_fn = os.path.join(TEST_IMG_DIR, f'items_{img_name}.png')
+        det_item_names = determine_pack_item_names(input_img_fn)
+        logger.debug(f"item names: {det_item_names}")
+        for det_item_name,known_item_name in zip(det_item_names,known_item_names):
+            assert(det_item_name == known_item_name)
+    logger.info("Test 9 - success!")
 
 
 @click.command()
