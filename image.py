@@ -3,7 +3,7 @@
 import glob
 import logging
 import os
-from typing import List
+from typing import Any, List
 
 import cv2
 from PIL import Image
@@ -21,6 +21,7 @@ logger = logging.getLogger(mod_fname(__file__))
 
 
 LETTERS_DIR = os.path.join("images", "letters")
+NUM_DIR = os.path.join("images", "numbers")
 
 
 def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
@@ -40,12 +41,14 @@ def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
     return sprite_type
 
 
-def determine_pack_item_names(pack_img_fn: str, del_png: bool = True) -> List[str]:
-    """Determine the item names from a screenshot inside the pack."""
+def determine_pack_items(pack_img_fn: str, del_png: bool = True) -> Any:
+    """Determine the items and their associated quantities in the pack."""
+    # TODO - update after creating pack module with PackType and
+    # other custom classes
     im = Image.open(pack_img_fn)
 
     max_items = 5  # the max number of items shown in one pack screenshot
-    
+
     # crop to only the item portion of the screen
     # percentages used in calcs were determined empirically
     # valid only for generation II games
@@ -57,29 +60,69 @@ def determine_pack_item_names(pack_img_fn: str, del_png: bool = True) -> List[st
     im = im.crop((left, top, right, bot))
     cropped_items_fn = "cropped_items.png"
     im.save(cropped_items_fn)
-    
-    item_names = []
-    for i in range(max_items):
-        # select the item name from the cropped items
-        item_name_height = im.height * 1/9
-        item_top = item_height * i
-        item_bot = item_top + item_height - item_name_height
-        im_item_name = im.crop((0, item_top, im.width, item_bot))
-        item_fn = "item.png"
-        im_item_name.save(item_fn)
 
-        letter_imgs = crop_item_name(im_item_name)
-        item_name = determine_name(letter_imgs)
+    items = []
+    for i in range(max_items):
+        # create a box for each item separated by its name and quantity
+        item_top = item_height * i
+        item_bot = item_top + item_height
+        im_item = im.crop((0, item_top, im.width, item_bot))
+        item_fn = "item.png"
+        im_item.save(item_fn)
+
+        item_name = determine_pack_item_name(im_item, del_png=del_png)
         if item_name == "" or item_name == "cancel":
             break
-        else:
-            item_names.append(item_name)
+        item_qty = determine_pack_item_qty(im_item, del_png=del_png)
+        item = (item_name, item_qty)
+        logger.debug(f"item: {item}")
+        items.append(item)
         
     if del_png:
         os.remove(cropped_items_fn)
         os.remove(item_fn)
     
-    return item_names
+    return items
+
+
+def determine_pack_item_name(im: Image.Image, del_png: bool = True) -> str:
+    """Determine the item name from a boxed image representing an item."""
+    char_width = im.width*(0.0725)
+    item_name_height = char_width
+    top = 0
+    bot = top + item_name_height
+    im_item_name = im.crop((0, top, im.width, bot))
+    item_name_fn = "item_name.png"
+    im_item_name.save(item_name_fn)
+
+    letter_imgs = crop_item_name(im_item_name, del_png=del_png)
+    item_name = determine_name(letter_imgs)
+        
+    if del_png:
+        os.remove(item_name_fn)
+    
+    return item_name
+
+
+def determine_pack_item_qty(im: Image.Image, del_png: bool = True) -> int:
+    """Determine the item quantity from a boxed image representing an item."""
+    char_width = im.width*(0.0625)
+    item_qty_height = char_width
+    top = im.height * 0.5575
+    bot = top + item_qty_height
+    left = im.width * 0.8325
+    right = im.width * 0.9975
+    im_item_qty = im.crop((left, top, right, bot))
+    item_qty_fn = "item_qty.png"
+    im_item_qty.save(item_qty_fn)
+
+    num_imgs = crop_item_qty(im_item_qty, del_png=del_png)
+    item_qty = determine_quantity(num_imgs)
+
+    if del_png:
+        os.remove(item_qty_fn)
+
+    return item_qty
 
 
 def determine_name(letter_imgs: List[cv2.Mat]) -> str:
@@ -128,6 +171,45 @@ def determine_letter(letter_img: cv2.Mat) -> str:
                     # male/female symbol
                     letter = letter.replace("_", " ")
     return letter
+
+
+def determine_quantity(num_imgs: List[cv2.Mat]) -> int:
+    """Determine the quantity based on images of each number."""
+    if len(num_imgs) == 0:
+        logger.warning("Should supply non-empty list of number images.")
+        return None
+    
+    qty = int()
+    for i,num_img in enumerate(num_imgs):
+        num = determine_number(num_img)
+        tens = pow(base=10, exp=len(num_imgs) - 1 - i)
+        qty += num * tens
+    logger.debug(f"determined qty: {qty}")
+    return qty
+
+
+def determine_number(num_img: cv2.Mat) -> int:
+    """Determine the number described in the image based on
+    pixel comparison using an image database between 0-9."""
+    # grab PNG files from numbers image db
+    glob_pattern = os.path.join(NUM_DIR, "*.png")
+    files = list(filter(os.path.isfile, glob.glob(glob_pattern)))
+    
+    # compare image to each number
+    min_diff = None
+    number = str()
+    for file in files:
+        alpha_img = cv2.imread(file)
+        img_width = get_img_width(num_img)
+        img_height = get_img_height(num_img)
+        diff = compare_img_pixels(num_img,
+                                  alpha_img,
+                                  resize_width=int(img_width/4),
+                                  resize_height=int(img_height/4))
+        if min_diff is None or diff < min_diff:
+            min_diff = diff
+            number = os.path.basename(file).replace(".png", "")
+    return int(number)
 
 
 def determine_menu(img_fn: str, del_png: bool = True) -> MenuType:
@@ -298,3 +380,40 @@ def crop_item_name(im_item_name: Image.Image, del_png: bool = True) -> List[cv2.
     logger.debug(f"item name contains {len(letter_imgs)} letters")
 
     return letter_imgs
+
+
+def crop_item_qty(im_item_qty: Image.Image, del_png: bool = True) -> List[cv2.Mat]:
+    """Crop quantity of an item."""
+    # generation II games have maximum 2 chars for item quantity
+    max_chars = 2
+    num_imgs = list()
+    for i in range(max_chars):
+        # percentages used in calcs were determined empirically
+        # valid only for generation II games
+        char_width = im_item_qty.width*(0.475)
+        char_height = im_item_qty.height
+        char_space = im_item_qty.width*(0.05)
+        
+        left = i*(char_width + char_space)
+        right = left + char_width - char_space
+        top = 0
+        bottom = char_height
+
+        # crop image and save to disk
+        im_char = im_item_qty.crop((left, top, right, bottom))
+        cropped_fn = f"item_qty_{str(i)}.png"
+        im_char.save(cropped_fn)
+
+        # load into OpenCV obj
+        img = cv2.imread(cropped_fn)
+
+        # determine if img contains a letter based on how white it is
+        if not is_img_white(img):
+            num_imgs.append(img)
+
+        if del_png:
+            os.remove(cropped_fn)
+    
+    logger.debug(f"item quantity contains {len(num_imgs)} letters")
+
+    return num_imgs

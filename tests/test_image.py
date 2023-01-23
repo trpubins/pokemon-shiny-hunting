@@ -12,10 +12,9 @@ from image import (
     crop_name_in_battle,
     crop_pokemon_in_battle,
     determine_name,
-    determine_pack_item_names,
+    determine_pack_items,
     determine_sprite_type,
 )
-from menu import MenuType
 from pokemon import Pokemon, SpriteType
 from helpers import test_util
 from helpers.opencv_util import compare_img_pixels
@@ -131,21 +130,25 @@ def test_8_determine_menu():
     logger.info("Test 8 - success!")
 
 
-def test_9_determine_pack_item_names():
-    logger.info("Test 9 - determine_pack_item_names")
+def test_9_determine_pack_items():
+    logger.info("Test 9 - determine_pack_items")
     pack_list = {
-        "ball":  ["masterball", "greatball", "pokeball", "ultraball"],
-        "ball1": ["greatball"],
-        "key":   ["squirtbottle", "redscale", "basementkey", "cardkey", "clearbell"],
-        "tm":    ["dynamicpunch", "rollout", "irontail", "dragonbreath", "shadowball"],
-        "tm1":   ["rollout", "shadowball", "mud-slap", "attract", "furycutter"]
+        "ball":  [("masterball", 1), ("greatball", 28), ("pokeball", 81), ("ultraball", 81)],
+        "ball1": [("greatball", 10)],
+        "ball2": [("greatball", 30), ("pokeball", 81)],
+        "ball3": [("greatball", 24), ("pokeball", 75)],
+        "key":   [("squirtbottle", None), ("redscale", None), ("basementkey", None), ("cardkey", None), ("clearbell", None)],
+        "tm":    [("dynamicpunch", 1), ("rollout", 1), ("irontail", 1), ("dragonbreath", 1), ("shadowball", 1)],
+        "tm1":   [("rollout", 1), ("shadowball", 1), ("mud-slap", 1), ("attract", 1), ("furycutter", 1)]
     }
-    for img_name,known_item_names in pack_list.items():
+    for img_name,known_items in pack_list.items():
         input_img_fn = os.path.join(TEST_IMG_DIR, f'items_{img_name}.png')
-        det_item_names = determine_pack_item_names(input_img_fn)
-        logger.debug(f"item names: {det_item_names}")
-        for det_item_name,known_item_name in zip(det_item_names,known_item_names):
+        items = determine_pack_items(input_img_fn, del_png=True)
+        logger.debug(f"items: {items}")
+        for (det_item_name,det_item_qty),(known_item_name,known_item_qty) \
+             in zip(items,known_items):
             assert(det_item_name == known_item_name)
+            assert(det_item_qty == known_item_qty)
     logger.info("Test 9 - success!")
 
 
