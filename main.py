@@ -25,4 +25,5 @@ if __name__ == "__main__":
         if not shiny_found:
             em.reset()
     logger.info(f"found a shiny {pokemon.name}!")
+    logger.info(f"number attempts: {n_attempts}")
     send_notification(pokemon, n_attempts, shiny_found, send=False)
