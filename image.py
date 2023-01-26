@@ -41,7 +41,7 @@ def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
     return sprite_type
 
 
-def determine_pack_items(pack_img_fn: str, del_png: bool = True) -> Any:
+def determine_pack_items(pack_img_fn: str, get_qty: bool = True, del_png: bool = True) -> Any:
     """Determine the items and their associated quantities in the pack."""
     # TODO - update after creating pack module with PackType and
     # other custom classes
@@ -73,7 +73,10 @@ def determine_pack_items(pack_img_fn: str, del_png: bool = True) -> Any:
         item_name = determine_pack_item_name(im_item, del_png=del_png)
         if item_name == "" or item_name == "cancel":
             break
-        item_qty = determine_pack_item_qty(im_item, del_png=del_png)
+        if get_qty:
+            item_qty = determine_pack_item_qty(im_item, del_png=del_png)
+        else:
+            item_qty = None
         item = (item_name, item_qty)
         logger.debug(f"item: {item}")
         items.append(item)

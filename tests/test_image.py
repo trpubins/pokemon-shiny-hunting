@@ -143,7 +143,11 @@ def test_9_determine_pack_items():
     }
     for img_name,known_items in pack_list.items():
         input_img_fn = os.path.join(TEST_IMG_DIR, f'items_{img_name}.png')
-        items = determine_pack_items(input_img_fn, del_png=True)
+        if img_name == "key":
+            # KeyItems do not contain quantities
+            items = determine_pack_items(input_img_fn, get_qty=False, del_png=True)
+        else:
+            items = determine_pack_items(input_img_fn, get_qty=True, del_png=True)
         logger.debug(f"items: {items}")
         for (det_item_name,det_item_qty),(known_item_name,known_item_qty) \
              in zip(items,known_items):
