@@ -116,6 +116,26 @@ class Emulator():
         self.cont.press_select(delay_after_press)
     
     @interact
+    def nav_up(self, presses: int = 1, delay_after_press: float = None):
+        """Navigate UP using the d-pad."""
+        self.cont.move_up(presses, delay_after_press)
+    
+    @interact
+    def nav_down(self, presses: int = 1, delay_after_press: float = None):
+        """Navigate DOWN using the d-pad."""
+        self.cont.move_down(presses, delay_after_press)
+    
+    @interact
+    def nav_left(self, presses: int = 1, delay_after_press: float = None):
+        """Navigate LEFT using the d-pad."""
+        self.cont.move_left(presses, delay_after_press)
+    
+    @interact
+    def nav_right(self, presses: int = 1, delay_after_press: float = None):
+        """Navigate RIGHT using the d-pad."""
+        self.cont.move_right(presses, delay_after_press)
+    
+    @interact
     def reset(self, delay_after_press: float = None):
         """Reset the emulator."""
         self.cont.press_reset_btn(delay_after_press)
