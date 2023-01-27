@@ -1,3 +1,6 @@
+"""Manage user push notifications."""
+
+import logging
 import os
 import smtplib
 import ssl
@@ -10,8 +13,8 @@ from email import encoders
 
 from config import USERNAME, RECEIVER_EMAIL, SENDER_EMAIL, SENDER_EMAIL_PASS
 from pokemon import Pokemon
-from helpers.log import get_logger, mod_fname
-logger = get_logger(mod_fname(__file__))
+from helpers.log import mod_fname
+logger = logging.getLogger(mod_fname(__file__))
 
 
 PORT = 465

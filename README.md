@@ -13,6 +13,7 @@ RETROARCH_CFG_FP: %(RETROARCH_DIR)s/config/retroarch.cfg                # requir
 RETROARCH_SCREENSHOTS_DIR: %(RETROARCH_DIR)s/screenshots                # required
 RETROARCH_APP_FP: /Applications/RetroArch.app                           # required
 POKEMON_GAME: Crystal                                                   # required
+POKEMON_STATIC_ENCOUNTER: Suicune                                       # required
 LOG_LEVEL: DEBUG                                                        # optional, default is INFO
 USERNAME: your-username                                                 # optional, default is User
 RECEIVER_EMAIL: receiver@email.com                                      # optional, default is None
