@@ -31,6 +31,7 @@ class EmulatorController():
         fast_fwd_btn_str = "input_toggle_fast_forward = "
         reset_btn_str = "input_reset = "
         screenshot_btn_str = "input_screenshot = "
+        fullscreen_btn_str = "input_toggle_fullscreen = "
 
         def _clean_line(line: str, sub_str: str) -> str:
             return line.replace(sub_str, "").replace("\"", "").replace("\n", "")
@@ -59,6 +60,8 @@ class EmulatorController():
                     self.reset_btn = _clean_line(line, reset_btn_str)
                 elif screenshot_btn_str in line:
                     self.screenshot_btn = _clean_line(line, screenshot_btn_str)
+                elif fullscreen_btn_str in line:
+                    self.fullscreen_btn = _clean_line(line, fullscreen_btn_str)
                 else:
                     pass
     
@@ -105,6 +108,10 @@ class EmulatorController():
     def press_screenshot_btn(self, delay_after_press: float = None):
         press_key(self.screenshot_btn, delay_after_press=delay_after_press)
         logger.debug(f"pressed screenshot button")
+    
+    def press_fullscreen_btn(self, presses: int = 1, delay_after_press: float = None):
+        press_key(self.fullscreen_btn, presses, delay_after_press=delay_after_press)
+        logger.debug(f"pressed fullscreen button {presses}x")
 
 
 def press_key(key: str,
