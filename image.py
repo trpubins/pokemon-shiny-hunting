@@ -35,7 +35,7 @@ def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
         sprite_type = SpriteType.NORMAL
     else:
         sprite_type = SpriteType.SHINY
-    logger.debug(f"{pokemon} is more similar to {sprite_type}")
+    logger.debug(f"{pokemon.name} is more similar to {sprite_type}")
     return sprite_type
 
 
