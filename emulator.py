@@ -10,7 +10,6 @@ import pyautogui as gui
 
 from config import EMULATOR_NAME, POKEMON_GAME, RETROARCH_APP_FP
 from controller import EmulatorController, press_key
-from pokemon import Pokemon
 from helpers.delay import delay
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
@@ -66,14 +65,6 @@ class Emulator():
             gui.write(EMULATOR_NAME)
             gui.press("Enter")
         delay(3)  # ensure sys is fully open & ready to perform next action
-    
-    def find_shiny(self, pokemon: Pokemon, static_enounter: bool = True) -> bool:
-        """Find a shiny Pokémon."""
-        if static_enounter:
-            # TODO - implement functionality using separate module, encounter.py
-            pass
-        # until implemented, always return True
-        return True
 
     def interact(func):
         """Interact with controls inside the emulator.
