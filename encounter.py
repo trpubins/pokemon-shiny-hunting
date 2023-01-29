@@ -22,7 +22,7 @@ STATIC_ENCOUNTERS = {
     "LAPRAS":    { "max_moves": 100, "explode": False, "sequence": "a" },
     "SNORLAX":   { "max_moves":  60, "explode": False, "sequence": "sdddarrrbbaaa" },
     "SUDOWOODO": { "max_moves":  60, "explode": False, "sequence": "aaaaaa"},
-    "SUICUNE":   { "max_moves":  95, "explode": False, "sequence": "uu", "delay": 4 },
+    "SUICUNE":   { "max_moves":  95, "explode": False, "sequence": "u", "delay": 4 },
     "LUGIA":     { "max_moves":  65, "explode": False, "sequence": "a"},
     "HO-OH":     { "max_moves":  65, "explode": False, "sequence": "a"},
     "CELEBI":    { "max_moves":  50, "explode": False, "sequence": "a"},
@@ -32,7 +32,7 @@ STATIC_ENCOUNTERS = {
 
 def find_shiny(emulator: Emulator,
                pokemon: Pokemon,
-               max_attempts: int = 10,
+               max_attempts: int = 100,
                static_enounter: bool = True) -> Tuple[bool, int]:
     """Find a shiny Pokémon.
     Assumes Pokémon game has been launched in the emulator."""
@@ -48,6 +48,11 @@ def find_shiny(emulator: Emulator,
             sprite = encounter_static(emulator, pokemon)
             n_attempts += 1
             logger.debug(f"attempt number {n_attempts}")
+            
+            # log the number of attempts with INFO for every 5% of progress
+            if max_attempts >= 20 and n_attempts % int(max_attempts/20) == 0:
+                logger.info(f"attempt number {n_attempts}/{max_attempts}")
+
             if sprite == SpriteType.SHINY:
                 shiny_found = True
                 break

@@ -17,14 +17,12 @@ if __name__ == "__main__":
     em.launch_game()
     
     pokemon = Pokemon(POKEMON_STATIC_ENCOUNTER)
-    shiny_found, n_attempts = find_shiny(em, pokemon, static_enounter=True)
+    shiny_found, n_attempts = find_shiny(em, pokemon, max_attempts=8000, static_enounter=True)
     logger.info(f"total number attempts: {n_attempts}")
     
     if shiny_found:
         attachments = [get_latest_screenshot_fn()]
-        send = True
     else:
         attachments = []
-        send = False
     send_notification(pokemon, n_attempts, shiny_found,
-                      attachments=attachments, send=send)
+                      attachments=attachments, send=True)
