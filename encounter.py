@@ -22,7 +22,7 @@ STATIC_ENCOUNTERS = {
     "LAPRAS":    { "max_moves": 100, "explode": False, "sequence": "a" },
     "SNORLAX":   { "max_moves":  60, "explode": False, "sequence": "sdddarrrbbaaa" },
     "SUDOWOODO": { "max_moves":  60, "explode": False, "sequence": "aaaaaa"},
-    "SUICUNE":   { "max_moves":  95, "explode": False, "sequence": "u", "delay": 4 },
+    "SUICUNE":   { "max_moves":  95, "explode": False, "sequence": "u", "delay": 3.5 },
     "LUGIA":     { "max_moves":  65, "explode": False, "sequence": "a"},
     "HO-OH":     { "max_moves":  65, "explode": False, "sequence": "a"},
     "CELEBI":    { "max_moves":  50, "explode": False, "sequence": "a"},
@@ -55,7 +55,6 @@ def find_shiny(emulator: Emulator,
 
             if sprite == SpriteType.SHINY:
                 shiny_found = True
-                break
         if shiny_found:
             logger.info(f"found a shiny {pokemon.name}!")
         else:
@@ -71,11 +70,10 @@ def encounter_static(emulator: Emulator, pokemon: Pokemon) -> SpriteType:
     seconds: int = static_encounter["delay"]
     perform_btn_sequence(emulator, sequence)
     delay(seconds)
-    emulator.press_a(delay_after_press=0.5)
-    logger.debug("battle commenced")
+    logger.debug(f"wild {pokemon.name} appeared")
     emulator.take_screenshot(delay_after_press=0.25)
     screenshot_fn = get_latest_screenshot_fn()
-    crop = crop_pokemon_in_battle(screenshot_fn)
+    crop = crop_pokemon_in_battle(screenshot_fn, del_png=False)
     sprite = determine_sprite_type(pokemon, crop)
     if sprite == SpriteType.NORMAL:
         os.remove(screenshot_fn)
@@ -91,13 +89,13 @@ def perform_btn_sequence(emulator: Emulator, sequence: str):
         elif char == "b":
             emulator.press_b()
         elif char == "u":
-            emulator.nav_up()
+            emulator.move_up()
         elif char == "d":
-            emulator.nav_down()
+            emulator.move_down()
         elif char == "r":
-            emulator.nav_right()
+            emulator.move_right()
         elif char == "l":
-            emulator.nav_left()
+            emulator.move_left()
         elif char == "s":
             emulator.press_start()
         else:

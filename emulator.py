@@ -33,9 +33,9 @@ class Emulator():
         delay(1)
         self.fast_fwd_on()
         delay(1)
-        self.press_b(presses=1, delay_after_press=1.0)
-        self.press_a(presses=1, delay_after_press=0.5)
-        self.press_a(presses=2, delay_after_press=1.0)
+        self.press_b(presses=1, delay_after_press=0.5)
+        self.press_a(presses=1, delay_after_press=0.25)
+        self.press_a(presses=2, delay_after_press=0.5)
 
     def launch_game(self):
         """Launch the game inside the emulator."""
@@ -43,13 +43,13 @@ class Emulator():
 
         logger.debug("navigating to game")
         if platform.system() == "Darwin":
-            press_key("left", delay_after_press=0.5)
-            press_key("down", presses=2, delay_after_press=0.5)
-            press_key("right", delay_after_press=0.5)
+            press_key("left", delay_after_press=0.1)
+            press_key("down", presses=2, delay_after_press=0.1)
+            press_key("right", delay_after_press=0.1)
         elif platform.system() == "Windows":
             press_key("right", presses=3, in_game=False)
         press_key("Enter", in_game=False)
-        delay(0.5)
+        delay(0.25)
 
         logger.info(f"run game: Pokémon {POKEMON_GAME}")
         press_key("Enter", in_game=False)
@@ -87,52 +87,72 @@ class Emulator():
         return wrapper_func
     
     @interact
+    def press_a_precise(self, presses: int = 1, delay_after_press: float = None):
+        """Press the A button with precision (guarantees exact number of presses)."""
+        self.cont.press_a(presses, delay_after_press)
+    
     def press_a(self, presses: int = 1, delay_after_press: float = None):
         """Press the A button."""
         self.cont.press_a(presses, delay_after_press)
     
     @interact
+    def press_b_precise(self, presses: int = 1, delay_after_press: float = None):
+        """Press the B button with precision (guarantees exact number of presses)."""
+        self.cont.press_b(presses, delay_after_press)
+    
     def press_b(self, presses: int = 1, delay_after_press: float = None):
         """Press the B button."""
         self.cont.press_b(presses, delay_after_press)
     
-    @interact
     def press_start(self, delay_after_press: float = None):
         """Press the START button."""
         self.cont.press_start(delay_after_press)
     
-    @interact
     def press_select(self, delay_after_press: float = None):
         """Press the SELECT button."""
         self.cont.press_select(delay_after_press)
     
     @interact
-    def nav_up(self, presses: int = 1, delay_after_press: float = None):
-        """Navigate UP using the d-pad."""
+    def move_up_precise(self, presses: int = 1, delay_after_press: float = None):
+        """Move UP using the d-pad with precision (guarantees exact number of presses)."""
+        self.cont.move_up(presses, delay_after_press)
+    
+    def move_up(self, presses: int = 1, delay_after_press: float = None):
+        """Move UP using the d-pad."""
         self.cont.move_up(presses, delay_after_press)
     
     @interact
-    def nav_down(self, presses: int = 1, delay_after_press: float = None):
-        """Navigate DOWN using the d-pad."""
+    def move_down_precise(self, presses: int = 1, delay_after_press: float = None):
+        """Move DOWN using the d-pad with precision (guarantees exact number of presses)."""
+        self.cont.move_down(presses, delay_after_press)
+    
+    def move_down(self, presses: int = 1, delay_after_press: float = None):
+        """Move DOWN using the d-pad."""
         self.cont.move_down(presses, delay_after_press)
     
     @interact
-    def nav_left(self, presses: int = 1, delay_after_press: float = None):
-        """Navigate LEFT using the d-pad."""
+    def move_left_precise(self, presses: int = 1, delay_after_press: float = None):
+        """Move LEFT using the d-pad with precision (guarantees exact number of presses)."""
+        self.cont.move_left(presses, delay_after_press)
+    
+    def move_left(self, presses: int = 1, delay_after_press: float = None):
+        """Move LEFT using the d-pad."""
         self.cont.move_left(presses, delay_after_press)
     
     @interact
-    def nav_right(self, presses: int = 1, delay_after_press: float = None):
-        """Navigate RIGHT using the d-pad."""
+    def move_right_precise(self, presses: int = 1, delay_after_press: float = None):
+        """Move RIGHT using the d-pad with precision (guarantees exact number of presses)."""
         self.cont.move_right(presses, delay_after_press)
     
-    @interact
+    def move_right(self, presses: int = 1, delay_after_press: float = None):
+        """Move RIGHT using the d-pad."""
+        self.cont.move_right(presses, delay_after_press)
+    
     def reset(self, delay_after_press: float = None):
         """Reset the emulator."""
         self.cont.press_reset_btn(delay_after_press)
         logger.debug("emulator reset")
     
-    @interact
     def take_screenshot(self, delay_after_press: float = None):
         """Take a screenshot in the emulator."""
         self.cont.press_screenshot_btn(delay_after_press)
