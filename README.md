@@ -21,6 +21,16 @@ SENDER_EMAIL: sender@email.com                                          # option
 SENDER_EMAIL_PASS: sEndeR-EmaiL-pa22                                    # optional, default is None
 ```
 
+## RetroArch Config
+
+In order to successfully run the program, ensure the following RetroArch settings are as follows:
+
+- Video > GPU Screenshot > OFF
+- On-Screen Display > On-Screen Notifications > Notification Visibility > Screenshot Notification Persistence > Instant
+- Input > Polling Behavior > Normal
+
+Lastly, ensure that all controls mapped to the keyboard work as expected when the game is running in the emulator. See Input > Port 1 Controls in RetroArch settings.
+
 ## Usage
 
 ***Important❗***: ALL scripts must be executed from the project root directory.
