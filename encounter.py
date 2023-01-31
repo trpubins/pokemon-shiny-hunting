@@ -17,15 +17,15 @@ logger = logging.getLogger(mod_fname(__file__))
 
 
 STATIC_ENCOUNTERS = {
-    "ELECTRODE": { "max_moves":  70, "explode":  True, "sequence": "a" },
+    "ELECTRODE": { "max_moves":  70, "explode":  True, "sequence": "a", "delay": 2 },
     "GYARADOS":  { "max_moves":  85, "explode": False, "sequence": "a", "delay": 2 },
-    "LAPRAS":    { "max_moves": 100, "explode": False, "sequence": "a" },
+    "LAPRAS":    { "max_moves": 100, "explode": False, "sequence": "a", "delay": 2 },
     "SNORLAX":   { "max_moves":  60, "explode": False, "sequence": "sdddarrrbbaaa" },
     "SUDOWOODO": { "max_moves":  60, "explode": False, "sequence": "aaaaaa"},
-    "SUICUNE":   { "max_moves":  95, "explode": False, "sequence": "u", "delay": 3.5 },
-    "LUGIA":     { "max_moves":  65, "explode": False, "sequence": "a"},
-    "HO-OH":     { "max_moves":  65, "explode": False, "sequence": "a"},
-    "CELEBI":    { "max_moves":  50, "explode": False, "sequence": "a"},
+    "SUICUNE":   { "max_moves":  95, "explode": False, "sequence": "u", "delay": 3.75 },
+    "LUGIA":     { "max_moves":  65, "explode": False, "sequence": "a", "delay": 2},
+    "HO-OH":     { "max_moves":  65, "explode": False, "sequence": "a", "delay": 2},
+    "CELEBI":    { "max_moves":  50, "explode": False, "sequence": "a", "delay": 2},
     "ODD EGG":   { "sequence": "aaaaa"}
 }
 
