@@ -138,3 +138,4 @@ dmypy.json
 # Pokemon project files
 config.ini
 **/*.png
+tests/test_files/Savestates
