@@ -31,6 +31,7 @@ class EmulatorController():
         fast_fwd_btn_str = "input_toggle_fast_forward = "
         reset_btn_str = "input_reset = "
         screenshot_btn_str = "input_screenshot = "
+        menu_toggle_btn_str = "input_menu_toggle = "
 
         def _clean_line(line: str, sub_str: str) -> str:
             return line.replace(sub_str, "").replace("\"", "").replace("\n", "")
@@ -59,6 +60,8 @@ class EmulatorController():
                     self.reset_btn = _clean_line(line, reset_btn_str)
                 elif screenshot_btn_str in line:
                     self.screenshot_btn = _clean_line(line, screenshot_btn_str)
+                elif menu_toggle_btn_str in line:
+                    self.menu_toggle_btn = _clean_line(line, menu_toggle_btn_str)
                 else:
                     pass
     
@@ -106,6 +109,17 @@ class EmulatorController():
         press_key(self.screenshot_btn, delay_after_press=delay_after_press)
         logger.debug(f"pressed screenshot button")
 
+    def open_menu(self, delay_after_press: float = None):
+        press_key(self.menu_toggle_btn, delay_after_press=delay_after_press)
+        logger.debug(f"opened menu")
+
+    def back_menu(self, delay_after_press: float = None):
+        if platform.system() == "Darwin":
+            gui.keyDown("delete")
+            gui.keyUp("delete")
+        elif platform.system() == "Windows":
+            inp.press("backspace")
+        
 
 def press_key(key: str,
               presses: int = 1,
