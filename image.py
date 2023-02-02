@@ -29,8 +29,8 @@ def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
     img = cv2.resize(img, (get_img_width(normal_img), get_img_height(normal_img)))
 
     # use color differences to determine sprite type
-    diff_normal = compare_img_color(img, normal_img)
-    diff_shiny = compare_img_color(img, shiny_img)
+    diff_normal = compare_img_color(img, normal_img, offset_shading=False)
+    diff_shiny = compare_img_color(img, shiny_img, offset_shading=False)
     if diff_normal < diff_shiny:
         sprite_type = SpriteType.NORMAL
     else:
