@@ -8,7 +8,7 @@ from typing import List
 import cv2
 from PIL import Image
 
-from config import RETROARCH_SCREENSHOTS_DIR
+from config import PROJ_ROOT_PATH, RETROARCH_SCREENSHOTS_DIR
 from pokemon import Pokemon, SpriteType
 from helpers.opencv_util import (
     IMG_SIZE_VERY_SMALL,
@@ -19,7 +19,7 @@ from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
-LETTERS_DIR = os.path.join("images", "letters")
+LETTERS_DIR = os.path.join(PROJ_ROOT_PATH, "images", "letters")
 
 
 def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:

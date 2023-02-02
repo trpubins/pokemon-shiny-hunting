@@ -6,6 +6,7 @@ import os
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
+PROJ_ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 EMULATOR_NAME = "RetroArch"
 CFG_FN = "config.ini"
 SECTION = "DEFAULT"
