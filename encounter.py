@@ -17,15 +17,15 @@ logger = logging.getLogger(mod_fname(__file__))
 
 
 STATIC_ENCOUNTERS = {
-    "ELECTRODE": { "max_moves":  70, "explode":  True, "sequence": "a", "delay": 2 },
-    "GYARADOS":  { "max_moves":  85, "explode": False, "sequence": "a", "delay": 2 },
-    "LAPRAS":    { "max_moves": 100, "explode": False, "sequence": "a", "delay": 2 },
-    "SNORLAX":   { "max_moves":  60, "explode": False, "sequence": "sdddarrrbbaaa" },
-    "SUDOWOODO": { "max_moves":  60, "explode": False, "sequence": "aaaaaa"},
-    "SUICUNE":   { "max_moves":  95, "explode": False, "sequence": "u", "delay": 3.75 },
-    "LUGIA":     { "max_moves":  65, "explode": False, "sequence": "a", "delay": 2},
-    "HO-OH":     { "max_moves":  65, "explode": False, "sequence": "a", "delay": 2},
-    "CELEBI":    { "max_moves":  50, "explode": False, "sequence": "a", "delay": 2},
+    "ELECTRODE": { "max_moves":  70, "explode":  True, "sequence":              "a", "delay": 1.5  },
+    "GYARADOS":  { "max_moves":  85, "explode": False, "sequence":              "a", "delay": 2    },
+    "LAPRAS":    { "max_moves": 100, "explode": False, "sequence":              "a", "delay": 2    },
+    "SNORLAX":   { "max_moves":  60, "explode": False, "sequence": "sdddarrrbbaaaa", "delay": 1.5  },
+    "SUDOWOODO": { "max_moves":  60, "explode": False, "sequence":         "aaaaaa", "delay": 1.5  },
+    "SUICUNE":   { "max_moves":  95, "explode": False, "sequence":              "u", "delay": 3.75 },
+    "HO-OH":     { "max_moves":  65, "explode": False, "sequence":              "a", "delay": 2    },
+    "CELEBI":    { "max_moves":  50, "explode": False, "sequence":              "a", "delay": 2    },
+    "LUGIA":     { "max_moves":  65, "explode": False, "sequence":              "a", "delay": 2    },
     "ODD EGG":   { "sequence": "aaaaa"}
 }
 
