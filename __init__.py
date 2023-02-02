@@ -5,6 +5,7 @@ from emulator import logger as emulator_logger
 from image import logger as image_logger
 from main import logger as main_logger
 from notifications import logger as notification_logger
+from trader import logger as trader_logger
 from helpers.delay import logger as helpers_delay_logger
 from helpers.log import get_logger
 
@@ -15,4 +16,5 @@ emulator_logger = get_logger(emulator_logger.name, config.LOG_LEVEL)
 image_logger = get_logger(image_logger.name, config.LOG_LEVEL)
 main_logger = get_logger(main_logger.name, config.LOG_LEVEL)
 notification_logger = get_logger(notification_logger.name, config.LOG_LEVEL)
+trader_logger = get_logger(trader_logger.name, config.LOG_LEVEL)
 helpers_delay_logger = get_logger(helpers_delay_logger.name, config.LOG_LEVEL)
