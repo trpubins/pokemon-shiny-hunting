@@ -65,6 +65,11 @@ class Emulator():
             gui.write(EMULATOR_NAME)
             gui.press("Enter")
         delay(3)  # ensure sys is fully open & ready to perform next action
+    
+    def quit(self):
+        """Quit the emulator application."""
+        logger.info(f"quitting {EMULATOR_NAME} emulator")
+        self.cont.press_exit_btn(presses=2, delay_after_press=0.25)
 
     def interact(func):
         """Interact with controls inside the emulator.
@@ -158,6 +163,16 @@ class Emulator():
         self.cont.press_screenshot_btn(delay_after_press)
         logger.debug("screenshot taken")
     
+    def save_state(self, delay_after_press: float = None):
+        """Save the emulator state."""
+        self.cont.press_save_state_btn(delay_after_press)
+        logger.info("saved emulator state")
+    
+    def load_state(self, delay_after_press: float = None):
+        """Load the emulator state."""
+        self.cont.press_load_state_btn(delay_after_press)
+        logger.info("loaded emulator state")
+    
     def fast_fwd_on(self):
         """Turn fast forwad ON."""
         if self.state.is_fast_fwd_off():
@@ -171,12 +186,27 @@ class Emulator():
             self.cont.toggle_fast_fwd()
             self.state.fast_fwd_off()
         logger.debug("fast forward is OFF")
+    
+    def pause_on(self):
+        """Turn pause ON."""
+        if self.state.is_pause_off():
+            self.cont.toggle_pause()
+            self.state.pause_on()
+        logger.debug("pause is ON")
+    
+    def pause_off(self):
+        """Turn pause OFF."""
+        if self.state.is_pause_on():
+            self.cont.toggle_pause()
+            self.state.pause_off()
+        logger.debug("pause is OFF")
 
 
 class EmulatorState():
     """Track state inside an emulator."""
     def __init__(self):
         self.fast_fwd = ToggleState.OFF
+        self.pause = ToggleState.OFF
         self.game = POKEMON_GAME
     
     def is_fast_fwd_on(self) -> bool:
@@ -185,11 +215,23 @@ class EmulatorState():
     def is_fast_fwd_off(self) -> bool:
         return self.fast_fwd == ToggleState.OFF
     
+    def is_pause_on(self) -> bool:
+        return self.pause == ToggleState.ON
+    
+    def is_pause_off(self) -> bool:
+        return self.pause == ToggleState.OFF
+    
     def fast_fwd_on(self):
         self.fast_fwd = ToggleState.ON
     
     def fast_fwd_off(self):
         self.fast_fwd = ToggleState.OFF
+    
+    def pause_on(self):
+        self.pause = ToggleState.ON
+    
+    def pause_off(self):
+        self.pause = ToggleState.OFF
 
 
 if __name__ == "__main__":

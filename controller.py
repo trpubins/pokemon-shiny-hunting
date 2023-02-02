@@ -29,9 +29,13 @@ class EmulatorController():
         left_btn_str = f"{keybind}left = "
         right_btn_str = f"{keybind}right = "
         fast_fwd_btn_str = "input_toggle_fast_forward = "
+        pause_btn_str = "input_pause_toggle = "
         reset_btn_str = "input_reset = "
         screenshot_btn_str = "input_screenshot = "
         fullscreen_btn_str = "input_toggle_fullscreen = "
+        save_state_btn_str = "input_save_state = "
+        load_state_btn_str = "input_load_state = "
+        exit_btn_str = "input_exit_emulator = "
 
         def _clean_line(line: str, sub_str: str) -> str:
             return line.replace(sub_str, "").replace("\"", "").replace("\n", "")
@@ -56,12 +60,20 @@ class EmulatorController():
                     self.right_btn = _clean_line(line, right_btn_str)
                 elif fast_fwd_btn_str in line:
                     self.fast_fwd_btn = _clean_line(line, fast_fwd_btn_str)
+                elif pause_btn_str in line:
+                    self.pause_btn = _clean_line(line, pause_btn_str)
                 elif reset_btn_str in line:
                     self.reset_btn = _clean_line(line, reset_btn_str)
                 elif screenshot_btn_str in line:
                     self.screenshot_btn = _clean_line(line, screenshot_btn_str)
                 elif fullscreen_btn_str in line:
                     self.fullscreen_btn = _clean_line(line, fullscreen_btn_str)
+                elif save_state_btn_str in line:
+                    self.save_state_btn = _clean_line(line, save_state_btn_str)
+                elif load_state_btn_str in line:
+                    self.load_state_btn = _clean_line(line, load_state_btn_str)
+                elif exit_btn_str in line:
+                    self.exit_btn = _clean_line(line, exit_btn_str)
                 else:
                     pass
     
@@ -100,6 +112,10 @@ class EmulatorController():
     def toggle_fast_fwd(self, delay_after_press: float = None):
         press_key(self.fast_fwd_btn, delay_after_press=delay_after_press)
         logger.debug(f"toggled fast forward")
+    
+    def toggle_pause(self, delay_after_press: float = None):
+        press_key(self.pause_btn, delay_after_press=delay_after_press)
+        logger.debug(f"toggled pause")
 
     def press_reset_btn(self, delay_after_press: float = None):
         press_key(self.reset_btn, delay_after_press=delay_after_press)
@@ -112,6 +128,18 @@ class EmulatorController():
     def press_fullscreen_btn(self, presses: int = 1, delay_after_press: float = None):
         press_key(self.fullscreen_btn, presses, delay_after_press=delay_after_press)
         logger.debug(f"pressed fullscreen button {presses}x")
+    
+    def press_save_state_btn(self, delay_after_press: float = None):
+        press_key(self.save_state_btn, delay_after_press=delay_after_press)
+        logger.debug(f"pressed save state button")
+    
+    def press_load_state_btn(self, delay_after_press: float = None):
+        press_key(self.load_state_btn, delay_after_press=delay_after_press)
+        logger.debug(f"pressed load state button")
+    
+    def press_exit_btn(self, presses: int = 1, delay_after_press: float = None):
+        press_key(self.exit_btn, presses, delay_after_press=delay_after_press)
+        logger.debug(f"pressed exit button {presses}x")
 
 
 def press_key(key: str,
