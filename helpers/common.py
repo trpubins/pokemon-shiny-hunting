@@ -57,9 +57,11 @@ def set_disp_brightness(val: float = None):
         logger.warning(f"brightness value cannot be greater than 1. got {val}")
         val = 1
     
-    if is_tool("brightness"):
+    if Platform.is_mac() and is_tool("brightness"):
         logger.debug(f"setting display brightness to {val}")
         os.system(f"brightness {val}")
+    elif Platform.is_windows():
+        logger.debug("no display brightness utility identified for Windows at this time")
 
 
 def is_tool(name: str) -> bool:

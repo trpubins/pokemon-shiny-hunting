@@ -32,13 +32,7 @@ In order to successfully run the program, ensure the following RetroArch setting
 
 Lastly, ensure that all controls mapped to the keyboard work as expected when the game is running in the emulator. See Input > Port 1 Controls in RetroArch settings.
 
-## Usage
-
-***Important❗***: ALL scripts must be executed from the project root directory.
-
-```bash
-cd <path-to>/pokemon-shiny-hunting
-```
+## Dependencies
 
 ### Python environment
 
@@ -46,6 +40,25 @@ First ensure your python environment is up to date.
 
 ```bash
 pip install -r requirements.txt
+```
+
+### Other packages
+
+If user is running on Mac and wants the application to set their display's brightness, they are required to install a CLI [display brightness utility](https://github.com/nriley/brightness) for macOS.
+It can be easily installed with Homebrew:
+
+```bash
+brew install brightness
+```
+
+Note: the `brightness` utility is optional. Application will function fine without utilizing the display brightness feature.
+
+## Usage
+
+***Important❗***: ALL scripts must be executed from the project root directory.
+
+```bash
+cd <path-to>/pokemon-shiny-hunting
 ```
 
 ### main
