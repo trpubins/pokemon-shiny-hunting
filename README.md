@@ -8,17 +8,18 @@ Inside the project root directory, create a file named `config.ini`. Below is an
 
 ```ini
 [DEFAULT]
-RETROARCH_DIR: /Users/<UserName>/Library/Application Support/RetroArch  # required
-RETROARCH_CFG_FP: %(RETROARCH_DIR)s/config/retroarch.cfg                # required
-RETROARCH_SCREENSHOTS_DIR: %(RETROARCH_DIR)s/screenshots                # required
-RETROARCH_APP_FP: /Applications/RetroArch.app                           # required
-POKEMON_GAME: Crystal                                                   # required
-POKEMON_STATIC_ENCOUNTER: Suicune                                       # required
-LOG_LEVEL: DEBUG                                                        # optional, default is INFO
-USERNAME: your-username                                                 # optional, default is User
-RECEIVER_EMAIL: receiver@email.com                                      # optional, default is None
-SENDER_EMAIL: sender@email.com                                          # optional, default is None
-SENDER_EMAIL_PASS: sEndeR-EmaiL-pa22                                    # optional, default is None
+RETROARCH_DIR: /Users/<UserName>/Library/Application Support/RetroArch  # required (str)
+RETROARCH_CFG_FP: %(RETROARCH_DIR)s/config/retroarch.cfg                # required (str)
+RETROARCH_SCREENSHOTS_DIR: %(RETROARCH_DIR)s/screenshots                # required (str)
+RETROARCH_APP_FP: /Applications/RetroArch.app                           # required (str)
+POKEMON_GAME: Crystal                                                   # required (str)
+POKEMON_STATIC_ENCOUNTER: Suicune                                       # required (str)
+LOG_LEVEL: DEBUG                                                        # optional (str), default is INFO
+USERNAME: your-username                                                 # optional (str), default is User
+RECEIVER_EMAIL: receiver@email.com                                      # optional (str), default is None
+SENDER_EMAIL: sender@email.com                                          # optional (str), default is None
+SENDER_EMAIL_PASS: sEndeR-EmaiL-pa22                                    # optional (str), default is None
+DISP_BRIGHTNESS: 0.5                                                    # optional (float between [0,1]), default is None
 ```
 
 ## RetroArch Config

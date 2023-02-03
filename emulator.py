@@ -8,9 +8,9 @@ import platform
 
 import pyautogui as gui
 
-from config import EMULATOR_NAME, POKEMON_GAME, RETROARCH_APP_FP
+from config import EMULATOR_NAME, POKEMON_GAME, RETROARCH_APP_FP, DISP_BRIGHTNESS
 from controller import EmulatorController, press_key
-from helpers.common import delay
+from helpers.common import delay, set_disp_brightness
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
@@ -40,7 +40,7 @@ class Emulator():
     def launch_game(self):
         """Launch the game inside the emulator."""
         self.launch()
-        os.system("brightness 0")
+        set_disp_brightness(DISP_BRIGHTNESS)
 
         logger.debug("navigating to game")
         if platform.system() == "Darwin":
@@ -71,6 +71,7 @@ class Emulator():
         """Quit the emulator application."""
         logger.info(f"quitting {EMULATOR_NAME} emulator")
         self.cont.press_exit_btn(presses=2, delay_after_press=0.25)
+        set_disp_brightness(DISP_BRIGHTNESS)
 
     def interact(func):
         """Interact with controls inside the emulator.

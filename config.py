@@ -11,7 +11,7 @@ EMULATOR_NAME = "RetroArch"
 CFG_FN = "config.ini"
 SECTION = "DEFAULT"
 
-logger.info(f"parsing: {CFG_FN}")
+logger.debug(f"parsing: {CFG_FN}")
 if not os.path.isfile(CFG_FN):
     raise FileNotFoundError(f"Unable to locate {CFG_FN}. Create {CFG_FN} according to https://docs.python.org/3.9/library/configparser.html#quick-start with {SECTION} section.")
 
@@ -40,6 +40,10 @@ except NoOptionError:
     RECEIVER_EMAIL = None
     SENDER_EMAIL = None
     SENDER_EMAIL_PASS = None
+try:
+    DISP_BRIGHTNESS = float(config.get(SECTION, "DISP_BRIGHTNESS"))
+except NoOptionError:
+    DISP_BRIGHTNESS = None 
 
 
 logger.info(f"RETROARCH_DIR: {RETROARCH_DIR}")
@@ -53,3 +57,4 @@ logger.info(f"USERNAME: {USERNAME}")
 logger.info(f"RECEIVER_EMAIL: {RECEIVER_EMAIL}")
 logger.info(f"SENDER_EMAIL: {SENDER_EMAIL}")
 logger.info(f"SENDER_EMAIL_PASS: {SENDER_EMAIL_PASS}")
+logger.info(f"DISP_BRIGHTNESS: {DISP_BRIGHTNESS}")
