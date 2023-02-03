@@ -8,7 +8,7 @@ if platform.system() == "Windows":
     import pydirectinput as inp   #pydirect input is perfect for controlling common button presses with the emulator development
 
 from config import RETROARCH_CFG_FP
-from helpers.delay import delay
+from helpers.common import delay
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 

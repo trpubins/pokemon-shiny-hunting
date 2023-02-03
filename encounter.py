@@ -11,7 +11,7 @@ from image import (
     get_latest_screenshot_fn
 )
 from pokemon import Pokemon, SpriteType
-from helpers.delay import delay
+from helpers.common import delay
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 

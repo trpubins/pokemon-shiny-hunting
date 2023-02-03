@@ -1,4 +1,4 @@
-"""Delay program execution."""
+"""Common utility module."""
 
 import logging
 import platform
