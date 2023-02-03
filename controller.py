@@ -1,16 +1,18 @@
 """Programmatically control I/O devices."""
 
 import logging
-import platform
 
-import pyautogui as gui           #pyautogui is great for hotkeys and utilizing special characters on the system level, but it cannot register output in the applications
-if platform.system() == "Windows":
-    import pydirectinput as inp   #pydirect input is perfect for controlling common button presses with the emulator development
+#pyautogui is for hotkeys and inputs at the system level, cannot register inputs inside the emulator core
+import pyautogui as gui
 
 from config import RETROARCH_CFG_FP
-from helpers.common import delay
+from helpers.common import Platform, delay
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
+
+if Platform.is_windows():
+    #pydirectinput is for controlling common button presses within the emulator
+    import pydirectinput as inp
 
 
 class EmulatorController():
@@ -148,10 +150,10 @@ def press_key(key: str,
               in_game: bool = True):
     """Virtually press the specified key."""
     for i in range(presses):
-        if platform.system() == "Darwin":
+        if Platform.is_mac():
             gui.keyDown(key)
             gui.keyUp(key)
-        elif platform.system() == "Windows":
+        elif Platform.is_windows():
             if in_game:
                 inp.typewrite(key)
             else:

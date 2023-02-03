@@ -3,16 +3,16 @@
 from contextlib import contextmanager
 import logging
 import os
-import platform
 import shutil
 from tempfile import gettempdir, mkdtemp
 from typing import Iterator
 
+from helpers.common import Platform
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
-if platform.system() == "Darwin":
+if Platform.is_mac():
     os.environ["TMPDIR"] = "/tmp"
 
 

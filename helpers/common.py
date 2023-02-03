@@ -10,9 +10,31 @@ from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
+class Platform:
+    """Clean way to identify platform OS."""
+    MAC: str = "Darwin"
+    WINDOWS: str = "Windows"
+    LINUX: str = "Linux"
+
+    @staticmethod
+    def is_mac() -> bool:
+        """True if running on Macintosh; otherwise False."""
+        return platform.system() == Platform.MAC
+    
+    @staticmethod
+    def is_windows() -> bool:
+        """True if running on Windows; otherwise False."""
+        return platform.system() == Platform.WINDOWS
+    
+    @staticmethod
+    def is_linux() -> bool:
+        """True if running on Linux; otherwise False."""
+        return platform.system() == Platform.LINUX
+
+
 def delay(sec: float, slow_mac_factor: float = 1):
     """Delay program execution by some number of seconds."""
-    if platform.system() == "Darwin":
+    if Platform.is_mac():
         mac_ver,_,_ = platform.mac_ver()
         major_ver = int(mac_ver.split(".")[0])
         if major_ver < 11:

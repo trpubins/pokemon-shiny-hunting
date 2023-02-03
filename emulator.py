@@ -4,13 +4,12 @@ from enum import Enum
 from inspect import signature
 import logging
 import os
-import platform
 
 import pyautogui as gui
 
 from config import EMULATOR_NAME, POKEMON_GAME, RETROARCH_APP_FP, DISP_BRIGHTNESS
 from controller import EmulatorController, press_key
-from helpers.common import delay, set_disp_brightness
+from helpers.common import Platform, delay, set_disp_brightness
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
@@ -43,11 +42,11 @@ class Emulator():
         set_disp_brightness(DISP_BRIGHTNESS)
 
         logger.debug("navigating to game")
-        if platform.system() == "Darwin":
+        if Platform.is_mac():
             press_key("left", delay_after_press=0.1)
             press_key("down", presses=2, delay_after_press=0.1)
             press_key("right", delay_after_press=0.1)
-        elif platform.system() == "Windows":
+        elif Platform.is_windows():
             press_key("right", presses=3, in_game=False)
         press_key("Enter", in_game=False)
         delay(0.25)
@@ -58,10 +57,10 @@ class Emulator():
     def launch(self):
         """Launch the emulator application."""
         logger.info(f"launching {EMULATOR_NAME} emulator")
-        if platform.system() == "Darwin":
+        if Platform.is_mac():
             logger.debug(f"opening {RETROARCH_APP_FP}")
             os.system(f"open {RETROARCH_APP_FP}")
-        elif platform.system() == "Windows":
+        elif Platform.is_windows():
             gui.hotkey("ctrl", "esc")
             gui.write(EMULATOR_NAME)
             gui.press("Enter")
