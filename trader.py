@@ -14,7 +14,7 @@ logger = logging.getLogger(mod_fname(__file__))
 
 
 class Trader():
-
+    '''Trades shinies from sacrifice (trainer_1) to storage (trainer_2) games.'''
     def __init__(self) -> None:
         self.em1 = Emulator()
         self.cont = self.em1.cont
@@ -22,6 +22,7 @@ class Trader():
         
         
     def press_btn(self, btn: str, presses: int = 1, delay_after_press: float = 0):
+        '''Controls both emulators with their respective keystrokes (player 1 and 2 inputs must have different keybinds).'''
         for i in range(0, presses):
             if btn == 'a':
                 self.cont.press_a(presses=1)
