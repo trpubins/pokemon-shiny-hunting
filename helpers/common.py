@@ -37,7 +37,7 @@ def delay(sec: float, slow_mac_factor: float = 1):
     if Platform.is_mac():
         mac_ver,_,_ = platform.mac_ver()
         major_ver = int(mac_ver.split(".")[0])
-        if major_ver < 11:
+        if major_ver < 13:
             # add more delay for older macOS
             sec = slow_mac_factor*sec
     logger.debug(f"delay {sec}s")
