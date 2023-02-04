@@ -32,9 +32,14 @@ class Emulator():
         delay(1)
         self.fast_fwd_on()
         delay(1, slow_mac_factor=1.5)
-        self.press_b(presses=1, delay_after_press=0.5)
-        self.press_a(presses=1, delay_after_press=0.25)
-        self.press_a(presses=2, delay_after_press=0.5)
+        if Platform.is_mac():
+            self.press_b(presses=1, delay_after_press=0.5)
+            self.press_a(presses=1, delay_after_press=0.25)
+            self.press_a(presses=2, delay_after_press=0.5)
+        elif Platform.is_windows():
+            self.press_b_precise(presses=1, delay_after_press=0.5)
+            self.press_a_precise(presses=1, delay_after_press=0.25)
+            self.press_a_precise(presses=2, delay_after_press=0.5)
 
     def launch_game(self):
         """Launch the game inside the emulator."""
