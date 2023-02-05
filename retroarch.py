@@ -1,5 +1,8 @@
 """Manages the RetroArch configuration."""
 
+import os
+
+
 class RetroArchConfig():
     """Store key RetroArch settings in memory."""
     def __init__(self, config_fp: str):
@@ -15,13 +18,13 @@ class RetroArchConfig():
 
         # buttons
         self.fast_fwd_btn = config["input_toggle_fast_forward"]
-        self.pause_btn_str = config["input_pause_toggle"]
-        self.reset_btn_str = config["input_reset"]
-        self.screenshot_btn_str = config["input_screenshot"]
-        self.fullscreen_btn_str = config["input_toggle_fullscreen"]
-        self.save_state_btn_str = config["input_save_state"]
-        self.load_state_btn_str = config["input_load_state"]
-        self.exit_btn_str = config["input_exit_emulator"]
+        self.pause_btn = config["input_pause_toggle"]
+        self.reset_btn = config["input_reset"]
+        self.screenshot_btn = config["input_screenshot"]
+        self.fullscreen_btn = config["input_toggle_fullscreen"]
+        self.save_state_btn = config["input_save_state"]
+        self.load_state_btn = config["input_load_state"]
+        self.exit_btn = config["input_exit_emulator"]
         self.input_player_1 = RetroArchInputPlayerConfig(config["input_player1_"])
         self.input_player_2 = RetroArchInputPlayerConfig(config["input_player2_"])
 
@@ -41,6 +44,9 @@ class RetroArchInputPlayerConfig():
 
 def _parse_retroarch_config(config_fp: str) -> dict:
     # Note: RetroArch config file has keys sorted alphabetically
+
+    if not os.path.isfile(config_fp):
+        raise FileNotFoundError(f"Unable to locate {config_fp}.")
 
     # parse the retroarch config file
     cheat_db_path = "cheat_database_path "
@@ -102,6 +108,7 @@ def _parse_retroarch_config(config_fp: str) -> dict:
                 if keybind not in config:
                     config[keybind] = dict()
                 
+                # add trailing space to ensure correct button-key mapping
                 a_btn_str = f"{keybind}a "
                 b_btn_str = f"{keybind}b "
                 start_btn_str = f"{keybind}start "
