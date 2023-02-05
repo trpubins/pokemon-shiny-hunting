@@ -100,7 +100,7 @@ def perform_btn_sequence(emulator: Emulator, sequence: str):
             emulator.press_start()
         else:
             raise RuntimeError(f"Unknown character in sequence: {char}. No button selected.")
-        delay(0.25)
+        delay(0.5)
 
 
 if __name__ == "__main__":
