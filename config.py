@@ -3,6 +3,7 @@
 from configparser import ConfigParser, NoOptionError
 import os
 
+from retroarch import RetroArchConfig
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
@@ -21,7 +22,8 @@ config.read(CFG_FN)
 RETROARCH_APP_FP = config.get(SECTION, "RETROARCH_APP_FP")
 RETROARCH_DIR = config.get(SECTION, "RETROARCH_DIR")
 RETROARCH_CFG_FP = config.get(SECTION, "RETROARCH_CFG_FP")
-RETROARCH_SCREENSHOTS_DIR = config.get(SECTION, "RETROARCH_SCREENSHOTS_DIR")
+RETROARCH_CFG = RetroArchConfig(RETROARCH_CFG_FP)
+
 POKEMON_GAME = config.get(SECTION, "POKEMON_GAME")
 POKEMON_STATIC_ENCOUNTER = config.get(SECTION, "POKEMON_STATIC_ENCOUNTER")
 try:
@@ -48,7 +50,6 @@ except NoOptionError:
 
 logger.info(f"RETROARCH_DIR: {RETROARCH_DIR}")
 logger.info(f"RETROARCH_CFG_FP: {RETROARCH_CFG_FP}")
-logger.info(f"RETROARCH_SCREENSHOTS_DIR: {RETROARCH_SCREENSHOTS_DIR}")
 logger.info(f"RETROARCH_APP_FP: {RETROARCH_APP_FP}")
 logger.info(f"POKEMON_GAME: {POKEMON_GAME}")
 logger.info(f"POKEMON_STATIC_ENCOUNTER: {POKEMON_STATIC_ENCOUNTER}")
