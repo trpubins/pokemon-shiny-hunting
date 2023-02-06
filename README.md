@@ -8,9 +8,8 @@ Inside the project root directory, create a file named `config.ini`. Below is an
 
 ```ini
 [DEFAULT]
-RETROARCH_DIR: /Users/<UserName>/Library/Application Support/RetroArch  # required (str)
+RETROARCH_DIR: /Users/<UserName>/Library/Application Support/RetroArch  # optional (str)
 RETROARCH_CFG_FP: %(RETROARCH_DIR)s/config/retroarch.cfg                # required (str)
-RETROARCH_SCREENSHOTS_DIR: %(RETROARCH_DIR)s/screenshots                # required (str)
 RETROARCH_APP_FP: /Applications/RetroArch.app                           # required (str)
 POKEMON_GAME: Crystal                                                   # required (str)
 POKEMON_STATIC_ENCOUNTER: Suicune                                       # required (str)

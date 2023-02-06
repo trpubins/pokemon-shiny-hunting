@@ -9,12 +9,12 @@ class RetroArchConfig():
         config = _parse_retroarch_config(config_fp)
         
         # paths
-        self.cheat_db_path = config["cheat_database_path"]
-        self.cores_dir = config["libretro_directory"]
-        self.log_dir = config["log_dir"]
-        self.savefile_dir = config["savefile_directory"]
-        self.savestate_dir = config["savestate_directory"]
-        self.screenshot_dir = config["screenshot_directory"]
+        self.cheat_db_path = os.path.expanduser(config["cheat_database_path"])
+        self.cores_dir = os.path.expanduser(config["libretro_directory"])
+        self.log_dir = os.path.expanduser(config["log_dir"])
+        self.savefile_dir = os.path.expanduser(config["savefile_directory"])
+        self.savestate_dir = os.path.expanduser(config["savestate_directory"])
+        self.screenshot_dir = os.path.expanduser(config["screenshot_directory"])
 
         # buttons
         self.fast_fwd_btn = config["input_toggle_fast_forward"]
@@ -69,7 +69,7 @@ def _parse_retroarch_config(config_fp: str) -> dict:
     
     def _clean_line(line: str, sub_str: str) -> str:
         return line.replace(sub_str, "").replace("\"", "").\
-            replace("=", "").replace(" ", "").replace("\n", "")
+            replace("=", "").replace("\n", "").strip()
     
     config = dict()
     with open(config_fp, "r") as infile:

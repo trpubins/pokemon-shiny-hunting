@@ -8,7 +8,7 @@ from typing import List
 import cv2
 from PIL import Image
 
-from config import PROJ_ROOT_PATH, RETROARCH_SCREENSHOTS_DIR
+from config import PROJ_ROOT_PATH, RETROARCH_CFG
 from pokemon import Pokemon, SpriteType
 from helpers.opencv_util import (
     IMG_SIZE_VERY_SMALL,
@@ -83,7 +83,7 @@ def determine_letter(letter_img: cv2.Mat) -> str:
 def get_screenshots() -> List[str]:
     """Retrieve all screenshots sorted by creation time."""
     # only grab PNG files
-    glob_pattern = os.path.join(RETROARCH_SCREENSHOTS_DIR, "*.png")
+    glob_pattern = os.path.join(RETROARCH_CFG.screenshot_dir, "*.png")
     files = list(filter(os.path.isfile, glob.glob(glob_pattern)))
     
     # sort by file creation time

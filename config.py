@@ -20,7 +20,6 @@ config = ConfigParser()
 config.read(CFG_FN)
 
 RETROARCH_APP_FP = config.get(SECTION, "RETROARCH_APP_FP")
-RETROARCH_DIR = config.get(SECTION, "RETROARCH_DIR")
 RETROARCH_CFG_FP = config.get(SECTION, "RETROARCH_CFG_FP")
 RETROARCH_CFG = RetroArchConfig(RETROARCH_CFG_FP)
 
@@ -48,7 +47,6 @@ except NoOptionError:
     DISP_BRIGHTNESS = None 
 
 
-logger.info(f"RETROARCH_DIR: {RETROARCH_DIR}")
 logger.info(f"RETROARCH_CFG_FP: {RETROARCH_CFG_FP}")
 logger.info(f"RETROARCH_APP_FP: {RETROARCH_APP_FP}")
 logger.info(f"POKEMON_GAME: {POKEMON_GAME}")
