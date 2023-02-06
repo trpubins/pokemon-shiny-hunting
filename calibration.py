@@ -16,17 +16,17 @@ from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
-MISC_DIR = os.path.join(PROJ_ROOT_PATH, "misc")
-NATIVE_SAVES_DIR = os.path.join(MISC_DIR, "native_saves_static_encounters")
+SAVES_DIR = os.path.join(PROJ_ROOT_PATH, "assets", "saves")
+NATIVE_SAVES_DIR = os.path.join(SAVES_DIR, "native_saves_static_encounters")
 
 
 def copy_native_save(pokemon_name: str) -> Tuple[str, str]:
     """Copy native save for this Pokémon static encounter
     into the user's saves dir."""
-    zip_fn = os.path.join(MISC_DIR, "native_saves_static_encounters.zip")
+    zip_fn = os.path.join(SAVES_DIR, "native_saves_static_encounters.zip")
     with ZipFile(zip_fn, 'r') as zip:
         if not os.path.exists(NATIVE_SAVES_DIR):
-            zip.extractall(path=MISC_DIR)
+            zip.extractall(path=SAVES_DIR)
             logger.debug(f"unzipped {zip_fn}")
     
     logger.info(f"copying native save files for {pokemon_name} -> savefiles dir")
