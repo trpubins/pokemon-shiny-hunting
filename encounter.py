@@ -69,7 +69,7 @@ def encounter_static(emulator: Emulator, pokemon: Pokemon) -> SpriteType:
     sequence: str = static_encounter["sequence"]
     seconds: int = static_encounter["delay"]
     perform_btn_sequence(emulator, sequence)
-    delay(seconds, slow_mac_factor=1.5)
+    delay(seconds)
     logger.debug(f"wild {pokemon.name} appeared")
     emulator.take_screenshot(delay_after_press=0.25)
     screenshot_fn = get_latest_screenshot_fn()

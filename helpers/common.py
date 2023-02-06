@@ -33,7 +33,7 @@ class Platform:
         return platform.system() == Platform.LINUX
 
 
-def delay(sec: float, slow_mac_factor: float = 1):
+def delay(sec: float):
     """Delay program execution by some number of seconds."""
     # 300 fps is the basis for all delays so generate factor from there
     factor = 300/EMULATOR_CORE_AVG_FPS

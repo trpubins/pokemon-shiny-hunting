@@ -31,7 +31,7 @@ class Emulator():
         logger.debug("continue game")
         delay(1)
         self.fast_fwd_on()
-        delay(1, slow_mac_factor=1.5)
+        delay(1)
         if Platform.is_mac():
             self.press_b(presses=1, delay_after_press=0.5)
             self.press_a(presses=1, delay_after_press=0.25)
