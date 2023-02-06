@@ -19,7 +19,7 @@ from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
-LETTERS_DIR = os.path.join(PROJ_ROOT_PATH, "images", "letters")
+LETTERS_DIR = os.path.join(PROJ_ROOT_PATH, "assets", "images", "letters")
 
 
 def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:

@@ -10,7 +10,7 @@ from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
-SPRITES_DIR = os.path.join(PROJ_ROOT_PATH, "images", "sprites")
+SPRITES_DIR = os.path.join(PROJ_ROOT_PATH, "assets", "images", "sprites")
 
 
 class Pokemon():
