@@ -92,7 +92,7 @@ if __name__ == "__main__":
     try:
         with cdtmp(sub_dirname="pokemon_shiny_hunting"):
             pokemon = Pokemon(pokemon_name)
-            shiny_found, n_attempts = find_shiny(em, pokemon, max_attempts=1, static_enounter=True)
+            shiny_found, n_attempts = find_shiny(em, pokemon, max_attempts=10, static_enounter=True)
             logger.info(f"total number attempts: {n_attempts}")
     except KeyboardInterrupt as k:
         logger.warning("Keyboard interrupt by user")
