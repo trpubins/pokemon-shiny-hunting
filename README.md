@@ -12,7 +12,7 @@ RETROARCH_DIR: /Users/<UserName>/Library/Application Support/RetroArch  # option
 RETROARCH_CFG_FP: %(RETROARCH_DIR)s/config/retroarch.cfg                # required (str)
 RETROARCH_APP_FP: /Applications/RetroArch.app                           # required (str)
 EMULATOR_CORE_AVG_FPS: 300                                              # required (int)
-ROM_FNAME: Your_ROM_filename                                            # required (str)
+ROM_NAME: Name_of_Your_ROM_no_ext                                       # required (str)
 POKEMON_GAME: Crystal                                                   # required (str)
 POKEMON_STATIC_ENCOUNTER: Suicune                                       # required (str)
 LOG_LEVEL: DEBUG                                                        # optional (str), default is INFO
