@@ -6,6 +6,7 @@ import platform
 import shutil
 import time
 
+from config import EMULATOR_CORE_AVG_FPS
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
@@ -34,12 +35,9 @@ class Platform:
 
 def delay(sec: float, slow_mac_factor: float = 1):
     """Delay program execution by some number of seconds."""
-    if Platform.is_mac():
-        mac_ver,_,_ = platform.mac_ver()
-        major_ver = int(mac_ver.split(".")[0])
-        if major_ver < 13:
-            # add more delay for older macOS
-            sec = slow_mac_factor*sec
+    # 300 fps is the basis for all delays so generate factor from there
+    factor = 300/EMULATOR_CORE_AVG_FPS
+    sec *= factor
     logger.debug(f"delay {sec}s")
     time.sleep(sec)
 

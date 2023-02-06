@@ -11,6 +11,8 @@ Inside the project root directory, create a file named `config.ini`. Below is an
 RETROARCH_DIR: /Users/<UserName>/Library/Application Support/RetroArch  # optional (str)
 RETROARCH_CFG_FP: %(RETROARCH_DIR)s/config/retroarch.cfg                # required (str)
 RETROARCH_APP_FP: /Applications/RetroArch.app                           # required (str)
+EMULATOR_CORE_AVG_FPS: 300                                              # required (int)
+ROM_FNAME: Your_ROM_filename                                            # required (str)
 POKEMON_GAME: Crystal                                                   # required (str)
 POKEMON_STATIC_ENCOUNTER: Suicune                                       # required (str)
 LOG_LEVEL: DEBUG                                                        # optional (str), default is INFO
