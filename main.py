@@ -16,7 +16,6 @@ if __name__ == "__main__":
     logger.info("running main")
     em = Emulator()
     em.launch_game()
-    
     try:
         with cdtmp(sub_dirname="pokemon_shiny_hunting"):
             pokemon = Pokemon(POKEMON_STATIC_ENCOUNTER)
@@ -24,11 +23,11 @@ if __name__ == "__main__":
             logger.info(f"total number attempts: {n_attempts}")
     except KeyboardInterrupt as k:
         logger.warning("Keyboard interrupt by user")
-        em.quit()
+        em.kill_process()
         raise k
     except Exception as e:
         logger.error("Exception occurred while shiny hunting")
-        em.quit()
+        em.kill_process()
         raise e
     
     if shiny_found:
@@ -37,7 +36,7 @@ if __name__ == "__main__":
         em.pause_on()
         attachments = [get_latest_screenshot_fn()]
     else:
-        em.quit()
+        em.kill_process()
         attachments = []
     send_notification(pokemon, n_attempts, shiny_found,
                       attachments=attachments, send=True)

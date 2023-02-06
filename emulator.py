@@ -72,9 +72,16 @@ class Emulator():
         delay(3)  # ensure sys is fully open & ready to perform next action
     
     def quit(self):
-        """Quit the emulator application."""
+        """Quit the emulator."""
         logger.info(f"quitting {EMULATOR_NAME} emulator")
         self.cont.press_exit_btn(presses=2, delay_after_press=0.25)
+        set_disp_brightness(DISP_BRIGHTNESS)
+    
+    def kill_process(self):
+        """Kill the emulator process."""
+        logger.info(f"killing {EMULATOR_NAME} process")
+        if Platform.is_mac():
+            os.system(f"killall {EMULATOR_NAME}")
         set_disp_brightness(DISP_BRIGHTNESS)
 
     def interact(func):
