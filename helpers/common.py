@@ -5,6 +5,7 @@ import os
 import platform
 import shutil
 import time
+from typing import Union
 
 from config import EMULATOR_CORE_AVG_FPS
 from helpers.log import mod_fname
@@ -65,3 +66,10 @@ def set_disp_brightness(val: float = None):
 def is_tool(name: str) -> bool:
     """Check whether `name` is on PATH and marked as executable."""
     return shutil.which(name) is not None
+
+
+def opposite_signs(num1: Union[int, float], num2: Union[int, float]) -> bool:
+    """Compare two numbers for opposing signs.
+    `True` if signs are opposite; otherwise, `False`."""
+    prod = num1*num2
+    return prod < 0
