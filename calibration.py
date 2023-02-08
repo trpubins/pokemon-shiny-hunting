@@ -9,7 +9,7 @@ from zipfile import ZipFile
 import __init__
 from config import PROJ_ROOT_PATH, RETROARCH_CFG, ROM_NAME
 from emulator import Emulator
-from encounter import find_shiny
+from encounter import StaticEncounter
 from pokemon import Pokemon
 from helpers.tmp import cdtmp
 from helpers.log import mod_fname
@@ -92,8 +92,9 @@ if __name__ == "__main__":
     try:
         with cdtmp(sub_dirname="pokemon_shiny_hunting"):
             pokemon = Pokemon(pokemon_name)
-            shiny_found, n_attempts = find_shiny(em, pokemon, max_attempts=10, static_enounter=True)
-            logger.info(f"total number attempts: {n_attempts}")
+            encounter = StaticEncounter(em, pokemon)
+            shiny_found = encounter.find_shiny(max_attempts=10)
+            logger.info(f"total number attempts: {encounter.n_attempts}")
     except KeyboardInterrupt as k:
         logger.warning("Keyboard interrupt by user")
         raise k

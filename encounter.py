@@ -2,7 +2,6 @@
 
 import logging
 import os
-from typing import Tuple
 
 from emulator import Emulator
 from image import (
@@ -30,54 +29,59 @@ STATIC_ENCOUNTERS = {
 }
 
 
-def find_shiny(emulator: Emulator,
-               pokemon: Pokemon,
-               max_attempts: int = 100,
-               static_enounter: bool = True) -> Tuple[bool, int]:
-    """Find a shiny Pokémon.
-    Assumes Pokémon game has been launched in the emulator."""
-    logger.info(f"looking for shiny {pokemon.name}")
-    if not static_enounter:
-        raise RuntimeError("Not yet able to handle dynamic encounters")
-    else:
-        n_attempts = 0
-        shiny_found = False
-        while not shiny_found and n_attempts < max_attempts:
-            emulator.reset()
-            emulator.continue_pokemon_game()
-            sprite = encounter_static(emulator, pokemon)
-            n_attempts += 1
-            logger.debug(f"attempt number {n_attempts}")
+class StaticEncounter():
+    """Maintain state for a static encounter."""
+    def __init__(self, emulator: Emulator, pokemon: Pokemon):
+        self.emulator = emulator
+        self.pokemon = pokemon
+        self.shiny_found = False
+        self.n_attempts = 0
+    
+    def find_shiny(self, max_attempts: int = 100) -> bool:
+        """Find a shiny Pokémon.
+        Assumes Pokémon game has been launched in the emulator."""
+        logger.info(f"looking for shiny {self.pokemon.name}")
+        while not self.shiny_found and self.n_attempts < max_attempts:
+            self.emulator.reset()
+            self.emulator.continue_pokemon_game()
+            sprite = self._encounter_static()
+            self._inc_attempts()
+            logger.debug(f"attempt number {self.n_attempts}")
             
             # log the number of attempts with INFO for every 5% of progress
-            if max_attempts >= 20 and n_attempts % int(max_attempts/20) == 0:
-                logger.info(f"attempt number {n_attempts}/{max_attempts}")
+            if max_attempts >= 20 and self.n_attempts % int(max_attempts/20) == 0:
+                logger.info(f"attempt number {self.n_attempts}/{max_attempts}")
 
             if sprite == SpriteType.SHINY:
-                shiny_found = True
-        if shiny_found:
-            logger.info(f"found a shiny {pokemon.name}!")
+                self.shiny_found = True
+        if self.shiny_found:
+            logger.info(f"found a shiny {self.pokemon.name}!")
         else:
-            logger.info(f"no shiny found for {pokemon.name}!")
-    return shiny_found, n_attempts
+            logger.info(f"no shiny found for {self.pokemon.name}!")
+        return self.shiny_found
 
+    def _encounter_static(self) -> SpriteType:
+        """Encounter a static Pokémon with the objective of entering a battle."""
+        pokemon = self.pokemon
+        logger.debug(f"encountering static {pokemon.name}")
+        static_encounter = STATIC_ENCOUNTERS[pokemon.name]
+        sequence: str = static_encounter["sequence"]
+        seconds: int = static_encounter["delay"]
+        perform_btn_sequence(self.emulator, sequence)
+        delay(seconds)
+        logger.debug(f"wild {pokemon.name} appeared")
+        self.emulator.take_screenshot(delay_after_press=0.25)
+        screenshot_fn = get_latest_screenshot_fn()
+        crop = crop_pokemon_in_battle(screenshot_fn, del_png=False)
+        sprite = determine_sprite_type(pokemon, crop)
+        if sprite == SpriteType.NORMAL:
+            os.remove(screenshot_fn)
+            logger.debug(f"removed screenshot {screenshot_fn}")
+        return sprite
 
-def encounter_static(emulator: Emulator, pokemon: Pokemon) -> SpriteType:
-    """Encounter a static Pokémon with the objective of entering a battle."""
-    logger.debug(f"encountering static {pokemon.name}")
-    static_encounter = STATIC_ENCOUNTERS[pokemon.name]
-    sequence: str = static_encounter["sequence"]
-    seconds: int = static_encounter["delay"]
-    perform_btn_sequence(emulator, sequence)
-    delay(seconds)
-    logger.debug(f"wild {pokemon.name} appeared")
-    emulator.take_screenshot(delay_after_press=0.25)
-    screenshot_fn = get_latest_screenshot_fn()
-    crop = crop_pokemon_in_battle(screenshot_fn, del_png=False)
-    sprite = determine_sprite_type(pokemon, crop)
-    if sprite == SpriteType.NORMAL:
-        os.remove(screenshot_fn)
-    return sprite
+    def _inc_attempts(self, n: int = 1):
+        """Increment number of attempts by `n`."""
+        self.n_attempts += n
 
 
 def perform_btn_sequence(emulator: Emulator, sequence: str):
@@ -110,5 +114,6 @@ if __name__ == "__main__":
     em = Emulator()
     em.launch_game()
     pokemon = Pokemon(POKEMON_STATIC_ENCOUNTER)
-    shiny_found, n_attempts = find_shiny(em, pokemon, max_attempts=3)
-    logger.info(f"total number attempts: {n_attempts}")
+    encounter = StaticEncounter(em, pokemon)
+    shiny_found = encounter.find_shiny(max_attempts=3)
+    logger.info(f"total number attempts: {encounter.n_attempts}")

@@ -3,7 +3,7 @@ import logging
 import __init__
 from config import POKEMON_STATIC_ENCOUNTER
 from emulator import Emulator
-from encounter import find_shiny
+from encounter import StaticEncounter
 from image import get_latest_screenshot_fn
 from notifications import send_notification
 from pokemon import Pokemon
@@ -19,8 +19,9 @@ if __name__ == "__main__":
     try:
         with cdtmp(sub_dirname="pokemon_shiny_hunting"):
             pokemon = Pokemon(POKEMON_STATIC_ENCOUNTER)
-            shiny_found, n_attempts = find_shiny(em, pokemon, max_attempts=8000, static_enounter=True)
-            logger.info(f"total number attempts: {n_attempts}")
+            encounter = StaticEncounter(em, pokemon)
+            shiny_found = encounter.find_shiny(max_attempts=8000)
+            logger.info(f"total number attempts: {encounter.n_attempts}")
     except KeyboardInterrupt as k:
         logger.warning("Keyboard interrupt by user")
         em.kill_process()
@@ -38,5 +39,5 @@ if __name__ == "__main__":
     else:
         em.kill_process()
         attachments = []
-    send_notification(pokemon, n_attempts, shiny_found,
+    send_notification(pokemon, encounter.n_attempts, shiny_found,
                       attachments=attachments, send=True)
