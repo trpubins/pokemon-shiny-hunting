@@ -82,6 +82,8 @@ class Emulator():
         logger.info(f"killing {EMULATOR_NAME} process")
         if Platform.is_mac():
             os.system(f"killall {EMULATOR_NAME}")
+        elif Platform.is_windows():
+            os.system(f"taskkill /IM retroarch.exe")
         set_disp_brightness(DISP_BRIGHTNESS)
 
     def interact(func):
