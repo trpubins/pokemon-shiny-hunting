@@ -116,6 +116,14 @@ def collect_pack_inventory(emulator: Emulator) -> Tuple[Items, Machines, KeyItem
         Balls(balls_list)
     )
 
+def confirm_fly(moves: Machines) -> bool:
+    if "fly" in moves.hm:
+        boolean = True
+        logger.info("The user has access to Fly")
+    else:
+        boolean = False
+        logger.info("The user does not have access to Fly")
+    return boolean
 
 def collect_inventory(emulator: Emulator, get_qty: bool) -> List[Tuple[str, int]]:
     """Generic function to collect inventory for any section in the pack."""
@@ -150,3 +158,5 @@ if __name__ == "__main__":
     logger.info(f"tm: {pack.machines.tm}")
     logger.info(f"hm: {pack.machines.hm}")
     logger.info(f"key items: {pack.keyitems.inventory}")
+
+    hm_fly = confirm_fly(pack.machines)
