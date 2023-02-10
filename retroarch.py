@@ -10,11 +10,17 @@ class RetroArchConfig():
         
         # paths
         self.cheat_db_path = os.path.expanduser(config["cheat_database_path"])
+        self.cheat_db_path = self._clean_line(config_fp, dir= self.cheat_db_path)
         self.cores_dir = os.path.expanduser(config["libretro_directory"])
+        self.cores_dir = self._clean_line(config_fp, self.cores_dir)
         self.log_dir = os.path.expanduser(config["log_dir"])
+        self.log_dir = self._clean_line(config_fp, self.log_dir)
         self.savefile_dir = os.path.expanduser(config["savefile_directory"])
+        self.savefile_dir = self._clean_line(config_fp, self.savefile_dir)
         self.savestate_dir = os.path.expanduser(config["savestate_directory"])
+        self.savestate_dir = self._clean_line(config_fp, self.savestate_dir)
         self.screenshot_dir = os.path.expanduser(config["screenshot_directory"])
+        self.screenshot_dir = self._clean_line(config_fp, self.screenshot_dir)
 
         # buttons
         self.fast_fwd_btn = config["input_toggle_fast_forward"]
@@ -27,6 +33,21 @@ class RetroArchConfig():
         self.exit_btn = config["input_exit_emulator"]
         self.input_player_1 = RetroArchInputPlayerConfig(config["input_player1_"])
         self.input_player_2 = RetroArchInputPlayerConfig(config["input_player2_"])
+
+    def _clean_line(self, config_fp: str, dir:str) -> str:
+        if ":\\" in dir:
+            dir = dir.replace(":\\", "")
+            path_fp = config_fp.split("\\")
+            directory = ""
+            for i in range(len(path_fp)-1):
+                if path_fp[i] == "C:":
+                    directory += "C:\\"
+                else:
+                    directory = os.path.join(directory, path_fp[i])
+            directory = os.path.join(directory, dir)
+        else:
+            directory = dir
+        return directory
 
 
 class RetroArchInputPlayerConfig():
