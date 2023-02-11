@@ -47,12 +47,10 @@ class Emulator():
         set_disp_brightness(DISP_BRIGHTNESS)
 
         logger.debug("navigating to game")
-        if Platform.is_mac():
-            press_key("left", delay_after_press=0.1)
-            press_key("down", presses=2, delay_after_press=0.1)
-            press_key("right", delay_after_press=0.1)
-        elif Platform.is_windows():
-            press_key("right", presses=3, in_game=False)
+        
+        press_key("left", delay_after_press=0.1, in_game=False)
+        press_key("down", presses=2, delay_after_press=0.1, in_game= False)
+        press_key("right", delay_after_press=0.1, in_game=False)
         press_key("Enter", in_game=False)
         delay(0.25)
 
