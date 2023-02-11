@@ -12,11 +12,13 @@ from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
-def delay(sec: float):
+def delay(sec: float, universal: bool = False):
     """Delay program execution by some number of seconds."""
-    # 300 fps is the basis for all delays so generate factor from there
-    factor = 300/EMULATOR_CORE_AVG_FPS
-    sec *= factor
+    if not universal:
+        # this delay is relative so scale it by some factor
+        # 300 fps is the basis for all delays so generate factor from there
+        factor = 300/EMULATOR_CORE_AVG_FPS
+        sec *= factor
     logger.debug(f"delay {sec}s")
     time.sleep(sec)
 

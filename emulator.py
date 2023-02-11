@@ -29,9 +29,9 @@ class Emulator():
     def continue_pokemon_game(self):
         """Continue the Pokémon game from last save."""
         logger.debug("continue game")
-        delay(1)
+        delay(1, universal=True)
         self.fast_fwd_on()
-        delay(1)
+        delay(1, universal=True)
         self.press_b(presses=1, delay_after_press=0.5)
         self.press_a(presses=1, delay_after_press=0.25)
         self.press_a(presses=2, delay_after_press=0.5)
@@ -43,11 +43,11 @@ class Emulator():
 
         logger.debug("navigating to game")
         # assume RetroArch menu driver set to ozone
-        press_key("left", delay_after_press=0.1, in_game=False)
-        press_key("down", presses=2, delay_after_press=0.1, in_game= False)
-        press_key("right", delay_after_press=0.1, in_game=False)
+        press_key("left", delay_after_press=0.1, delay_universal=True, in_game=False)
+        press_key("down", presses=2, delay_after_press=0.1, delay_universal=True, in_game= False)
+        press_key("right", delay_after_press=0.1, delay_universal=True, in_game=False)
         press_key("Enter", in_game=False)
-        delay(0.25)
+        delay(0.25, universal=True)
 
         logger.info(f"run game: Pokémon {POKEMON_GAME}")
         press_key("Enter", in_game=False)
@@ -62,7 +62,7 @@ class Emulator():
             with cd(os.path.dirname(RETROARCH_APP_FP)):
                 exe = os.path.basename(RETROARCH_APP_FP)
                 os.system(f"start {exe}")
-        delay(3)  # ensure sys is fully open & ready to perform next action
+        delay(3, universal=True)  # ensure sys is fully open & ready to perform next action
     
     def quit(self):
         """Quit the emulator."""
@@ -79,7 +79,7 @@ class Emulator():
         elif Platform.is_windows():
             exe = os.path.basename(RETROARCH_APP_FP)
             os.system(f"taskkill /IM {exe}")
-        delay(1)
+        delay(1, universal=True)
         set_disp_brightness(DISP_BRIGHTNESS)
 
     def interact(func):
@@ -90,7 +90,7 @@ class Emulator():
         def wrapper_func(self, presses: int = 1, delay_after_press: float = None):
             fast_fwd_orig_state = self.state.fast_fwd
             self.fast_fwd_off()
-            delay(0.5)
+            delay(0.5, universal=True)
             
             # call Emulator method based on the method's number of parameters
             if n_params == 3:

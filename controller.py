@@ -97,6 +97,7 @@ class EmulatorController():
 def press_key(key: str,
               presses: int = 1,
               delay_after_press: float = None,
+              delay_universal: bool = False,
               in_game: bool = True):
     """Virtually press the specified key."""
     for i in range(presses):
@@ -110,4 +111,4 @@ def press_key(key: str,
                 inp.press(key)
         logger.debug(f"pressed key: {key}")
         if delay_after_press is not None:
-            delay(delay_after_press)
+            delay(delay_after_press, delay_universal)
