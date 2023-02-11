@@ -7,7 +7,7 @@ from encounter import StaticEncounter
 from image import get_latest_screenshot_fn
 from notifications import send_notification
 from pokemon import Pokemon
-from helpers.tmp import cdtmp
+from helpers.file_mgmt import cdtmp
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 

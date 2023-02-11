@@ -9,7 +9,7 @@ from main import logger as main_logger
 from notifications import logger as notifications_logger
 from pokemon import logger as pokemon_logger
 from helpers.common import logger as helpers_common_logger
-from helpers.tmp import logger as helpers_tmp_logger
+from helpers.file_mgmt import logger as helpers_file_mgmt_logger
 from helpers.log import get_logger
 
 
@@ -23,4 +23,4 @@ main_logger = get_logger(main_logger.name, config.LOG_LEVEL)
 notifications_logger = get_logger(notifications_logger.name, config.LOG_LEVEL)
 pokemon_logger = get_logger(pokemon_logger.name, config.LOG_LEVEL)
 helpers_common_logger = get_logger(helpers_common_logger.name, config.LOG_LEVEL)
-helpers_tmp_logger = get_logger(helpers_tmp_logger.name, config.LOG_LEVEL)
+helpers_file_mgmt_logger = get_logger(helpers_file_mgmt_logger.name, config.LOG_LEVEL)

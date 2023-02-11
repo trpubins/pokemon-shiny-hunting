@@ -1,4 +1,4 @@
-"""Work with temporary files."""
+"""Manage folder navigation and file operations."""
 
 from contextlib import contextmanager
 import logging

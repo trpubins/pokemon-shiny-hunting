@@ -11,7 +11,7 @@ from config import PROJ_ROOT_PATH, RETROARCH_CFG, ROM_NAME
 from emulator import Emulator
 from encounter import StaticEncounter
 from pokemon import Pokemon
-from helpers.tmp import cdtmp
+from helpers.file_mgmt import cdtmp
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
