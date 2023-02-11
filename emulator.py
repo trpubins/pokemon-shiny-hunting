@@ -5,11 +5,10 @@ from inspect import signature
 import logging
 import os
 
-import pyautogui as gui
-
 from config import EMULATOR_NAME, POKEMON_GAME, RETROARCH_APP_FP, DISP_BRIGHTNESS
 from controller import EmulatorController, press_key
 from helpers.common import delay, set_disp_brightness
+from helpers.file_mgmt import cd
 from helpers.platform import Platform
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
@@ -33,14 +32,9 @@ class Emulator():
         delay(1)
         self.fast_fwd_on()
         delay(1)
-        if Platform.is_mac():
-            self.press_b(presses=1, delay_after_press=0.5)
-            self.press_a(presses=1, delay_after_press=0.25)
-            self.press_a(presses=2, delay_after_press=0.5)
-        elif Platform.is_windows():
-            self.press_b_precise(presses=1, delay_after_press=0.5)
-            self.press_a_precise(presses=1, delay_after_press=0.25)
-            self.press_a_precise(presses=2, delay_after_press=0.5)
+        self.press_b(presses=1, delay_after_press=0.5)
+        self.press_a(presses=1, delay_after_press=0.25)
+        self.press_a(presses=2, delay_after_press=0.5)
 
     def launch_game(self):
         """Launch the game inside the emulator."""
@@ -61,13 +55,13 @@ class Emulator():
     def launch(self):
         """Launch the emulator application."""
         logger.info(f"launching {EMULATOR_NAME} emulator")
+        logger.debug(f"opening {RETROARCH_APP_FP}")
         if Platform.is_mac():
-            logger.debug(f"opening {RETROARCH_APP_FP}")
             os.system(f"open {RETROARCH_APP_FP}")
         elif Platform.is_windows():
-            gui.hotkey("ctrl", "esc")
-            gui.write(EMULATOR_NAME)
-            gui.press("Enter")
+            with cd(os.path.dirname(RETROARCH_APP_FP)):
+                exe = os.path.basename(RETROARCH_APP_FP)
+                os.system(f"start {exe}")
         delay(3)  # ensure sys is fully open & ready to perform next action
     
     def quit(self):
@@ -80,9 +74,12 @@ class Emulator():
         """Kill the emulator process."""
         logger.info(f"killing {EMULATOR_NAME} process")
         if Platform.is_mac():
-            os.system(f"killall {EMULATOR_NAME}")
+            app_name, _ = os.path.basename(RETROARCH_APP_FP).split(".")
+            os.system(f"killall {app_name}")
         elif Platform.is_windows():
-            os.system(f"taskkill /IM retroarch.exe")
+            exe = os.path.basename(RETROARCH_APP_FP)
+            os.system(f"taskkill /IM {exe}")
+        delay(1)
         set_disp_brightness(DISP_BRIGHTNESS)
 
     def interact(func):
