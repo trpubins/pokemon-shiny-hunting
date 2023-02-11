@@ -47,7 +47,7 @@ class Emulator():
         set_disp_brightness(DISP_BRIGHTNESS)
 
         logger.debug("navigating to game")
-        
+        # assume RetroArch menu driver set to ozone
         press_key("left", delay_after_press=0.1, in_game=False)
         press_key("down", presses=2, delay_after_press=0.1, in_game= False)
         press_key("right", delay_after_press=0.1, in_game=False)
