@@ -9,7 +9,8 @@ import pyautogui as gui
 
 from config import EMULATOR_NAME, POKEMON_GAME, RETROARCH_APP_FP, DISP_BRIGHTNESS
 from controller import EmulatorController, press_key
-from helpers.common import Platform, delay, set_disp_brightness
+from helpers.common import delay, set_disp_brightness
+from helpers.platform import Platform
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 

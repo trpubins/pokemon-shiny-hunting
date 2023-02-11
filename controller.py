@@ -6,7 +6,8 @@ import logging
 import pyautogui as gui
 
 from config import RETROARCH_CFG
-from helpers.common import Platform, delay
+from helpers.common import delay
+from helpers.platform import Platform
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
