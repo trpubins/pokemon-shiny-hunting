@@ -1,5 +1,7 @@
 import logging
 
+import click
+
 import __init__
 from config import POKEMON_STATIC_ENCOUNTER
 from emulator import Emulator
@@ -12,13 +14,15 @@ from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
-if __name__ == "__main__":
-    logger.info("running main")
+@click.command()
+@click.option("-p", "--pokemon_name", required=False, default=POKEMON_STATIC_ENCOUNTER, type=str,
+              help="The pokemon to shiny hunt.")
+def run(pokemon_name: str):
     em = Emulator()
     em.launch_game()
     try:
         with cdtmp(sub_dirname="pokemon_shiny_hunting"):
-            pokemon = Pokemon(POKEMON_STATIC_ENCOUNTER)
+            pokemon = Pokemon(pokemon_name)
             encounter = StaticEncounter(em, pokemon)
             shiny_found = encounter.find_shiny(max_attempts=8000)
             logger.info(f"total number attempts: {encounter.n_attempts}")
@@ -41,3 +45,8 @@ if __name__ == "__main__":
         attachments = []
     send_notification(pokemon, encounter.n_attempts, shiny_found,
                       attachments=attachments, send=True)
+
+
+if __name__ == "__main__":
+    logger.info("running main")
+    run()
