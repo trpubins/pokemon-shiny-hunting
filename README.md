@@ -8,25 +8,32 @@ Inside the project root directory, create a file named `config.ini`. Below is an
 
 ```ini
 [DEFAULT]
-RETROARCH_DIR: /Users/<UserName>/Library/Application Support/RetroArch  # required
-RETROARCH_CFG_FP: %(RETROARCH_DIR)s/config/retroarch.cfg                # required
-RETROARCH_SCREENSHOTS_DIR: %(RETROARCH_DIR)s/screenshots                # required
-RETROARCH_APP_FP: /Applications/RetroArch.app                           # required
-POKEMON_GAME: Crystal                                                   # required
-LOG_LEVEL: DEBUG                                                        # optional, default is INFO
-USERNAME: your-username                                                 # optional, default is User
-RECEIVER_EMAIL: receiver@email.com                                      # optional, default is None
-SENDER_EMAIL: sender@email.com                                          # optional, default is None
-SENDER_EMAIL_PASS: sEndeR-EmaiL-pa22                                    # optional, default is None
+RETROARCH_DIR: /Users/<UserName>/Library/Application Support/RetroArch  # optional (str)
+RETROARCH_CFG_FP: %(RETROARCH_DIR)s/config/retroarch.cfg                # required (str)
+RETROARCH_APP_FP: /Applications/RetroArch.app                           # required (str)
+EMULATOR_CORE_AVG_FPS: 300                                              # required (int)
+ROM_NAME: Name_of_Your_ROM_no_ext                                       # required (str)
+POKEMON_GAME: Crystal                                                   # required (str)
+POKEMON_STATIC_ENCOUNTER: Suicune                                       # required (str)
+LOG_LEVEL: DEBUG                                                        # optional (str), default is INFO
+USERNAME: your-username                                                 # optional (str), default is User
+RECEIVER_EMAIL: receiver@email.com                                      # optional (str), default is None
+SENDER_EMAIL: sender@email.com                                          # optional (str), default is None
+SENDER_EMAIL_PASS: sEndeR-EmaiL-pa22                                    # optional (str), default is None
+DISP_BRIGHTNESS: 0.5                                                    # optional (float between [0,1]), default is None
 ```
 
-## Usage
+## RetroArch Config
 
-***Important❗***: ALL scripts must be executed from the project root directory.
+In order to successfully run the program, ensure the following RetroArch settings are as follows:
 
-```bash
-cd <path-to>/pokemon-shiny-hunting
-```
+- Video > GPU Screenshot > OFF
+- On-Screen Display > On-Screen Notifications > Notification Visibility > Screenshot Notification Persistence > Instant
+- Input > Polling Behavior > Normal
+
+Lastly, ensure that all controls mapped to the keyboard work as expected when the game is running in the emulator. See Input > Port 1 Controls in RetroArch settings.
+
+## Dependencies
 
 ### Python environment
 
@@ -34,6 +41,25 @@ First ensure your python environment is up to date.
 
 ```bash
 pip install -r requirements.txt
+```
+
+### Other packages
+
+If user is running on Mac and wants the application to set their display's brightness, they are required to install a CLI [display brightness utility](https://github.com/nriley/brightness) for macOS.
+It can be easily installed with Homebrew:
+
+```bash
+brew install brightness
+```
+
+Note: the `brightness` utility is optional. Application will function fine without utilizing the display brightness feature.
+
+## Usage
+
+***Important❗***: ALL scripts must be executed from the project root directory.
+
+```bash
+cd <path-to>/pokemon-shiny-hunting
 ```
 
 ### main

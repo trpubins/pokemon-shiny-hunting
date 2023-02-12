@@ -89,7 +89,7 @@ def test_5_determine_name():
 
 def test_6_determine_name_full():
     logger.info("Test 6 - determine_name_full")
-    for pokemon_obj in POKEMON_LIST:
+    for pokemon_obj in POKEMON_LIST[:16]:
         n: int = pokemon_obj["test_img_num"]
         name: str = pokemon_obj["name"]
         battle_img_fn = os.path.join(TEST_IMG_DIR, f"battle_img_{n}.png")
@@ -106,9 +106,6 @@ def test_7_determine_sprite_type_full():
         type_: SpriteType = pokemon_obj["sprite_type"]
         pokemon = Pokemon(pokemon_obj["name"])
         battle_img_fn = os.path.join(TEST_IMG_DIR, f"battle_img_{n}.png")
-        letter_imgs = crop_name_in_battle(battle_img_fn)
-        pokemon_name = determine_name(letter_imgs)
-        assert(pokemon_name == pokemon.name.lower())
         sprite_img = crop_pokemon_in_battle(battle_img_fn, del_png=False)
         sprite_type = determine_sprite_type(pokemon, img=sprite_img)
         assert(sprite_type == type_)

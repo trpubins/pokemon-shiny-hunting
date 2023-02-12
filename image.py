@@ -8,7 +8,7 @@ from typing import List
 import cv2
 from PIL import Image
 
-from config import RETROARCH_SCREENSHOTS_DIR
+from config import PROJ_ROOT_PATH, RETROARCH_CFG
 from pokemon import Pokemon, SpriteType
 from helpers.opencv_util import (
     IMG_SIZE_VERY_SMALL,
@@ -19,7 +19,7 @@ from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
-LETTERS_DIR = os.path.join("images", "letters")
+LETTERS_DIR = os.path.join(PROJ_ROOT_PATH, "assets", "images", "letters")
 
 
 def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
@@ -29,13 +29,13 @@ def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
     img = cv2.resize(img, (get_img_width(normal_img), get_img_height(normal_img)))
 
     # use color differences to determine sprite type
-    diff_normal = compare_img_color(img, normal_img)
-    diff_shiny = compare_img_color(img, shiny_img)
+    diff_normal = compare_img_color(img, normal_img, offset_shading=False)
+    diff_shiny = compare_img_color(img, shiny_img, offset_shading=False)
     if diff_normal < diff_shiny:
         sprite_type = SpriteType.NORMAL
     else:
         sprite_type = SpriteType.SHINY
-    logger.debug(f"{pokemon} is more similar to {sprite_type}")
+    logger.debug(f"{pokemon.name} is more similar to {sprite_type}")
     return sprite_type
 
 
@@ -83,7 +83,7 @@ def determine_letter(letter_img: cv2.Mat) -> str:
 def get_screenshots() -> List[str]:
     """Retrieve all screenshots sorted by creation time."""
     # only grab PNG files
-    glob_pattern = os.path.join(RETROARCH_SCREENSHOTS_DIR, "*.png")
+    glob_pattern = os.path.join(RETROARCH_CFG.screenshot_dir, "*.png")
     files = list(filter(os.path.isfile, glob.glob(glob_pattern)))
     
     # sort by file creation time

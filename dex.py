@@ -1,12 +1,14 @@
 """Model a Pokédex, aka, a Pokémon db."""
 
 import logging
+import os
 import pandas as pd
 
+from config import PROJ_ROOT_PATH
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
-POKEMON_CSV_FN = "pokemon.csv"
+POKEMON_CSV_FN = os.path.join(PROJ_ROOT_PATH, "pokemon.csv")
 
 # making dataframe
 df = pd.read_csv(POKEMON_CSV_FN)

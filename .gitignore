@@ -103,7 +103,7 @@ celerybeat.pid
 
 # Environments
 .env
-.venv
+.venv*
 env/
 venv/
 ENV/
@@ -139,3 +139,8 @@ dmypy.json
 config.ini
 **/*.png
 tests/test_files/Savestates
+
+# Emulator save files
+**/*.rtc
+**/*.srm
+**/*.state*

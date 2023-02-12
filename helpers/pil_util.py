@@ -1,9 +1,11 @@
 """Facilitates interaction with PIL Image objects."""
 
-from typing import Tuple
+from typing import Tuple, Union
 
 import numpy as np
 from PIL.Image import Image
+
+from helpers.common import opposite_signs
 
 
 class RGB():
@@ -23,20 +25,37 @@ class RGB():
             else:
                 raise RuntimeError(f"Expected {self.LENGTH} or {self.LENGTH+1} values. Got {n_val}.")
         
-    def is_white(self):
-        # allow for slightly off-white
+    def is_white(self) -> bool:
+        """Determine if an RGB value is white
+        (allows for slightly off-white)."""
         return self.r >= 245 and self.g >= 245 and self.b >= 245
 
-    def is_black(self):
+    def is_black(self) -> bool:
+        """Determine if an RGB value is black
+        (only exact black is considered)."""
         return self.r == 0 and self.g == 0 and self.b == 0
     
-    def max(self):
+    def max(self) -> int:
+        """Retrieve the maximum component value (red, green or blue)."""
         return max(self.r, self.g, self.b)
     
-    def offset(self, number: float):
+    def offset(self, number: Union[int, float]):
+        """Offset each RGB value by the specified number."""
         self.r += number
         self.g += number
         self.b += number
+    
+    def rg_diff(self) -> int:
+        """The difference between red-green component values."""
+        return self.r - self.g
+    
+    def gb_diff(self) -> int:
+        """The difference between green-blue component values."""
+        return self.g - self.b
+    
+    def br_diff(self) -> int:
+        """The difference between blue-red component values."""
+        return self.b - self.r
 
 
 def compare_img_color(img1: Image,
@@ -54,7 +73,17 @@ def compare_img_color(img1: Image,
         amt_offset = rgb1.max() - rgb2.max()
         rgb2.offset(amt_offset)
 
-    return _get_color_diff(rgb1, rgb2)
+    color_diff = _get_color_diff(rgb1, rgb2)
+
+    if opposite_signs(rgb1.rg_diff(), rgb2.rg_diff()) or \
+            opposite_signs(rgb1.gb_diff(), rgb2.gb_diff()) or \
+            opposite_signs(rgb1.br_diff(), rgb2.br_diff()):
+        # compare interactions between the RGB component values
+        # if relative interactions have opposing signs, make
+        # significant change to the resulting color difference
+        color_diff *= 10
+    
+    return color_diff
 
 
 def is_img_white(img: Image) -> bool:
