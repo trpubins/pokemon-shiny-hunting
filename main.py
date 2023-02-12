@@ -1,10 +1,10 @@
+"""Application driver module."""
+
 import logging
 from multiprocessing import Queue
 import signal
 import sys
 
-import __init__
-from config import POKEMON_STATIC_ENCOUNTER
 from emulator import Emulator
 from encounter import StaticEncounter
 from image import get_latest_screenshot_fn
@@ -72,8 +72,11 @@ def run(emulator: Emulator, encounter: StaticEncounter, max_attempts: int = 8000
 
 
 if __name__ == "__main__":
+    import __init__
+    from config import POKEMON_STATIC_ENCOUNTER
+
     logger.info("running main")
     emulator = Emulator()
     pokemon = Pokemon(POKEMON_STATIC_ENCOUNTER)
     encounter = StaticEncounter(emulator, pokemon)
-    run(emulator, encounter, max_attempts=1)
+    run(emulator, encounter)
