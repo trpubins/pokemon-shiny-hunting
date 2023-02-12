@@ -96,10 +96,11 @@ def stop_hunt():
     if is_server_available():
         msg = "No hunt to stop"
     else:
+        _, n_attempts = get_app_state()
         logger.warning(f"terminating pid {app.bkgd_process.pid}")
         app.bkgd_process.terminate()
         app.bkgd_process = None
-        msg = f"Stopped hunting {app.pokemon.name}"
+        msg = f"Stopped hunting {app.pokemon.name} after {n_attempts} attempts"
     logger.info(f"response: {msg}")
     return msg
 
