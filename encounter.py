@@ -34,31 +34,19 @@ class StaticEncounter():
     def __init__(self, emulator: Emulator, pokemon: Pokemon):
         self.emulator = emulator
         self.pokemon = pokemon
-        self.shiny_found = False
-        self.n_attempts = 0
     
-    def find_shiny(self, max_attempts: int = 100) -> bool:
+    def find_shiny(self) -> bool:
         """Find a shiny Pokémon.
         Assumes Pokémon game has been launched in the emulator."""
-        logger.info(f"looking for shiny {self.pokemon.name}")
-        while not self.shiny_found and self.n_attempts < max_attempts:
-            self.emulator.reset()
-            self.emulator.continue_pokemon_game()
-            sprite = self._encounter_static()
-            self._inc_attempts()
-            logger.debug(f"attempt number {self.n_attempts}")
-            
-            # log the number of attempts with INFO for every 5% of progress
-            if max_attempts >= 20 and self.n_attempts % int(max_attempts/20) == 0:
-                logger.info(f"attempt number {self.n_attempts}/{max_attempts}")
+        self.emulator.reset()
+        self.emulator.continue_pokemon_game()
+        sprite = self._encounter_static()
 
-            if sprite == SpriteType.SHINY:
-                self.shiny_found = True
-        if self.shiny_found:
-            logger.info(f"found a shiny {self.pokemon.name}!")
+        if sprite == SpriteType.SHINY:
+            shiny_found = True
         else:
-            logger.info(f"no shiny found for {self.pokemon.name}!")
-        return self.shiny_found
+            shiny_found = False
+        return shiny_found
 
     def _encounter_static(self) -> SpriteType:
         """Encounter a static Pokémon with the objective of entering a battle."""
@@ -78,10 +66,6 @@ class StaticEncounter():
             os.remove(screenshot_fn)
             logger.debug(f"removed screenshot {screenshot_fn}")
         return sprite
-
-    def _inc_attempts(self, n: int = 1):
-        """Increment number of attempts by `n`."""
-        self.n_attempts += n
 
 
 def perform_btn_sequence(emulator: Emulator, sequence: str):
@@ -115,5 +99,9 @@ if __name__ == "__main__":
     em.launch_game()
     pokemon = Pokemon(POKEMON_STATIC_ENCOUNTER)
     encounter = StaticEncounter(em, pokemon)
-    shiny_found = encounter.find_shiny(max_attempts=3)
-    logger.info(f"total number attempts: {encounter.n_attempts}")
+    shiny_found = encounter.find_shiny()
+    if shiny_found:
+        logger.info(f"found a shiny {encounter.pokemon.name}!")
+    else:
+        logger.info(f"no shiny found for {encounter.pokemon.name}")
+    em.kill_process()
