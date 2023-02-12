@@ -94,22 +94,32 @@ class Trader():
             less_poke = t1
         
         for poke in range(len(less_poke)):
-            # if poke > 0 :
-            #     self.press_btn(btn = 'down', delay_after_press=0.1)
+        #     # if poke > 0 :
+        #     #     self.press_btn(btn = 'down', delay_after_press=0.1)
             self.press_btn(btn = 'a', delay_after_press=2)
             self.press_btn(btn = 'right', delay_after_press=2)
             self.press_btn(btn= 'a', delay_after_press=0.1)
 
+        t1_old = t1[0]
+        t2_old = t2[0]
+
+        t1[0] = t2_old
+        t2[0] = t1_old
+
+        logger.info(f'{t1[0]} has been traded successfully for {t2[0]}')
+
+        return t1, t2
 
 if __name__ == "__main__":
-    trainer_1 = ['Lugia', 'Pidgeot', 'Meganium', 'Chinchou', 'Electrode', 'Ursaring']
-    trainer_2 = ['Cyndaquil', 'Sentret', 'Sentret']
+    trainer_1 = ['Ursaring', 'Pidgeot', 'Meganium', 'Chinchou', 'Electrode', 'Togepi']
+    trainer_2 = ['Sentret', 'Sentret', 'Lugia']
     
     tr = Trader()
     tr.em1.launch_game()
     delay(1)
     tr.open_menu_overlay()
-    # tr.open_game()
-    # tr.begin_trade()
-    # delay(10)
-    # tr.trade_pokemon(trainer_1, trainer_2)
+    tr.open_game()
+    tr.begin_trade()
+    delay(10)
+    trainer1, trainer2 = tr.trade_pokemon(trainer_1, trainer_2)
+    print(trainer1, trainer2)
