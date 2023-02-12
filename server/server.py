@@ -26,6 +26,8 @@ logger = logging.getLogger(mod_fname(__file__))
 # globals
 app = FastAPI()
 app.pokemon: Pokemon = None
+app.shiny_found: bool = False
+app.n_attempts: int = 0
 app.bkgd_process: Process = None  # prefer process over background task (thread) so that we can easily terminate it
 app.queue: Queue = Queue()  # requried for multiprocess communication
 
@@ -56,11 +58,13 @@ async def shiny_hunt(pokemon_name: str, resp: Response):
         logger.info(f"response: {msg}")
         return msg
 
-    # create objects and assign to state variables
+    # create objects and init server state variables
     emulator = Emulator()
     pokemon = Pokemon(pokemon_name)
     encounter = StaticEncounter(emulator, pokemon)
     app.pokemon = pokemon
+    app.shiny_found = False
+    app.n_attempts = 0
 
     # execute hunt in the background (asynchronously)
     kwargs = {
@@ -79,7 +83,7 @@ async def shiny_hunt(pokemon_name: str, resp: Response):
 
 @app.get("/status_hunt", status_code=status.HTTP_200_OK)
 def status_hunt():
-    if is_server_available():
+    if is_server_available() and not did_hunting_commence():
         msg = "No hunt to status"
     else:
         shiny_found, n_attempts = get_app_state()
@@ -110,14 +114,19 @@ def is_server_available() -> bool:
     return app.bkgd_process is None or not app.bkgd_process.is_alive()
 
 
+def did_hunting_commence() -> bool:
+    """Determine if hunting has started or not."""
+    return app.n_attempts > 0
+
+
 def get_app_state() -> Tuple[bool, int]:
     """Retrieve the state of the shiny hunting application."""
-    logger.info("checking for data in the queue")
-    while app.queue.empty():
-        # wait for queue to populate
-        delay(1, universal=True)
-    app_state = app.queue.get()
-    shiny_found: bool = app_state["shiny_found"]
-    n_attempts: int = app_state["n_attempts"]
-
-    return shiny_found, n_attempts
+    if not app.queue.empty():
+        logger.info("queue contains data. updating server state")
+        app_state = app.queue.get()
+        app.shiny_found = app_state["shiny_found"]
+        app.n_attempts = app_state["n_attempts"]
+    else:
+        logger.info("queue is empty")
+    
+    return app.shiny_found, app.n_attempts
