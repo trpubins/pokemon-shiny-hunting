@@ -41,6 +41,7 @@ def status_server():
         msg = "Server Available"
     else:
         msg = "Server Busy"
+    logger.info(f"response: {msg}")
     return msg
 
 
@@ -51,7 +52,9 @@ async def shiny_hunt(pokemon_name: str, background_tasks: BackgroundTasks, resp:
 
     if not app.server_available:
         resp.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
-        return "Server Busy"
+        msg = "Servery Busy"
+        logger.info(f"response: {msg}")
+        return msg
     
     # update server state
     app.server_available = False
@@ -67,11 +70,13 @@ async def shiny_hunt(pokemon_name: str, background_tasks: BackgroundTasks, resp:
     background_tasks.add_task(go_shiny_hunt, emulator, encounter, logger)
     
     # provide response immediately
-    return f"Started shiny hunt for {encounter.pokemon.name}"
+    msg = f"Started shiny hunt for {encounter.pokemon.name}"
+    logger.info(f"response: {msg}")
+    return msg
 
 
 @app.get("/status_hunt", status_code=status.HTTP_200_OK)
-def stop_hunt():
+def status_hunt():
     if app.server_available:
         msg = "No hunt to status"
     else:
@@ -79,6 +84,7 @@ def stop_hunt():
             msg = f"Shiny {app.encounter.pokemon.name} found after {app.encounter.n_attempts} attempts"
         else:
             msg = f"No shiny {app.encounter.pokemon.name} found after {app.encounter.n_attempts} attempts"
+    logger.info(f"response: {msg}")
     return msg
 
 
@@ -89,6 +95,7 @@ def stop_hunt():
     else:
         kill_emulator_process(app.emulator)
         msg = f"Stopped hunting {app.encounter.pokemon.name}"
+    logger.info(f"response: {msg}")
     return msg
 
 
