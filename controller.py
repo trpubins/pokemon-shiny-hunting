@@ -65,6 +65,10 @@ class EmulatorController():
         press_key(RETROARCH_CFG.fast_fwd_btn, delay_after_press=delay_after_press)
         logger.debug(f"toggled fast forward")
     
+    def toggle_menu(self, delay_after_press: float = None):
+        press_key(RETROARCH_CFG.menu_btn, delay_after_press=delay_after_press)
+        logger.debug(f"toggled menu overlay")
+
     def toggle_pause(self, delay_after_press: float = None):
         press_key(RETROARCH_CFG.pause_btn, delay_after_press=delay_after_press)
         logger.debug(f"toggled pause")

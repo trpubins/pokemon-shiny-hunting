@@ -33,6 +33,7 @@ class RetroArchConfig():
 
         # buttons
         self.fast_fwd_btn = config["input_toggle_fast_forward"]
+        self.menu_btn = config["input_menu_toggle"]
         self.pause_btn = config["input_pause_toggle"]
         self.reset_btn = config["input_reset"]
         self.screenshot_btn = config["input_screenshot"]
@@ -72,6 +73,7 @@ def _parse_retroarch_config(config_fp: str) -> dict:
     screenshot_dir = "screenshot_directory "
     
     fast_fwd_btn = "input_toggle_fast_forward "
+    menu_btn = "input_menu_toggle "
     pause_btn = "input_pause_toggle "
     reset_btn = "input_reset "
     screenshot_btn = "input_screenshot "
@@ -103,6 +105,8 @@ def _parse_retroarch_config(config_fp: str) -> dict:
                 config[screenshot_dir.strip()] = _clean_line(line, screenshot_dir)
             elif fast_fwd_btn in line:
                 config[fast_fwd_btn.strip()] = _clean_line(line, fast_fwd_btn)
+            elif menu_btn in line:
+                config[menu_btn.strip()] = _clean_line(line, menu_btn)
             elif pause_btn in line:
                 config[pause_btn.strip()] = _clean_line(line, pause_btn)
             elif reset_btn in line:
