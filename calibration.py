@@ -6,7 +6,7 @@ import shutil
 from typing import Tuple
 from zipfile import ZipFile
 
-import __init__
+from main import run as go_shiny_hunt
 from config import PROJ_ROOT_PATH, RETROARCH_CFG, ROM_NAME
 from emulator import Emulator
 from encounter import StaticEncounter
@@ -87,20 +87,10 @@ if __name__ == "__main__":
     pokemon_name = "Snorlax"
     og_rename_rtc_file, og_rename_srm_file = copy_native_save(pokemon_name)
     
-    em = Emulator()
-    em.launch_game()
+    emulator = Emulator()
+    pokemon = Pokemon(pokemon_name)
+    encounter = StaticEncounter(emulator, pokemon)
     try:
-        with cdtmp(sub_dirname="pokemon_shiny_hunting"):
-            pokemon = Pokemon(pokemon_name)
-            encounter = StaticEncounter(em, pokemon)
-            shiny_found = encounter.find_shiny(max_attempts=10)
-            logger.info(f"total number attempts: {encounter.n_attempts}")
-    except KeyboardInterrupt as k:
-        logger.warning("Keyboard interrupt by user")
-        raise k
-    except Exception as e:
-        logger.error("Exception occurred while shiny hunting")
-        raise e
+        go_shiny_hunt(emulator, encounter, max_attempts=10, send_email=False)
     finally:
-        em.kill_process()
         cleanup_save_dir(og_rename_rtc_file, og_rename_srm_file)

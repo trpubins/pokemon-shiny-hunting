@@ -15,7 +15,11 @@ from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
-def run(emulator: Emulator, encounter: StaticEncounter, max_attempts: int = 8000, queue: Queue = None):
+def run(emulator: Emulator,
+        encounter: StaticEncounter,
+        max_attempts: int = 8000,
+        send_email: bool = True,
+        queue: Queue = None):
     """Try to find a shiny from a static encounter."""
     
     def signal_handler(signalnum: int, frame):
@@ -66,8 +70,11 @@ def run(emulator: Emulator, encounter: StaticEncounter, max_attempts: int = 8000
     else:
         emulator.kill_process()
         attachments = []
-    send_notification(encounter.pokemon, n_attempts, shiny_found,
-                      attachments=attachments, send=True)
+    send_notification(encounter.pokemon,
+                      n_attempts,
+                      shiny_found,
+                      attachments=attachments,
+                      send=send_email)
     sys.exit(0)
 
 
