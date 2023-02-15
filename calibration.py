@@ -7,17 +7,13 @@ from typing import Tuple
 from zipfile import ZipFile
 
 from main import run as go_shiny_hunt
-from config import PROJ_ROOT_PATH, RETROARCH_CFG, ROM_NAME
+from config import NATIVE_SAVES_DIR, SAVES_DIR, RETROARCH_CFG, ROM_NAME
 from emulator import Emulator
 from encounter import StaticEncounter
 from pokemon import Pokemon
 from helpers.file_mgmt import cdtmp
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
-
-
-SAVES_DIR = os.path.join(PROJ_ROOT_PATH, "assets", "saves")
-NATIVE_SAVES_DIR = os.path.join(SAVES_DIR, "native_saves_static_encounters")
 
 
 def copy_native_save(pokemon_name: str) -> Tuple[str, str]:
