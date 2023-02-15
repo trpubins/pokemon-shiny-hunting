@@ -43,14 +43,14 @@ class Emulator():
 
         logger.debug("navigating to game")
         # assume RetroArch menu driver set to ozone
-        press_key("left", delay_after_press=0.1, delay_universal=True, in_game=False)
-        press_key("down", presses=2, delay_after_press=0.1, delay_universal=True, in_game= False)
-        press_key("right", delay_after_press=0.1, delay_universal=True, in_game=False)
-        press_key("Enter", in_game=False)
+        press_key("left", delay_after_press=0.1, delay_universal=True)
+        press_key("down", presses=2, delay_after_press=0.1, delay_universal=True)
+        press_key("right", delay_after_press=0.1, delay_universal=True)
+        press_key("Enter")
         delay(0.25, universal=True)
 
         logger.info(f"run game: Pokémon {POKEMON_GAME}")
-        press_key("Enter", in_game=False)
+        press_key("Enter")
     
     def launch(self):
         """Launch the emulator application."""
