@@ -97,18 +97,14 @@ class EmulatorController():
 def press_key(key: str,
               presses: int = 1,
               delay_after_press: float = None,
-              delay_universal: bool = False,
-              in_game: bool = True):
+              delay_universal: bool = False):
     """Virtually press the specified key."""
     for i in range(presses):
         if Platform.is_mac():
             gui.keyDown(key)
             gui.keyUp(key)
         elif Platform.is_windows():
-            if in_game:
-                inp.typewrite(key)
-            else:
-                inp.press(key)
+            inp.press(key)
         logger.debug(f"pressed key: {key}")
         if delay_after_press is not None:
             delay(delay_after_press, delay_universal)
