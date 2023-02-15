@@ -5,7 +5,8 @@ import logging
 import os
 import shutil
 from tempfile import gettempdir, mkdtemp
-from typing import Iterator
+from typing import Iterator, List
+from zipfile import ZipFile
 
 from helpers.platform import Platform
 from helpers.log import mod_fname
@@ -78,3 +79,17 @@ def cd(dir: str) -> Iterator[None]:
         yield
     finally:
         os.chdir(prev_dir)
+
+
+def extract_zipfiles(zipfiles: List[str]):
+    """Extract contents from the provided list of zipfiles
+    if not already unzipped. Will extract contents into
+    directory sharing same name as the zipfile."""
+    for zip_fn in zipfiles:
+        zip_dir, _ = zip_fn.split(".")
+        with ZipFile(zip_fn, 'r') as zip:
+            if not os.path.exists(zip_dir):
+                zip.extractall(path=os.path.join(zip_dir, os.path.pardir))
+                logger.debug(f"unzipped {zip_fn}")
+            else:
+                logger.debug(f"contents already unzipped for {zip_fn}")

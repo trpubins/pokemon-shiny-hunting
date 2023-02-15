@@ -4,18 +4,29 @@ from configparser import ConfigParser, NoOptionError
 import os
 
 from retroarch import RetroArchConfig
+from helpers.file_mgmt import extract_zipfiles
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
+# project paths
 PROJ_ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
+IMAGES_DIR = os.path.join(PROJ_ROOT_PATH, "assets", "images")
+LETTERS_DIR = os.path.join(IMAGES_DIR, "letters")
+SPRITES_DIR = os.path.join(IMAGES_DIR, "sprites")
+SAVES_DIR = os.path.join(PROJ_ROOT_PATH, "assets", "saves")
+NATIVE_SAVES_DIR = os.path.join(SAVES_DIR, "native_saves_static_encounters")
+extract_zipfiles(zipfiles=[
+    f"{LETTERS_DIR}.zip",
+    f"{SPRITES_DIR}.zip",
+    f"{NATIVE_SAVES_DIR}.zip"
+])
+
+# config.ini file
 CFG_FN = os.path.join(PROJ_ROOT_PATH, "config.ini")
 SECTION = "DEFAULT"
-EMULATOR_NAME = "RetroArch"
-
 logger.debug(f"parsing: {CFG_FN}")
 if not os.path.isfile(CFG_FN):
     raise FileNotFoundError(f"Unable to locate {CFG_FN}. Create {CFG_FN} according to https://docs.python.org/3.9/library/configparser.html#quick-start with {SECTION} section.")
-
 config = ConfigParser()
 config.read(CFG_FN)
 
@@ -48,7 +59,6 @@ try:
 except NoOptionError:
     DISP_BRIGHTNESS = None 
 
-
 logger.info(f"RETROARCH_CFG_FP: {RETROARCH_CFG_FP}")
 logger.info(f"RETROARCH_APP_FP: {RETROARCH_APP_FP}")
 logger.info(f"EMULATOR_CORE_AVG_FPS: {EMULATOR_CORE_AVG_FPS}")
@@ -61,3 +71,6 @@ logger.info(f"RECEIVER_EMAIL: {RECEIVER_EMAIL}")
 logger.info(f"SENDER_EMAIL: {SENDER_EMAIL}")
 logger.info(f"SENDER_EMAIL_PASS: {SENDER_EMAIL_PASS}")
 logger.info(f"DISP_BRIGHTNESS: {DISP_BRIGHTNESS}")
+
+# misc
+EMULATOR_NAME = "RetroArch"
