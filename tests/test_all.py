@@ -1,6 +1,7 @@
 import __init__
 
 import test_dex
+import test_emulator
 import test_image
 import test_notifications
 import test_opencv_util
@@ -19,6 +20,7 @@ def run_tests():
     test_notifications.run_tests.callback()
     test_opencv_util.run_tests.callback()
     test_image.run_tests.callback()
+    test_emulator.run_tests.callback()
     logger.info("-----------------------------")
     logger.info("ALL modules passed ALL tests!")
     logger.info("-----------------------------")
