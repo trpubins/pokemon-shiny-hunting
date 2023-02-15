@@ -1,3 +1,2 @@
 fastapi
-starlette
 uvicorn
