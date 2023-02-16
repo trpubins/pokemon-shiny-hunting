@@ -18,7 +18,6 @@ from main import run as go_shiny_hunt
 from emulator import Emulator
 from encounter import StaticEncounter
 from pokemon import Pokemon
-from helpers.common import delay
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 

@@ -92,3 +92,28 @@ You can also run all test scripts at once with:
 # runs all test scripts
 python tests/test_all.py
 ```
+
+### server
+
+>Note: server shell scripts are written for bash shell environments
+
+As an added feature, an Asynchronous Server Gateway Interface (ASGI) server has been designed with API endpoints available to run, status, and stop the `main` shiny hunting application. The endpoints are as follows:
+
+| Endpoint     | Description |
+|--------------|-------------|
+| /            | Provides status on the server (available or busy)                                             |
+| /shiny_hunt  | Launches a new static encounter shiny hunt if server is available                             |
+| /status_hunt | Provides a progress report on the hunt, namely if/not shiny found and the number of attempts  |
+| /stop_hunt   | Stops hunting for a pokemon                                                                   |
+
+To run the server, you must first have the environment variable `POKEMON_PROJ_PATH` set to the directory containing this README. Navigate into the server directory and in a bash terminal run:
+
+```bash
+./run_server.sh
+```
+
+Similarly, to kill the process running the uvicorn server, navigate into the server directory and in a bash terminal run:
+
+```bash
+./kill_server.sh
+```
