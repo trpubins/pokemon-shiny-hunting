@@ -3,9 +3,9 @@ import os
 import click
 
 import __init__
-
+from config import SPRITES_DIR
 from pokemon import (
-    SpriteType, SPRITES_DIR, create_pokemon_sprite_fn, get_sprite_name
+    SpriteType, create_pokemon_sprite_fn, get_sprite_name
 )
 from helpers import test_util
 from helpers.log import get_logger, mod_fname

@@ -29,6 +29,11 @@ POKEMON_LIST = [
     { "test_img_num": 14, "name":  "Nidoran F", "sprite_type": SpriteType.NORMAL },
     { "test_img_num": 15, "name":   "Mr. Mime", "sprite_type": SpriteType.NORMAL },
     { "test_img_num": 16, "name": "Farfetch'd", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num": 17, "name":  "Sudowoodo", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num": 18, "name":    "Suicune", "sprite_type":  SpriteType.SHINY },
+    { "test_img_num": 19, "name":      "Lugia", "sprite_type":  SpriteType.SHINY },
+    { "test_img_num": 20, "name":      "Lugia", "sprite_type": SpriteType.NORMAL },
+    { "test_img_num": 21, "name":      "Ho-Oh", "sprite_type":  SpriteType.SHINY },
 ]
 
 # check if zipfile requires unzipping
