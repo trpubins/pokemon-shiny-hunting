@@ -1,9 +1,14 @@
 """Manages the RetroArch configuration."""
 
+import logging
 import os
+import shutil
+from typing import Tuple
 
 from helpers.file_mgmt import cd
 from helpers.platform import Platform
+from helpers.log import mod_fname
+logger = logging.getLogger(mod_fname(__file__))
 
 
 class RetroArchConfig():
@@ -155,3 +160,75 @@ def _parse_retroarch_config(config_fp: str) -> dict:
                 pass
     
     return config
+
+
+def copy_native_save(pokemon_name: str,
+                     user_rom_name: str,
+                     native_saves_dir: str,
+                     retroarch_saves_dir: str) -> Tuple[str, str]:
+    """Copy native save for this Pokémon static encounter
+    into the user's saves dir."""
+    pokemon_name = pokemon_name.lower().capitalize()
+    logger.info(f"copying native save files for {pokemon_name} -> savefiles dir")
+
+    calibrate_rom_name = "Pokemon - Crystal Version (UE) (V1.1) [C][!]"
+    calibrate_rtc_path = os.path.join(native_saves_dir, pokemon_name, f"{calibrate_rom_name}.rtc")
+    calibrate_srm_path = os.path.join(native_saves_dir, pokemon_name, f"{calibrate_rom_name}.srm")
+    og_rtc_path = os.path.join(retroarch_saves_dir, f"{user_rom_name}.rtc")
+    og_srm_path = os.path.join(retroarch_saves_dir, f"{user_rom_name}.srm")
+
+    # rename original files as to not overwrite user's current saves
+    og_rename_rtc_path = os.path.join(retroarch_saves_dir, "og_file.rtc")
+    if os.path.exists(og_rename_rtc_path):
+        # don't do anything if og_file already exists
+        # (artifact from previous hunt where shiny was found)
+        logger.debug(f"original file already exists and is renamed: {og_rename_rtc_path}")
+    elif os.path.exists(og_rtc_path):
+        os.rename(og_rtc_path, og_rename_rtc_path)
+        logger.debug(f"renamed {og_rtc_path} -> {og_rename_rtc_path}")
+    else:
+        og_rename_rtc_path = None
+    
+    og_rename_srm_path = os.path.join(retroarch_saves_dir, "og_file.srm")
+    if os.path.exists(og_rename_srm_path):
+        # don't do anything if og_file already exists
+        # (artifact from previous hunt where shiny was found)
+        logger.debug(f"original file already exists and is renamed: {og_rename_srm_path}")
+    elif os.path.exists(og_srm_path):
+        os.rename(og_srm_path, og_rename_srm_path)
+        logger.debug(f"renamed {og_srm_path} -> {og_rename_srm_path}")
+    else:
+        og_rename_srm_path = None
+    
+    # copy calibration save files over to savefile dir, then rename
+    shutil.copy(calibrate_rtc_path, og_rtc_path)
+    shutil.copy(calibrate_srm_path, og_srm_path)
+    logger.debug(f"copied {calibrate_rtc_path} -> {og_rtc_path}")
+    logger.debug(f"copied {calibrate_srm_path} -> {og_srm_path}")
+
+    return og_rename_rtc_path, og_rename_srm_path
+
+
+def cleanup_save_dir(user_rom_name: str,
+                     retroarch_saves_dir: str,
+                     renamed_rtc_file: str,
+                     renamed_srm_file: str):
+    """Cleanup the RetroArch saves directory."""
+    logger.info("cleaning up the savefiles dir")
+    og_rtc_file = os.path.join(retroarch_saves_dir, f"{user_rom_name}.rtc")
+    og_srm_file = os.path.join(retroarch_saves_dir, f"{user_rom_name}.srm")
+
+    # first, delete the files that were renamed to the original saves
+    os.remove(og_rtc_file)
+    os.remove(og_srm_file)
+    logger.debug(f"deleted {og_rtc_file}")
+    logger.debug(f"deleted {og_srm_file}")
+
+    # next, rename the original files back
+    if renamed_rtc_file is not None:
+        os.rename(renamed_rtc_file, og_rtc_file)
+        logger.debug(f"renamed {renamed_rtc_file} to {og_rtc_file}")
+    
+    if renamed_srm_file is not None:
+        os.rename(renamed_srm_file, og_srm_file)
+        logger.debug(f"renamed {renamed_srm_file} to {og_srm_file}")
