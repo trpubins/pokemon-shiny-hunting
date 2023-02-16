@@ -27,6 +27,7 @@ DISP_BRIGHTNESS: 0.5                                                    # option
 
 In order to successfully run the program, ensure the following RetroArch settings are as follows:
 
+- User Interface > Menu > ozone
 - Video > GPU Screenshot > OFF
 - On-Screen Display > On-Screen Notifications > Notification Visibility > Screenshot Notification Persistence > Instant
 - Input > Polling Behavior > Normal
