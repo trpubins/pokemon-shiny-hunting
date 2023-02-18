@@ -1,14 +1,16 @@
+import os
+
 import click
 
 import __init__
 
-from image import get_latest_screenshot_fn
 from pokemon import Pokemon
 from notifications import USERNAME, send_notification
 from helpers import test_util
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
+from tests.__init__ import TEST_IMG_DIR
 MODULE = "notifications.py"
 
 
@@ -21,10 +23,11 @@ def test_1_get_username():
 def test_2_draft_email_shiny_found():
     logger.info("Test 2 - draft_email_shiny_found")
     pokemon = Pokemon("Gyarados")
+    shiny_gyarados_png = os.path.join(TEST_IMG_DIR, "battle_img_2.png")
     send_notification(pokemon,
                       n_attempts=5000,
                       shiny_found=True,
-                      attachments=[get_latest_screenshot_fn()],
+                      attachments=[shiny_gyarados_png],
                       send=False)
     logger.info("Test 2 - success!")
 
@@ -54,6 +57,7 @@ def run_tests(test_number: int = None):
             logger.error(f"Invalid test_number specified: {test_number}")
             raise e
     logger.info("----- All tests pass! -----")
+
 
 if __name__ == "__main__":
     run_tests()

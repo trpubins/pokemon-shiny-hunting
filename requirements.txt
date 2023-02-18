@@ -2,11 +2,11 @@
 coloredlogs
 matplotlib
 numpy>=1.19, <1.24
-opencv-python
+opencv-python>=4.6, <4.7
 pandas
 pillow
 pyautogui
-pydirectinput
+pydirectinput; sys_platform == 'win32'
 
 # tests
 click

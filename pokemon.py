@@ -4,13 +4,10 @@ from enum import Enum
 import logging
 import os
 
-from config import POKEMON_GAME
+from config import SPRITES_DIR, POKEMON_GAME
 from dex import get_pokemon_number
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
-
-
-SPRITES_DIR = os.path.join("images", "sprites")
 
 
 class Pokemon():
