@@ -11,7 +11,7 @@ from image import (
     determine_pack_items,
     get_latest_screenshot_fn
 )
-from helpers.delay import delay
+from helpers.common import delay
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
@@ -93,16 +93,16 @@ def collect_pack_inventory(emulator: Emulator) -> Tuple[Items, Machines, KeyItem
     # assume user is in the Pokémon world
     # assume pause menu has not yet been interacted
     emulator.press_start(delay_after_press=0.25)
-    emulator.nav_down(presses=2)
+    emulator.move_down_precise(presses=2)
     emulator.press_a(delay_after_press=0.25)
     
     # get inventory of each section in the pack
     items_list = collect_inventory(emulator, get_qty=True)
-    emulator.nav_left(presses=1)
+    emulator.move_left_precise(presses=1)
     machines_list = collect_inventory(emulator, get_qty=True)
-    emulator.nav_left(presses=1)
+    emulator.move_left_precise(presses=1)
     keyitems_list = collect_inventory(emulator, get_qty=False)
-    emulator.nav_left(presses=1)
+    emulator.move_left_precise(presses=1)
     balls_list = collect_inventory(emulator, get_qty=True)
 
     # back out of the pause menu
@@ -129,7 +129,7 @@ def collect_inventory(emulator: Emulator, get_qty: bool) -> List[Tuple[str, int]
     """Generic function to collect inventory for any section in the pack."""
     inventory = []
     unique_pack_items = [None]  # initialize with None element to kick off while loop
-    emulator.nav_down(presses=MAX_PACK_ITEMS - 1)  # assume cursor starts on unique item
+    emulator.move_down_precise(presses=MAX_PACK_ITEMS - 1)  # assume cursor starts on unique item
     while len(inventory) % MAX_PACK_ITEMS == 0 and len(unique_pack_items) > 0:
         emulator.take_screenshot(delay_after_press=0.25)
         pack_img_fn = get_latest_screenshot_fn()
@@ -139,7 +139,7 @@ def collect_inventory(emulator: Emulator, get_qty: bool) -> List[Tuple[str, int]
         # add only unique items to inventory
         unique_pack_items = [e for e in pack_items if e not in inventory]
         inventory += unique_pack_items
-        emulator.nav_down(presses=MAX_PACK_ITEMS)
+        emulator.move_down_precise(presses=MAX_PACK_ITEMS)
         
         if platform.system() == "Darwin" and len(unique_pack_items) > 0:
             # wait for screenshot banner to disappear from gui
