@@ -4,11 +4,9 @@ from enum import Enum
 import logging
 import os
 
+from config import MENU_DIR
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
-
-
-MENU_DIR = os.path.join("images", "menus")
 
 
 class MenuType(str, Enum):

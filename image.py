@@ -8,7 +8,7 @@ from typing import Any, List
 import cv2
 from PIL import Image
 
-from config import LETTERS_DIR, RETROARCH_CFG
+from config import LETTERS_DIR, NUM_DIR, RETROARCH_CFG
 from menu import MenuType, get_menu_fn
 from pokemon import Pokemon, SpriteType
 from helpers.opencv_util import (
@@ -18,7 +18,6 @@ from helpers.opencv_util import (
 )
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
-NUM_DIR = os.path.join("images", "numbers")
 
 
 def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
