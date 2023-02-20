@@ -198,11 +198,11 @@ def determine_number(num_img: cv2.Mat) -> int:
     min_diff = None
     number = str()
     for file in files:
-        alpha_img = cv2.imread(file)
-        img_width = get_img_width(num_img)
-        img_height = get_img_height(num_img)
+        digit_img = cv2.imread(file)
+        img_width = get_img_width(digit_img)
+        img_height = get_img_height(digit_img)
         diff = compare_img_pixels(num_img,
-                                  alpha_img,
+                                  digit_img,
                                   resize_width=int(img_width/4),
                                   resize_height=int(img_height/4))
         if min_diff is None or diff < min_diff:
