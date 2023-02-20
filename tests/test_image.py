@@ -134,6 +134,8 @@ def test_9_determine_pack_items():
         "ball1": [("greatball", 10)],
         "ball2": [("greatball", 30), ("pokeball", 81)],
         "ball3": [("greatball", 24), ("pokeball", 75)],
+        "ball4": [("greatball", 6)],
+        "items": [("superpotion", 1), ("fullheal", 16), ("fullrestore", 2), ("hyperpotion", 29), ("nevermeltice", 1)],
         "key":   [("squirtbottle", None), ("redscale", None), ("basementkey", None), ("cardkey", None), ("clearbell", None)],
         "tm":    [("dynamicpunch", 1), ("rollout", 1), ("irontail", 1), ("dragonbreath", 1), ("shadowball", 1)],
         "tm1":   [("rollout", 1), ("shadowball", 1), ("mud-slap", 1), ("attract", 1), ("furycutter", 1)]
