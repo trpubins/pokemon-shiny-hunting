@@ -3,7 +3,6 @@
 from enum import Enum
 import logging
 import os
-import platform
 from typing import List, Tuple
 
 from emulator import Emulator
@@ -131,10 +130,6 @@ def collect_inventory(emulator: Emulator, get_qty: bool) -> List[Tuple[str, int]
         unique_pack_items = [e for e in pack_items if e not in inventory]
         inventory += unique_pack_items
         emulator.move_down_precise(presses=MAX_PACK_ITEMS)
-        
-        if platform.system() == "Darwin" and len(unique_pack_items) > 0:
-            # wait for screenshot banner to disappear from gui
-            delay(1.5)
     return inventory
 
 
