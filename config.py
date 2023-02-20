@@ -12,11 +12,15 @@ logger = get_logger(mod_fname(__file__))
 PROJ_ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 IMAGES_DIR = os.path.join(PROJ_ROOT_PATH, "assets", "images")
 LETTERS_DIR = os.path.join(IMAGES_DIR, "letters")
+MENU_DIR = os.path.join(IMAGES_DIR, "menus")
+NUM_DIR = os.path.join(IMAGES_DIR, "numbers")
 SPRITES_DIR = os.path.join(IMAGES_DIR, "sprites")
 SAVES_DIR = os.path.join(PROJ_ROOT_PATH, "assets", "saves")
 NATIVE_SAVES_DIR = os.path.join(SAVES_DIR, "native_saves_static_encounters")
 extract_zipfiles(zipfiles=[
     f"{LETTERS_DIR}.zip",
+    f"{MENU_DIR}.zip",
+    f"{NUM_DIR}.zip",
     f"{SPRITES_DIR}.zip",
     f"{NATIVE_SAVES_DIR}.zip"
 ])

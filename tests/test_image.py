@@ -1,3 +1,4 @@
+import glob
 import os
 
 import click
@@ -7,9 +8,11 @@ import __init__
 
 from dex import gen_2_dex
 from image import (
+    determine_menu,
     crop_name_in_battle,
     crop_pokemon_in_battle,
     determine_name,
+    determine_pack_items,
     determine_sprite_type,
 )
 from pokemon import Pokemon, SpriteType
@@ -110,6 +113,46 @@ def test_7_determine_sprite_type_full():
         sprite_type = determine_sprite_type(pokemon, img=sprite_img)
         assert(sprite_type == type_)
     logger.info("Test 7 - success!")
+
+
+def test_8_determine_menu():
+    logger.info("Test 8 - determine_menu")
+    glob_pattern = os.path.join(TEST_IMG_DIR, "menu_*.png")
+    menu_test_files = list(filter(os.path.isfile, glob.glob(glob_pattern)))
+    for input_img_fn in menu_test_files:
+        logger.debug(f"testing {os.path.basename(input_img_fn)}")
+        menu = determine_menu(input_img_fn)
+        logger.debug(f"Determined menu type: {menu}")
+        assert(menu in input_img_fn)
+    logger.info("Test 8 - success!")
+
+
+def test_9_determine_pack_items():
+    logger.info("Test 9 - determine_pack_items")
+    pack_list = {
+        "ball":  [("masterball", 1), ("greatball", 28), ("pokeball", 81), ("ultraball", 81)],
+        "ball1": [("greatball", 10)],
+        "ball2": [("greatball", 30), ("pokeball", 81)],
+        "ball3": [("greatball", 24), ("pokeball", 75)],
+        "ball4": [("greatball", 6)],
+        "items": [("superpotion", 1), ("fullheal", 16), ("fullrestore", 2), ("hyperpotion", 29), ("nevermeltice", 1)],
+        "key":   [("squirtbottle", None), ("redscale", None), ("basementkey", None), ("cardkey", None), ("clearbell", None)],
+        "tm":    [("dynamicpunch", 1), ("rollout", 1), ("irontail", 1), ("dragonbreath", 1), ("shadowball", 1)],
+        "tm1":   [("rollout", 1), ("shadowball", 1), ("mud-slap", 1), ("attract", 1), ("furycutter", 1)]
+    }
+    for img_name,known_items in pack_list.items():
+        input_img_fn = os.path.join(TEST_IMG_DIR, f'items_{img_name}.png')
+        if img_name == "key":
+            # KeyItems do not contain quantities
+            items = determine_pack_items(input_img_fn, get_qty=False, del_png=True)
+        else:
+            items = determine_pack_items(input_img_fn, get_qty=True, del_png=True)
+        logger.debug(f"items: {items}")
+        for (det_item_name,det_item_qty),(known_item_name,known_item_qty) \
+             in zip(items,known_items):
+            assert(det_item_name == known_item_name)
+            assert(det_item_qty == known_item_qty)
+    logger.info("Test 9 - success!")
 
 
 @click.command()
