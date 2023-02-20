@@ -119,7 +119,7 @@ def collect_inventory(emulator: Emulator, get_qty: bool) -> List[Tuple[str, int]
     """Generic function to collect inventory for any section in the pack."""
     inventory = []
     unique_pack_items = [None]  # initialize with None element to kick off while loop
-    emulator.move_down_precise(presses=MAX_PACK_ITEMS - 1)  # assume cursor starts on unique item
+    emulator.move_down_precise(presses=MAX_PACK_ITEMS - 1, delay_after_press=0.1)  # assume cursor starts on unique item
     while len(inventory) % MAX_PACK_ITEMS == 0 and len(unique_pack_items) > 0:
         emulator.take_screenshot(delay_after_press=0.25)
         pack_img_fn = get_latest_screenshot_fn()
@@ -129,7 +129,7 @@ def collect_inventory(emulator: Emulator, get_qty: bool) -> List[Tuple[str, int]
         # add only unique items to inventory
         unique_pack_items = [e for e in pack_items if e not in inventory]
         inventory += unique_pack_items
-        emulator.move_down_precise(presses=MAX_PACK_ITEMS)
+        emulator.move_down_precise(presses=MAX_PACK_ITEMS, delay_after_press=0.1)
     return inventory
 
 
