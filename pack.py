@@ -86,6 +86,25 @@ class BallType(str, Enum):
     MOON = "moonball"
     SPORT = "sportball"
 
+    def ordered_ball(self) -> int:
+        if self == self.MASTER:
+            return 1
+        if self == self.ULTRA:
+            return 2
+        if self == self.GREAT:
+            return 3
+        if self == self.POKE:
+            return 4
+
+    def rank(self, rank:int) -> str:
+        if rank == 1:
+            return self.MASTER[1]
+        if rank == 2:
+            return self.ULTRA[1]
+        if rank == 3:
+            return self.GREAT[1]
+        if rank == 4:
+            return self.POKE[1]
 
 def collect_pack_inventory(emulator: Emulator) -> Tuple[Items, Machines, KeyItems, Balls]:
     """Collect inventory of all items in the pack."""
