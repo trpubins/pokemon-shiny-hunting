@@ -55,7 +55,8 @@ if __name__ == "__main__":
         em.press_start(delay_after_press=0.25)
         em.press_a()
         ball_inv = collect_inventory(em, True)
-        em.press_b(presses=2, delay_after_press=0.5)
+        em.press_a(delay_after_press=1)         #Cannot use press_b twice on Mac when Retroarch is already open? Is opening up my Notes application
+        em.press_start(delay_after_press=1)     #Press_a for cancel and Press_start to exit menu
     logger.info(f"current ball inventory: {ball_inv}")
     hier = id_ball_hierarchy(ball_inv)
     logger.info(f"ranking of current balls: {hier}")
