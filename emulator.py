@@ -7,6 +7,7 @@ import os
 
 from config import EMULATOR_NAME, POKEMON_GAME, RETROARCH_APP_FP, DISP_BRIGHTNESS
 from controller import EmulatorController, press_key
+from image import is_in_battle
 from helpers.common import delay, set_disp_brightness
 from helpers.file_mgmt import cd
 from helpers.platform import Platform
@@ -222,6 +223,7 @@ class EmulatorState():
         self.fast_fwd = ToggleState.OFF
         self.pause = ToggleState.OFF
         self.run = ToggleState.OFF
+        self.battle = ToggleState.OFF
         self.game = POKEMON_GAME
     
     def is_fast_fwd_on(self) -> bool:
@@ -259,6 +261,15 @@ class EmulatorState():
 
     def game_off(self):
         self.run = ToggleState.OFF
+    
+    def battle_state(self) -> ToggleState:
+        if is_in_battle():
+            self.battle = ToggleState.ON
+            logger.info("BattleState is ON")
+        else:
+            self.battle = ToggleState.OFF
+            logger.info("BattleState is OFF")
+        return self.battle
 
 if __name__ == "__main__":
     em = Emulator()

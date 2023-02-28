@@ -416,3 +416,46 @@ def crop_item_qty(im_item_qty: Image.Image, del_png: bool = True) -> List[cv2.Ma
     logger.debug(f"item quantity contains {len(num_imgs)} letters")
 
     return num_imgs
+
+
+def is_in_battle(del_png: bool = True) -> bool:
+    """Check to see if Trainer is in battle"""
+    img = get_latest_screenshot_fn()
+    im = Image.open(img)
+    true_im = os.path.join("assets", "images", "battle", "hp.png")
+    """Crop around the HP bar's black box that is located below the name of both Pokemon"""
+    hp_upper_top = im.height * 0.125
+    hp_upper_bot = im.height * 0.15
+    hp_upper_left = im.width * 0.1
+    hp_upper_right = im.width * 0.2
+    hp_upper = im.crop((hp_upper_left, hp_upper_top, hp_upper_right, hp_upper_bot))
+    
+    hp1 = "hp_upper_test.png"
+    hp_upper.save(hp1)
+
+    hp_lower_top = im.height * 0.515
+    hp_lower_bot = im.height * 0.54
+    hp_lower_left = im.width * 0.5
+    hp_lower_right = im.width * 0.6
+    hp_lower = im.crop((hp_lower_left, hp_lower_top, hp_lower_right, hp_lower_bot))
+
+    hp2 = "hp_lower_test.png"
+    hp_lower.save(hp2)
+
+    upper = cv2.imread(hp1)
+    lower = cv2.imread(hp2)
+    true = cv2.imread(true_im)
+
+    if del_png:
+        os.remove(hp1)
+        os.remove(hp2)
+
+    """Assert that if both crops are identical and not purely white images, return that Trainer is in battle"""
+    if compare_img_pixels(upper, lower) == 0 and compare_img_pixels(upper, true) == 0:
+        return True
+    else:
+        return False
+
+if __name__ == "__main__":
+    img = get_latest_screenshot_fn()
+    print(is_in_battle())
