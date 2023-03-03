@@ -4,9 +4,11 @@ import pandas as pd
 
 from emulator import Emulator, ToggleState
 from encounter import StaticEncounter
+from image import determine_capture_status, get_latest_screenshot_fn
 from pack import Pack, BallType, collect_inventory
 from pokemon import Pokemon
 
+from helpers.common import delay
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
@@ -74,7 +76,7 @@ if __name__ == "__main__":
     import __init__
     from config import POKEMON_STATIC_ENCOUNTER
     em = Emulator()
-    em.state.run = ToggleState.ON              #Change depending on if game is already preloaded to enhance speed
+    em.state.run = ToggleState.OFF              #Change depending on if game is already preloaded to enhance speed
     if  em.state.run != ToggleState.ON:         #If game is closed, do full launch
         em.launch_game()
         em.continue_pokemon_game()
@@ -99,4 +101,8 @@ if __name__ == "__main__":
         em.press_b(presses=5, delay_after_press=0.25)
         em.take_screenshot()
     ball_inv = throw_best_ball(ball_inv)
+    delay(5)
+    em.take_screenshot()
+    img = get_latest_screenshot_fn()
+    capture = determine_capture_status(img)
     
