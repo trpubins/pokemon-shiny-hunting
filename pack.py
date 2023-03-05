@@ -67,8 +67,56 @@ class Machines(Inventory):
 
 class Balls(Inventory):
     """Track inventory of pack Balls."""
-    pass
+    
+    def id_ball_hierarchy(self) -> dict:
+        """Establishes hierarchy of balls in pocket"""
+        hierarchy = dict()
+        for ball in self.inventory.keys():
+            bt = BallType(ball)
+            rank = (bt.ordered_ball())
+            hierarchy[ball] = rank
+        logger.info(f"ranking of current balls: {hierarchy}")
+        return hierarchy
 
+    def id_best_ball(self, hierarchy: dict):                    #Cannot tell it how to return BallType in the callout of the function
+        """Returns the string of best ball in pocket"""
+        best = 13 # number of different ball types used in game
+        best_name = ""
+        for ball, rank in hierarchy.items():
+            if rank <= best:
+                best = rank
+                best_name = ball
+        logger.info(f"best ball in pocket is {best_name}")
+        return BallType(best_name)
+    
+    def highlight_best_ball(self, hierarchy: dict, emulator: Emulator) -> int:
+        """Hover cursor over best ball in pocket"""
+        emulator.move_down(delay_after_press=0.25)
+        emulator.press_a(delay_after_press=0.25)
+        best = self.id_best_ball(self.id_ball_hierarchy())
+        for ball in hierarchy.keys():
+            if BallType(ball) == best:
+                L = list(hierarchy.keys())
+                actions = L.index(ball)                                      #Assumes that cursor is currently hovering over top option
+        emulator.move_down_precise(presses= actions, delay_after_press=0.25)
+        return actions
+
+    def throw_best_ball(self, emulator: Emulator) -> dict:
+        """Throws best ball in pocket available. Returns new inventory value"""
+        num = self.highlight_best_ball(self.id_ball_hierarchy(), emulator=Emulator())
+        emulator.press_a(presses=2, delay_after_press=0.5)
+        logger.info("ball thrown")
+        L = list(self.inventory)
+        for ball, qty in self.inventory.items():
+            if L.index(ball) == num:
+                qty -= 1
+                if qty == 0:
+                    del self.inventory[ball]
+                    break
+                else:
+                    self.inventory[ball] = qty
+        logger.info(f"current ball inventory: {self.inventory}")
+        return self.inventory
 
 class BallType(str, Enum):
     """Enumeration for ball types."""
