@@ -90,14 +90,14 @@ class Balls(Inventory):
     
     def highlight_best_ball(self, hierarchy: dict, emulator: Emulator) -> int:
         """Hover cursor over best ball in pocket"""
-        emulator.move_down(delay_after_press=0.25)
-        emulator.press_a(delay_after_press=0.25)
+        emulator.move_down_precise(delay_after_press=0.25)
+        emulator.press_a_precise(delay_after_press=0.25)
         hierarchy = self.id_ball_hierarchy()
         best = self.id_best_ball(hierarchy)
         for ball in hierarchy.keys():
             if BallType(ball) == best:
                 L = list(hierarchy.keys())
-                actions = L.index(ball)                                      #Assumes that cursor is currently hovering over top option
+                actions = len(L) - L.index(ball)                              #Assumes that cursor is currently hovering over cancel
         emulator.move_down_precise(presses= actions, delay_after_press=0.25)
         return actions
 
@@ -116,7 +116,7 @@ class Balls(Inventory):
 
     def throw_best_ball(self, emulator: Emulator) -> dict:
         """Throws best ball in pocket available. Returns new inventory value"""
-        num = self.highlight_best_ball(self.id_ball_hierarchy(), emulator=Emulator())
+        num = self.highlight_best_ball(self.id_ball_hierarchy(), emulator)
         emulator.press_a(presses=2, delay_after_press=0.5)
         logger.info("ball thrown")
         L = list(self.inventory)
