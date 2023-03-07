@@ -72,8 +72,7 @@ class Balls(Inventory):
         """Establishes hierarchy of balls in pocket"""
         hierarchy = dict()
         for ball in self.inventory.keys():
-            bt = BallType(ball)
-            rank = (bt.ordered_ball())
+            rank = (self.ordered_ball(ball))
             hierarchy[ball] = rank
         logger.info(f"ranking of current balls: {hierarchy}")
         return hierarchy
@@ -93,13 +92,27 @@ class Balls(Inventory):
         """Hover cursor over best ball in pocket"""
         emulator.move_down(delay_after_press=0.25)
         emulator.press_a(delay_after_press=0.25)
-        best = self.id_best_ball(self.id_ball_hierarchy())
+        hierarchy = self.id_ball_hierarchy()
+        best = self.id_best_ball(hierarchy)
         for ball in hierarchy.keys():
             if BallType(ball) == best:
                 L = list(hierarchy.keys())
                 actions = L.index(ball)                                      #Assumes that cursor is currently hovering over top option
         emulator.move_down_precise(presses= actions, delay_after_press=0.25)
         return actions
+
+    def ordered_ball(self, ball: str) -> int:
+        """Returns the hierarchy of the ball in absolute terms"""
+        ball = BallType(ball)
+
+        if ball == BallType.MASTER:
+            return 1
+        if ball == BallType.ULTRA:
+            return 2
+        if ball == BallType.GREAT:
+            return 3
+        if ball == BallType.POKE:
+            return 4
 
     def throw_best_ball(self, emulator: Emulator) -> dict:
         """Throws best ball in pocket available. Returns new inventory value"""
@@ -133,26 +146,6 @@ class BallType(str, Enum):
     FRIEND = "friendball"
     MOON = "moonball"
     SPORT = "sportball"
-
-    def ordered_ball(self) -> int:
-        if self == self.MASTER:
-            return 1
-        if self == self.ULTRA:
-            return 2
-        if self == self.GREAT:
-            return 3
-        if self == self.POKE:
-            return 4
-
-    def rank(self, rank:int) -> str:
-        if rank == 1:
-            return self.MASTER[1]
-        if rank == 2:
-            return self.ULTRA[1]
-        if rank == 3:
-            return self.GREAT[1]
-        if rank == 4:
-            return self.POKE[1]
 
 def collect_pack_inventory(emulator: Emulator) -> Tuple[Items, Machines, KeyItems, Balls]:
     """Collect inventory of all items in the pack."""
