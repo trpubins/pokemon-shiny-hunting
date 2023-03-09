@@ -445,11 +445,11 @@ def determine_capture_status(img: str, del_png: bool = True) -> bool:
         im_char.save(cropped_fn)
 
         # load into OpenCV obj
-        img = cv2.imread(cropped_fn)
+        img1 = cv2.imread(cropped_fn)
 
         # determine if img contains a letter based on how white it is
-        if not is_img_white(img):
-            letter_imgs.append(img)
+        if not is_img_white(img1):
+            letter_imgs.append(img1)
 
         if del_png:
             os.remove(cropped_fn)
@@ -458,10 +458,14 @@ def determine_capture_status(img: str, del_png: bool = True) -> bool:
 
     if pokename == capture_name:
         logger.info(f"{pokename.upper()} has been successfully caught!")
-        return True
+        boolean = True
     else:
         logger.info(f"{pokename.upper()} has broken out of the ball!")
-        return False
+        boolean = False
+    
+    if del_png:
+        os.remove(img)
+    return boolean
 
 def is_in_battle(del_png: bool = True) -> bool:
     """Check to see if Trainer is in battle"""

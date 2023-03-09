@@ -32,7 +32,18 @@ class Inventory():
         self.inventory = dict()
         for name,qty in inventory:
             self.inventory[name] = qty
-
+    
+    def update_qty(self, indice: int) -> dict:
+        listing = list(self.inventory)
+        for item, qty in self.inventory.items():
+            if listing.index(item) == indice:
+                qty -= 1
+                if qty == 0:
+                    del self.inventory[item]
+                    break
+                else:
+                    self.inventory[item] = qty
+        return self.inventory
 
 class InventoryNoQty():
     """Generic class to track inventory without considering quantity."""
@@ -88,7 +99,7 @@ class Balls(Inventory):
         logger.info(f"best ball in pocket is {best_name}")
         return BallType(best_name)
     
-    def highlight_best_ball(self, hierarchy: dict, emulator: Emulator) -> int:
+    def highlight_best_ball(self, hierarchy: dict, emulator: Emulator, highlighted: bool= True) -> int:
         """Hover cursor over best ball in pocket"""
         emulator.move_down_precise(delay_after_press=0.25)
         emulator.press_a_precise(delay_after_press=0.25)
@@ -97,9 +108,13 @@ class Balls(Inventory):
         for ball in hierarchy.keys():
             if BallType(ball) == best:
                 L = list(hierarchy.keys())
-                actions = len(L) - L.index(ball)                              #Assumes that cursor is currently hovering over cancel
-        emulator.move_down_precise(presses= actions, delay_after_press=0.25)
-        return actions
+                position = L.index(ball)
+                actions = len(L) - position          #Assumes that cursor is currently hovering over cancel
+        # If highlight has already been run, reset cursor to cancel position
+        if not highlighted:
+                emulator.move_down(presses=len(L), delay_after_press=0.1)
+        emulator.move_up_precise(presses= actions, delay_after_press=0.25)
+        return position
 
     def ordered_ball(self, ball: str) -> int:
         """Returns the hierarchy of the ball in absolute terms"""
@@ -114,21 +129,15 @@ class Balls(Inventory):
         if ball == BallType.POKE:
             return 4
 
-    def throw_best_ball(self, emulator: Emulator) -> dict:
+    def throw_best_ball(self, emulator: Emulator, highlighted: bool= True) -> dict:
         """Throws best ball in pocket available. Returns new inventory value"""
-        num = self.highlight_best_ball(self.id_ball_hierarchy(), emulator)
+        num = self.highlight_best_ball(self.id_ball_hierarchy(), emulator, highlighted)
         emulator.press_a(presses=2, delay_after_press=0.5)
-        logger.info("ball thrown")
-        L = list(self.inventory)
-        for ball, qty in self.inventory.items():
-            if L.index(ball) == num:
-                qty -= 1
-                if qty == 0:
-                    del self.inventory[ball]
-                    break
-                else:
-                    self.inventory[ball] = qty
-        logger.info(f"current ball inventory: {self.inventory}")
+        logger.info("ball thrown")  
+        current_inv = self.update_qty(num)
+        logger.info(f"current ball inventory: {current_inv}")
+        delay(2.5)
+        emulator.take_screenshot()
         return self.inventory
 
 class BallType(str, Enum):

@@ -5,8 +5,7 @@ import cv2
 
 import __init__
 from emulator import Emulator
-from image import compare_img_pixels, get_latest_screenshot_fn
-from pack import Balls, BallType, Inventory
+from pack import Balls, BallType
 from helpers import test_util
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
@@ -52,15 +51,12 @@ def test_4_throw_best_ball():
 def run_tests():
     logger.info(f"----- Testing {MODULE} -----")
     
-    # # launch and continue game **before** running these tests
-    # EMULATOR.launch_game()
-    # EMULATOR.continue_pokemon_game()
+
 
     # each test is dependent on controller presses from
     # previous test so required to always run all tests in this test
     test_util.run_tests(module_name=__name__)
     
-    # EMULATOR.kill_process()
     logger.info("----- All tests pass! -----")
 
 
