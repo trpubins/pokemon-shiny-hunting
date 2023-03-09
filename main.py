@@ -8,10 +8,12 @@ import sys
 from config import NATIVE_SAVES_DIR, ROM_NAME, RETROARCH_CFG
 from emulator import Emulator
 from encounter import StaticEncounter
-from image import get_latest_screenshot_fn
+from image import determine_capture_status, get_latest_screenshot_fn
 from notifications import send_notification
+from pack import Balls, collect_inventory
 from pokemon import Pokemon
 from retroarch import cleanup_save_dir, copy_native_save
+from helpers.common import delay
 from helpers.file_mgmt import cdtmp
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
@@ -79,9 +81,29 @@ def run(emulator: Emulator,
         raise e
     
     if shiny_found:
-        emulator.save_state()
-        emulator.fast_fwd_off()
-        emulator.pause_on()
+        # Set Up Balls Pocket
+        emulator.press_b(delay_after_press=1.0)
+        emulator.move_down(delay_after_press=.5)
+        emulator.press_a(delay_after_press=.5)
+        emulator.move_right_precise(delay_after_press=0.5)
+
+        # Collect Balls Pocket qty
+        balls = Balls(collect_inventory(emulator, get_qty=True))
+        emulator.press_b(delay_after_press=0.5)
+        logger.info(f'current inventory: {balls.inventory}')
+        balls.throw_best_ball(emulator)
+        capture_img = get_latest_screenshot_fn()
+        delay(1.5)
+        count = 0
+        
+        # If Pokemon breaks out of ball, continue throwing same ball, if 3 or more balls have been thrown, allows user to take over
+        #manually
+        while determine_capture_status(capture_img) != True and count <= 3:
+            emulator.press_b(presses= 8, delay_after_press=0.25)
+            balls.throw_best_ball(emulator, highlighted= False)
+            capture_img = get_latest_screenshot_fn()
+            count += 1
+
         attachments = [get_latest_screenshot_fn()]
     else:
         kill_proc_and_cleanup()

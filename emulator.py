@@ -7,6 +7,7 @@ import os
 
 from config import EMULATOR_NAME, POKEMON_GAME, RETROARCH_APP_FP, DISP_BRIGHTNESS
 from controller import EmulatorController, press_key
+from image import is_in_battle
 from helpers.common import delay, set_disp_brightness
 from helpers.file_mgmt import cd
 from helpers.platform import Platform
@@ -18,7 +19,6 @@ class ToggleState(str, Enum):
     """Enumeration for toggling on/off."""
     ON = 'on'
     OFF = 'off'
-
 
 class Emulator():
     """Take actions inside an emulator."""
@@ -50,6 +50,7 @@ class Emulator():
         delay(0.25, universal=True)
 
         logger.info(f"run game: Pokémon {POKEMON_GAME}")
+        self.state.game_run()
         press_key("Enter")
     
     def launch(self):
@@ -69,6 +70,7 @@ class Emulator():
         logger.info(f"quitting {EMULATOR_NAME} emulator")
         self.cont.press_exit_btn(presses=2, delay_after_press=0.25)
         set_disp_brightness(DISP_BRIGHTNESS)
+        self.state.game_off()
     
     def kill_process(self):
         """Kill the emulator process."""
@@ -81,6 +83,8 @@ class Emulator():
             os.system(f"taskkill /IM {exe}")
         delay(1, universal=True)
         set_disp_brightness(DISP_BRIGHTNESS)
+        self.state.game_off()
+        
 
     def interact(func):
         """Interact with controls inside the emulator.
@@ -218,6 +222,8 @@ class EmulatorState():
     def __init__(self):
         self.fast_fwd = ToggleState.OFF
         self.pause = ToggleState.OFF
+        self.run = ToggleState.OFF
+        self.battle = ToggleState.OFF
         self.game = POKEMON_GAME
     
     def is_fast_fwd_on(self) -> bool:
@@ -232,6 +238,12 @@ class EmulatorState():
     def is_pause_off(self) -> bool:
         return self.pause == ToggleState.OFF
     
+    def is_game_run(self) -> bool:
+        return self.run == ToggleState.ON
+
+    def is_game_off(self) -> bool:
+        return self.run == ToggleState.OFF
+
     def fast_fwd_on(self):
         self.fast_fwd = ToggleState.ON
     
@@ -244,6 +256,20 @@ class EmulatorState():
     def pause_off(self):
         self.pause = ToggleState.OFF
 
+    def game_run(self):
+        self.run = ToggleState.ON
+
+    def game_off(self):
+        self.run = ToggleState.OFF
+    
+    def battle_state(self) -> ToggleState:
+        if is_in_battle():
+            self.battle = ToggleState.ON
+            logger.info("BattleState is ON")
+        else:
+            self.battle = ToggleState.OFF
+            logger.info("BattleState is OFF")
+        return self.battle
 
 if __name__ == "__main__":
     em = Emulator()

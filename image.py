@@ -416,3 +416,95 @@ def crop_item_qty(im_item_qty: Image.Image, del_png: bool = True) -> List[cv2.Ma
     logger.debug(f"item quantity contains {len(num_imgs)} letters")
 
     return num_imgs
+
+def determine_capture_status(img: str, del_png: bool = True) -> bool:
+    """Determine if capture has been made successfully"""
+    pokename = crop_name_in_battle(img)
+    pokename = determine_name(pokename)
+
+    im = Image.open(img)
+
+    # generation II games have maximum 10 chars for names
+    max_chars = 10
+    letter_imgs = list()
+    for i in range(max_chars):
+        # percentages used in calcs were determined empirically
+        # valid only for generation II games
+        char_width = im.width*(0.04375)
+        char_height = char_width
+        char_space = char_width/7
+        
+        left = i*(char_width + char_space) + im.width*(0.45)    #Derived from empirical testing; compares the upper and lower names on screen
+        right = left + char_width
+        top = im.height * .775
+        bottom = top + char_height
+
+        # crop image and save to disk
+        im_char = im.crop((left, top, right, bottom))
+        cropped_fn = f"char_{str(i)}.png"
+        im_char.save(cropped_fn)
+
+        # load into OpenCV obj
+        img1 = cv2.imread(cropped_fn)
+
+        # determine if img contains a letter based on how white it is
+        if not is_img_white(img1):
+            letter_imgs.append(img1)
+
+        if del_png:
+            os.remove(cropped_fn)
+    
+    capture_name = determine_name(letter_imgs)
+
+    if pokename == capture_name:
+        logger.info(f"{pokename.upper()} has been successfully caught!")
+        boolean = True
+    else:
+        logger.info(f"{pokename.upper()} has broken out of the ball!")
+        boolean = False
+    
+    if del_png:
+        os.remove(img)
+    return boolean
+
+def is_in_battle(del_png: bool = True) -> bool:
+    """Check to see if Trainer is in battle"""
+    img = get_latest_screenshot_fn()
+    im = Image.open(img)
+    true_im = os.path.join("assets", "images", "battle", "hp.png")
+    """Crop around the HP bar's black box that is located below the name of both Pokemon"""
+    hp_upper_top = im.height * 0.125
+    hp_upper_bot = im.height * 0.15
+    hp_upper_left = im.width * 0.1
+    hp_upper_right = im.width * 0.2
+    hp_upper = im.crop((hp_upper_left, hp_upper_top, hp_upper_right, hp_upper_bot))
+    
+    hp1 = "hp_upper_test.png"
+    hp_upper.save(hp1)
+
+    hp_lower_top = im.height * 0.515
+    hp_lower_bot = im.height * 0.54
+    hp_lower_left = im.width * 0.5
+    hp_lower_right = im.width * 0.6
+    hp_lower = im.crop((hp_lower_left, hp_lower_top, hp_lower_right, hp_lower_bot))
+
+    hp2 = "hp_lower_test.png"
+    hp_lower.save(hp2)
+
+    upper = cv2.imread(hp1)
+    lower = cv2.imread(hp2)
+    true = cv2.imread(true_im)
+
+    if del_png:
+        os.remove(hp1)
+        os.remove(hp2)
+
+    """Assert that if both crops are identical and not purely white images, return that Trainer is in battle"""
+    if compare_img_pixels(upper, lower) == 0 and compare_img_pixels(upper, true) == 0:
+        return True
+    else:
+        return False
+
+if __name__ == "__main__":
+    img = get_latest_screenshot_fn()
+    im = determine_capture_status(img, False)
