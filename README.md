@@ -2,7 +2,33 @@
 
 Automate the shiny-hunting process for a Pokémon emulator.
 
-## Config File
+## Getting Started
+
+### Prerequisites
+
+1. Python 3.9 | 3.10 | 3.11 installed on system
+
+>WARNING: Dependency build errors occur with Python 3.12 or later.
+
+### Set Up Environment
+
+To create the dev environment, navigate to the project root directory and run the following
+
+```bash
+make setup [PYTHON3=python3]
+```
+
+>NOTE: This command creates a virtual environment to `./.venv` and downloads all the
+packages required to debug/test the source code as well as other developer tools. Specify
+a minor version of Python 3 using the `PYTHON3=python3.<minor>` arg.
+
+If the dev environment has already been setup, then the dependencies can be updated with
+
+```bash
+make update [PYTHON3=python3]
+```
+
+### Project Config File
 
 Inside the project root directory, create a file named `config.ini`. Below is an example:
 

@@ -8,5 +8,7 @@ pillow
 pyautogui
 pydirectinput; sys_platform == 'win32'
 
-# tests
+# dev tools
 click
+black~=24.10
+ruff~=0.9
