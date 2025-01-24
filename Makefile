@@ -1,5 +1,5 @@
 .PHONY: setup update clean \
-		format lint
+		format lint test
 
 ####### CONSTANTS #######
 PROJ_ROOT_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
@@ -45,3 +45,11 @@ format:
 
 lint:
 	$(VENV_DIR)/bin/ruff check $(PROJ_ROOT_DIR)
+
+# Run all tests
+test:
+	$(VENV_DIR)/bin/pytest -s -v -c $(PROJ_ROOT_DIR)/tests/pytest.ini \
+		--cov --cov-report term --cov-report html --cov-report xml --cov-config $(PROJ_ROOT_DIR)/tests/.coveragerc
+
+test-no-cov:
+	$(VENV_DIR)/bin/pytest -s -v -c $(PROJ_ROOT_DIR)/tests/pytest.ini
