@@ -1,0 +1,7 @@
+{
+    "description": "Verify the pokemon name (male) with a space is returned with a dash",
+    "input": {
+        "name": "Nidoran M"
+    },
+    "expected_output": "nidoran-m"
+}
