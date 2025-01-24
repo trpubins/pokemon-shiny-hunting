@@ -1,0 +1,8 @@
+{
+    "description": "Verify maximum differences in color when black and white images are compared",
+    "input": {
+        "image1": "black.png",
+        "image2": "white.png"
+    },
+    "expected_output": "max"
+}

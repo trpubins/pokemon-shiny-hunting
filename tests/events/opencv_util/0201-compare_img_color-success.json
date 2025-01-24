@@ -1,0 +1,8 @@
+{
+    "description": "Verify minimal differences in color when same image is compared",
+    "input": {
+        "image1": "black.png",
+        "image2": "black.png"
+    },
+    "expected_output": "min"
+}
