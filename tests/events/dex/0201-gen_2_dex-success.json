@@ -1,0 +1,5 @@
+{
+    "description": "Verify the generation II pokedex has 251 pokemon entries",
+    "input": {},
+    "expected_output": 251
+}

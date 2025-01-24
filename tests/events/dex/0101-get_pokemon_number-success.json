@@ -1,0 +1,7 @@
+{
+    "description": "Verify the pokemon name (lowercase) returns no. 1 from the pokedex",
+    "input": {
+        "name": "bulbasaur"
+    },
+    "expected_output": 1
+}
