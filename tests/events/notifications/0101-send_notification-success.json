@@ -1,0 +1,10 @@
+{
+    "description": "Verify the email notification is drafted when a shiny is found",
+    "input": {
+        "name": "Gyarados",
+        "image": "battle_img_2.png",
+        "n_attempts": 5000,
+        "shiny_found": true
+    },
+    "expected_output": null
+}
