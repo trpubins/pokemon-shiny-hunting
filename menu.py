@@ -20,6 +20,6 @@ class MenuType(str, Enum):
 
 def get_menu_fn(menu_type: MenuType, ext: str = "png"):
     """Generate the menu filename from the menu type."""
-    menu_fn = os.path.join(MENU_DIR, f"menu_{menu_type}.{ext}")
+    menu_fn = os.path.join(MENU_DIR, f"menu_{menu_type.value}.{ext}")
     logger.debug(f"menu_fn: {menu_fn}")
     return menu_fn
