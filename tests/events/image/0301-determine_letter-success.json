@@ -1,0 +1,9 @@
+{
+    "description": "Verify image of character 'G' matches expected ouptut",
+    "input": {
+        "image": "char_0.png"
+    },
+    "expected_output": {
+        "letter": "g"
+    }
+}

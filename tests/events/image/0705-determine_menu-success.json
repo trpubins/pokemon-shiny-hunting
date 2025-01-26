@@ -1,0 +1,7 @@
+{
+    "description": "Verify menu type determined from Mac items image matches expected output",
+    "input": {
+        "image": "menu_items_mac.png"
+    },
+    "expected_output": "items"
+}

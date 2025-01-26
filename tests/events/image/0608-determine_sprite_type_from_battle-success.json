@@ -1,0 +1,8 @@
+{
+    "description": "Verify sprite type determined from battle image 8 matches expected output",
+    "input": {
+        "pokemon_name": "Zubat",
+        "image": "battle_img_8.png"
+    },
+    "expected_output": "normal"
+}

@@ -1,0 +1,7 @@
+{
+    "description": "Verify name determined from battle image 4 matches expected output",
+    "input": {
+        "image": "battle_img_4.png"
+    },
+    "expected_output": "sentret"
+}

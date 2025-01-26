@@ -1,0 +1,8 @@
+{
+    "description": "Verify sprite type determined from battle image 13 matches expected output",
+    "input": {
+        "pokemon_name": "Nidoran M",
+        "image": "battle_img_13.png"
+    },
+    "expected_output": "normal"
+}

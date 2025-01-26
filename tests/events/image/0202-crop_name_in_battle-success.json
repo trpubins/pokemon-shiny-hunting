@@ -1,0 +1,8 @@
+{
+    "description": "Verify number of letter images returned matches number of letters in pokemon name when cropping battle image 2",
+    "input": {
+        "pokemon_name": "Gyarados",
+        "image": "battle_img_2.png"
+    },
+    "expected_output": {}
+}

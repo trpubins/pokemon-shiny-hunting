@@ -1,0 +1,7 @@
+{
+    "description": "Verify menu type determined from Windows pause image matches expected output",
+    "input": {
+        "image": "menu_pause_win.png"
+    },
+    "expected_output": "pause"
+}

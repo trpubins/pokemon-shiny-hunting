@@ -1,0 +1,8 @@
+{
+    "description": "Verify sprite type determined from battle image 6 matches expected output",
+    "input": {
+        "pokemon_name": "Pidgey",
+        "image": "battle_img_6.png"
+    },
+    "expected_output": "normal"
+}

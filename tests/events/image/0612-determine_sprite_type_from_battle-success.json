@@ -1,0 +1,8 @@
+{
+    "description": "Verify sprite type determined from battle image 12 matches expected output",
+    "input": {
+        "pokemon_name": "Vulpix",
+        "image": "battle_img_12.png"
+    },
+    "expected_output": "normal"
+}

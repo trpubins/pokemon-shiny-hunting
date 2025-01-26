@@ -1,0 +1,8 @@
+{
+    "description": "Verify sprite type determined from battle image 20 matches expected output",
+    "input": {
+        "pokemon_name": "Lugia",
+        "image": "battle_img_20.png"
+    },
+    "expected_output": "normal"
+}
