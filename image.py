@@ -3,7 +3,7 @@
 import glob
 import logging
 import os
-from typing import Any, List
+from typing import List
 
 import cv2
 from PIL import Image
@@ -37,7 +37,7 @@ def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
     return sprite_type
 
 
-def determine_pack_items(pack_img_fn: str, get_qty: bool = True, del_png: bool = True) -> Any:
+def determine_pack_items(pack_img_fn: str, get_qty: bool = True, del_png: bool = True) -> List[tuple[str,int]]:
     """Determine the items and their associated quantities in the pack."""
     # TODO - update after creating pack module with PackType and
     # other custom classes
