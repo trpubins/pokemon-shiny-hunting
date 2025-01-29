@@ -93,3 +93,14 @@ def extract_zipfiles(zipfiles: List[str]):
                 logger.debug(f"unzipped {zip_fn}")
             else:
                 logger.debug(f"contents already unzipped for {zip_fn}")
+
+
+def get_file_creation_time(file_path):
+    """Get file creation time cross-platform."""
+    stat = os.stat(file_path)
+    try:
+        # macOS
+        return stat.st_birthtime
+    except AttributeError:
+        # Windows
+        return stat.st_ctime

@@ -11,6 +11,7 @@ from PIL import Image
 from config import LETTERS_DIR, NUM_DIR, RETROARCH_CFG
 from menu import MenuType, get_menu_fn
 from pokemon import Pokemon, SpriteType
+from helpers.file_mgmt import get_file_creation_time
 from helpers.opencv_util import (
     IMG_SIZE_VERY_SMALL,
     compare_img_color, compare_img_pixels,
@@ -258,24 +259,20 @@ def determine_menu(img_fn: str, del_png: bool = True) -> MenuType:
     return menu_type
 
 
-def get_screenshots() -> List[str]:
-    """Retrieve all screenshots sorted by creation time."""
+def get_latest_screenshot_fn() -> str:
+    """Retrieve the most recent screenshot."""
     # only grab PNG files
     glob_pattern = os.path.join(RETROARCH_CFG.screenshot_dir, "*.png")
     files = list(filter(os.path.isfile, glob.glob(glob_pattern)))
     
     # sort by file creation time
-    files.sort(key=os.path.getctime)
-    return files
+    files.sort(key=lambda f: get_file_creation_time(f))
+    latest_file = files[-1]  # last element in list is most recent
 
-
-def get_latest_screenshot_fn() -> str:
-    """Retrieve the most recent screenshot."""
-    files = get_screenshots()
     if len(files) == 0:
         logger.warning("No screenshots exist")
         return None
-    return files[-1]  # last element in list is most recent
+    return latest_file
 
 
 def crop_pokemon_in_battle(battle_img_fn: str, del_png: bool = True) -> cv2.Mat:
