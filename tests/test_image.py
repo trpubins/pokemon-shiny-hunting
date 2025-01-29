@@ -33,6 +33,7 @@ from image import (  # noqa: E402
     determine_name,
     determine_pack_items,
     determine_sprite_type,
+    get_latest_png_fn,
 )
 from dex import gen_2_dex  # noqa: E402
 from pokemon import Pokemon, SpriteType  # noqa: E402
@@ -190,3 +191,17 @@ def test_08_determine_pack_items(get_event_as_dict):
     ):
         assert det_item_name == expected_output["name"]
         assert det_item_qty == expected_output["qty"]
+
+
+@pytest.mark.happy
+@pytest.mark.parametrize("event_dir", [MODULE_EVENTS_DIR])
+@pytest.mark.parametrize(
+    "event_file", get_json_files(MODULE_EVENTS_DIR, ["get_latest_png_fn"])
+)
+def test_09_get_latest_png_fn(get_event_as_dict):
+    print_section_break()
+    logger.info(f"Test Description: {get_event_as_dict['description']}")
+    expected_output = get_event_as_dict["expected_output"]
+    
+    screenshot_fn = get_latest_png_fn(TEST_IMG_DIR)
+    assert os.path.basename(screenshot_fn) == expected_output

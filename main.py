@@ -8,7 +8,7 @@ import sys
 from config import NATIVE_SAVES_DIR, ROM_NAME, RETROARCH_CFG
 from emulator import Emulator
 from encounter import StaticEncounter
-from image import get_latest_screenshot_fn
+from image import get_latest_png_fn
 from notifications import send_notification
 from pokemon import Pokemon
 from retroarch import cleanup_save_dir, copy_native_save
@@ -82,7 +82,7 @@ def run(emulator: Emulator,
         emulator.save_state()
         emulator.fast_fwd_off()
         emulator.pause_on()
-        attachments = [get_latest_screenshot_fn()]
+        attachments = [get_latest_png_fn(RETROARCH_CFG.screenshot_dir)]
     else:
         kill_proc_and_cleanup()
         attachments = []

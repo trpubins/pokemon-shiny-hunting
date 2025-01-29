@@ -8,7 +8,7 @@ from typing import List
 import cv2
 from PIL import Image
 
-from config import LETTERS_DIR, NUM_DIR, RETROARCH_CFG
+from config import LETTERS_DIR, NUM_DIR
 from menu import MenuType, get_menu_fn
 from pokemon import Pokemon, SpriteType
 from helpers.file_mgmt import get_file_creation_time
@@ -259,10 +259,11 @@ def determine_menu(img_fn: str, del_png: bool = True) -> MenuType:
     return menu_type
 
 
-def get_latest_screenshot_fn() -> str:
-    """Retrieve the most recent screenshot."""
+def get_latest_png_fn(dir: str) -> str:
+    """Retrieve the most recent PNG (by creation timestamp)
+    from the specified directory."""
     # only grab PNG files
-    glob_pattern = os.path.join(RETROARCH_CFG.screenshot_dir, "*.png")
+    glob_pattern = os.path.join(dir, "*.png")
     files = list(filter(os.path.isfile, glob.glob(glob_pattern)))
     
     # sort by file creation time
@@ -270,7 +271,7 @@ def get_latest_screenshot_fn() -> str:
     latest_file = files[-1]  # last element in list is most recent
 
     if len(files) == 0:
-        logger.warning("No screenshots exist")
+        logger.warning(f"No PNGs exist in the specified directory: {dir}")
         return None
     return latest_file
 

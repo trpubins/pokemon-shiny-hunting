@@ -3,11 +3,12 @@
 import logging
 import os
 
+from config import RETROARCH_CFG
 from emulator import Emulator
 from image import (
     crop_pokemon_in_battle,
     determine_sprite_type,
-    get_latest_screenshot_fn
+    get_latest_png_fn,
 )
 from pokemon import Pokemon, SpriteType
 from helpers.common import delay
@@ -59,7 +60,7 @@ class StaticEncounter():
         delay(seconds)
         logger.debug(f"wild {pokemon.name} appeared")
         self.emulator.take_screenshot(delay_after_press=0.25)
-        screenshot_fn = get_latest_screenshot_fn()
+        screenshot_fn = get_latest_png_fn(RETROARCH_CFG.screenshot_dir)
         crop = crop_pokemon_in_battle(screenshot_fn, del_png=False)
         sprite = determine_sprite_type(pokemon, crop)
         if sprite == SpriteType.NORMAL:

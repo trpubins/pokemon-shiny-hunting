@@ -5,12 +5,12 @@ import logging
 import os
 from typing import List, Tuple
 
+from config import RETROARCH_CFG
 from emulator import Emulator
 from image import (
     determine_pack_items,
-    get_latest_screenshot_fn
+    get_latest_png_fn,
 )
-from helpers.common import delay
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
@@ -122,7 +122,7 @@ def collect_inventory(emulator: Emulator, get_qty: bool) -> List[Tuple[str, int]
     emulator.move_down_precise(presses=MAX_PACK_ITEMS - 1, delay_after_press=0.1)  # assume cursor starts on unique item
     while len(inventory) % MAX_PACK_ITEMS == 0 and len(unique_pack_items) > 0:
         emulator.take_screenshot(delay_after_press=0.25)
-        pack_img_fn = get_latest_screenshot_fn()
+        pack_img_fn = get_latest_png_fn(RETROARCH_CFG.screenshot_dir)
         pack_items = determine_pack_items(pack_img_fn, get_qty=get_qty)
         os.remove(pack_img_fn)
         
