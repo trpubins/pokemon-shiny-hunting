@@ -134,7 +134,7 @@ def collect_inventory(emulator: Emulator, get_qty: bool) -> List[Tuple[str, int]
 
 
 if __name__ == "__main__":
-    import __init__
+    import __init__  # noqa: F401
     em = Emulator()
     em.launch_game()
     em.continue_pokemon_game()

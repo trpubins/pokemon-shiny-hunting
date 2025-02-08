@@ -95,7 +95,7 @@ def run(emulator: Emulator,
 
 
 if __name__ == "__main__":
-    import __init__
+    import __init__  # noqa: F401
     from config import POKEMON_STATIC_ENCOUNTER
 
     logger.info("running main")

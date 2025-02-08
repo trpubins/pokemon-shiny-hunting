@@ -93,7 +93,7 @@ def perform_btn_sequence(emulator: Emulator, sequence: str):
 
 
 if __name__ == "__main__":
-    import __init__
+    import __init__  # noqa: F401
     from config import POKEMON_STATIC_ENCOUNTER
 
     em = Emulator()
