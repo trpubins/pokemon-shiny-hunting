@@ -1,0 +1,8 @@
+{
+    "description": "Verify sprite type determined from battle image 16 matches expected output",
+    "input": {
+        "pokemon_name": "Farfetch'd",
+        "image": "battle_img_16.png"
+    },
+    "expected_output": "normal"
+}

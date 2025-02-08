@@ -26,7 +26,7 @@ class EmulatorController():
         elif player_num == 2:
             self.input_player = RETROARCH_CFG.input_player_2
         else:
-            raise RuntimeError(f"Only acceping player1 and player2 inputs at this time.\
+            raise RuntimeError("Only acceping player1 and player2 inputs at this time.\
                 Update retroarch.py to include more player inputs.")
     
     def press_a(self, presses: int = 1, delay_after_press: float = None):
@@ -39,11 +39,11 @@ class EmulatorController():
     
     def press_start(self, delay_after_press: float = None):
         press_key(self.input_player.start_btn, delay_after_press=delay_after_press)
-        logger.debug(f"pressed start button")
+        logger.debug("pressed start button")
     
     def press_select(self, delay_after_press: float = None):
         press_key(self.input_player.select_btn, delay_after_press=delay_after_press)
-        logger.debug(f"pressed select button")
+        logger.debug("pressed select button")
     
     def move_up(self, presses: int = 1, delay_after_press: float = None):
         press_key(self.input_player.up_btn, presses, delay_after_press=delay_after_press)
@@ -63,19 +63,19 @@ class EmulatorController():
     
     def toggle_fast_fwd(self, delay_after_press: float = None):
         press_key(RETROARCH_CFG.fast_fwd_btn, delay_after_press=delay_after_press)
-        logger.debug(f"toggled fast forward")
+        logger.debug("toggled fast forward")
     
     def toggle_pause(self, delay_after_press: float = None):
         press_key(RETROARCH_CFG.pause_btn, delay_after_press=delay_after_press)
-        logger.debug(f"toggled pause")
+        logger.debug("toggled pause")
 
     def press_reset_btn(self, delay_after_press: float = None):
         press_key(RETROARCH_CFG.reset_btn, delay_after_press=delay_after_press)
-        logger.debug(f"pressed reset button")
+        logger.debug("pressed reset button")
     
     def press_screenshot_btn(self, delay_after_press: float = None):
         press_key(RETROARCH_CFG.screenshot_btn, delay_after_press=delay_after_press)
-        logger.debug(f"pressed screenshot button")
+        logger.debug("pressed screenshot button")
     
     def press_fullscreen_btn(self, presses: int = 1, delay_after_press: float = None):
         press_key(RETROARCH_CFG.fullscreen_btn, presses, delay_after_press=delay_after_press)
@@ -83,11 +83,11 @@ class EmulatorController():
     
     def press_save_state_btn(self, delay_after_press: float = None):
         press_key(RETROARCH_CFG.save_state_btn, delay_after_press=delay_after_press)
-        logger.debug(f"pressed save state button")
+        logger.debug("pressed save state button")
     
     def press_load_state_btn(self, delay_after_press: float = None):
         press_key(RETROARCH_CFG.load_state_btn, delay_after_press=delay_after_press)
-        logger.debug(f"pressed load state button")
+        logger.debug("pressed load state button")
     
     def press_exit_btn(self, presses: int = 1, delay_after_press: float = None):
         press_key(RETROARCH_CFG.exit_btn, presses, delay_after_press=delay_after_press)

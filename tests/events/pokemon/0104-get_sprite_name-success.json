@@ -1,0 +1,7 @@
+{
+    "description": "Verify the pokemon name with an apostrophe is returned with no character",
+    "input": {
+        "name": "Farfetch'd"
+    },
+    "expected_output": "farfetchd"
+}

@@ -1,0 +1,5 @@
+{
+    "description": "Verify latest PNG by creation date from test images dir matches expected output",
+    "input": {},
+    "expected_output": "char_2.png"
+}

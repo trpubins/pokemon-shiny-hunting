@@ -1,0 +1,8 @@
+{
+    "description": "Verify sprite type determined from battle image 1 matches expected output",
+    "input": {
+        "pokemon_name": "Gyarados",
+        "image": "battle_img_1.png"
+    },
+    "expected_output": "shiny"
+}

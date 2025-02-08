@@ -1,0 +1,7 @@
+{
+    "description": "Verify menu type determined from Windows start image matches expected output",
+    "input": {
+        "image": "menu_start_win.png"
+    },
+    "expected_output": "start"
+}

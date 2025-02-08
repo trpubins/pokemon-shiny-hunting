@@ -1,63 +1,56 @@
 import os
 
-import click
+import pytest
 
-import __init__
+from helpers.log import get_logger
 
-from pokemon import Pokemon
-from notifications import USERNAME, send_notification
-from helpers import test_util
-from helpers.log import get_logger, mod_fname
-logger = get_logger(mod_fname(__file__))
+from conftest import get_json_files, print_section_break
 
-from tests.__init__ import TEST_IMG_DIR
-MODULE = "notifications.py"
+# ----------------------------------------------------------------------------#
+#                               --- Globals ---                               #
+# ----------------------------------------------------------------------------#
+from __setup__ import TEST_EVENTS_PATH, TEST_IMG_DIR
 
+MODULE = "notifications"
+MODULE_EVENTS_DIR = os.path.join(TEST_EVENTS_PATH, MODULE)
 
-def test_1_get_username():
-    logger.info("Test 1 - get_username")
-    logger.info(f"Hello {USERNAME}")
-    logger.info("Test 1 - success!")
+# ----------------------------------------------------------------------------#
+#                               --- Logging ---                               #
+# ----------------------------------------------------------------------------#
+logger = get_logger(f"test_{MODULE}")
 
-
-def test_2_draft_email_shiny_found():
-    logger.info("Test 2 - draft_email_shiny_found")
-    pokemon = Pokemon("Gyarados")
-    shiny_gyarados_png = os.path.join(TEST_IMG_DIR, "battle_img_2.png")
-    send_notification(pokemon,
-                      n_attempts=5000,
-                      shiny_found=True,
-                      attachments=[shiny_gyarados_png],
-                      send=False)
-    logger.info("Test 2 - success!")
+# ----------------------------------------------------------------------------#
+#                           --- Module Imports ---                            #
+# ----------------------------------------------------------------------------#
+from notifications import (  # noqa: E402
+    Pokemon,
+    send_notification,
+)
 
 
-def test_3_draft_email_shiny_not_found():
-    logger.info("Test 3 - draft_email_shiny_not_found")
-    pokemon = Pokemon("Charizard")
-    send_notification(pokemon,
-                      n_attempts=8000,
-                      shiny_found=False,
-                      send=False)
-    logger.info("Test 3 - success!")
-
-
-@click.command()
-@click.option("-n", "--test-number", required=False, type=int,
-              help="The test number to run.")
-def run_tests(test_number: int = None):
-    logger.info(f"----- Testing {MODULE} -----")
+# ----------------------------------------------------------------------------#
+#                                --- TESTS ---                                #
+# ----------------------------------------------------------------------------#
+@pytest.mark.happy
+@pytest.mark.parametrize("event_dir", [MODULE_EVENTS_DIR])
+@pytest.mark.parametrize(
+    "event_file", get_json_files(MODULE_EVENTS_DIR, ["send_notification"])
+)
+def test_01_send_notification(get_event_as_dict):
+    print_section_break()
+    logger.info(f"Test Description: {get_event_as_dict['description']}")
+    _input: dict = get_event_as_dict["input"]
+    name: str = _input["name"]
+    image: str = _input.get("image")
+    n_attempts: int = _input["n_attempts"]
+    shiny_found: bool = _input["shiny_found"]
+    expected_output: int = get_event_as_dict["expected_output"]
     
-    if test_number is None:
-        test_util.run_tests(module_name=__name__)
-    else:
-        try:
-            test_util.run_tests(module_name=__name__, test_number=test_number)
-        except ValueError as e:
-            logger.error(f"Invalid test_number specified: {test_number}")
-            raise e
-    logger.info("----- All tests pass! -----")
-
-
-if __name__ == "__main__":
-    run_tests()
+    notification = send_notification(
+        Pokemon(name),
+        n_attempts,
+        shiny_found,
+        attachments=[os.path.join(TEST_IMG_DIR, image)] if image else [],
+        send=False,
+    )
+    assert (notification == expected_output)

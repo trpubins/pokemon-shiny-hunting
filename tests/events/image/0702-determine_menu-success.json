@@ -1,0 +1,7 @@
+{
+    "description": "Verify menu type determined from Windows battle image matches expected output",
+    "input": {
+        "image": "menu_battle_win.png"
+    },
+    "expected_output": "battle"
+}

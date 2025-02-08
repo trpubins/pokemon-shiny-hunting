@@ -1,0 +1,13 @@
+{
+    "description": "Verify pack items determined for balls matches expected output",
+    "input": {
+        "get_qty": true,
+        "image": "items_ball4.png"
+    },
+    "expected_output": [
+        {
+            "name": "greatball",
+            "qty": 6
+        }
+    ]
+}

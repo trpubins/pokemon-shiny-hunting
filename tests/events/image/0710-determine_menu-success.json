@@ -1,0 +1,7 @@
+{
+    "description": "Verify menu type determined from Mac start image matches expected output",
+    "input": {
+        "image": "menu_start_mac.png"
+    },
+    "expected_output": "start"
+}

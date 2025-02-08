@@ -1,0 +1,8 @@
+{
+    "description": "Verify differences in pixels when different images are compared",
+    "input": {
+        "image1": "cropped_poke_battle_img_1.png",
+        "image2": "cropped_poke_battle_img_2.png"
+    },
+    "expected_output": "diff"
+}

@@ -1,51 +1,60 @@
-import click
+import os
 
-import __init__
+import pytest
 
-from dex import get_pokemon_number, gen_2_dex
-from helpers import test_util
-from helpers.log import get_logger, mod_fname
-logger = get_logger(mod_fname(__file__))
+from helpers.log import get_logger
 
-MODULE = "dex.py"
+from conftest import get_json_files, print_section_break
 
+# ----------------------------------------------------------------------------#
+#                               --- Globals ---                               #
+# ----------------------------------------------------------------------------#
+from __setup__ import TEST_EVENTS_PATH
 
-def test_1_get_pokemon_number():
-    logger.info("Test 1 - get_pokemon_number")
-    assert(get_pokemon_number("bulbasaur") == 1)
-    assert(get_pokemon_number("BULBASAUR") == 1)
-    assert(get_pokemon_number("MEW") == 151)
-    assert(get_pokemon_number("celebi") == 251)
-    logger.info("Test 1 - success!")
+MODULE = "dex"
+MODULE_EVENTS_DIR = os.path.join(TEST_EVENTS_PATH, MODULE)
 
+# ----------------------------------------------------------------------------#
+#                               --- Logging ---                               #
+# ----------------------------------------------------------------------------#
+logger = get_logger(f"test_{MODULE}")
 
-def test_2_gen_2_dex():
-    logger.info("Test 2 - gen_2_dex")
-    df = gen_2_dex()
-    assert(df.shape[0] == 251)
-    bulbasaur = df.loc[df["NAME"].str.upper() == "BULBASAUR"]
-    assert(bulbasaur.get("NUMBER").values[0] == 1)
-    celebi = df.loc[df["NAME"].str.upper() == "CELEBI"]
-    assert(celebi.get("NUMBER").values[0] == 251)
-    logger.info("Test 2 - success!")
+# ----------------------------------------------------------------------------#
+#                           --- Module Imports ---                            #
+# ----------------------------------------------------------------------------#
+from dex import (  # noqa: E402
+    get_pokemon_number,
+    gen_2_dex,
+)
 
 
-@click.command()
-@click.option("-n", "--test-number", required=False, type=int,
-              help="The test number to run.")
-def run_tests(test_number: int = None):
-    logger.info(f"----- Testing {MODULE} -----")
+# ----------------------------------------------------------------------------#
+#                                --- TESTS ---                                #
+# ----------------------------------------------------------------------------#
+@pytest.mark.happy
+@pytest.mark.parametrize("event_dir", [MODULE_EVENTS_DIR])
+@pytest.mark.parametrize(
+    "event_file", get_json_files(MODULE_EVENTS_DIR, ["get_pokemon_number"])
+)
+def test_01_get_pokemon_number(get_event_as_dict):
+    print_section_break()
+    logger.info(f"Test Description: {get_event_as_dict['description']}")
+    name: str = get_event_as_dict["input"]["name"]
+    expected_output: int = get_event_as_dict["expected_output"]
     
-    if test_number is None:
-        test_util.run_tests(module_name=__name__)
-    else:
-        try:
-            test_util.run_tests(module_name=__name__, test_number=test_number)
-        except ValueError as e:
-            logger.error(f"Invalid test_number specified: {test_number}")
-            raise e
-    logger.info("----- All tests pass! -----")
+    pokemon_number = get_pokemon_number(name)
+    assert (pokemon_number == expected_output)
 
 
-if __name__ == "__main__":
-    run_tests()
+@pytest.mark.happy
+@pytest.mark.parametrize("event_dir", [MODULE_EVENTS_DIR])
+@pytest.mark.parametrize(
+    "event_file", get_json_files(MODULE_EVENTS_DIR, ["gen_2_dex"])
+)
+def test_02_gen_2_dex(get_event_as_dict):
+    print_section_break()
+    logger.info(f"Test Description: {get_event_as_dict['description']}")
+    expected_output: int = get_event_as_dict["expected_output"]
+    
+    dex = gen_2_dex()
+    assert (dex.shape[0] == expected_output)

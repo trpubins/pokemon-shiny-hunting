@@ -1,0 +1,7 @@
+{
+    "description": "Verify the pokemon name with a period is returned with no character",
+    "input": {
+        "name": "Mr. Mime"
+    },
+    "expected_output": "mr-mime"
+}

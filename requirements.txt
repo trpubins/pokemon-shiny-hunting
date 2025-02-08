@@ -1,6 +1,5 @@
 # application
 coloredlogs
-matplotlib
 numpy>=1.19, <1.24
 opencv-python>=4.6, <4.7
 pandas
@@ -8,5 +7,6 @@ pillow
 pyautogui
 pydirectinput; sys_platform == 'win32'
 
-# tests
-click
+# dev tools
+black~=24.10
+ruff~=0.9

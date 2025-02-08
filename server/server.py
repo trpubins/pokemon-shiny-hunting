@@ -1,24 +1,24 @@
 """Serves up endpoints to drive the pokemon shiny hunting application."""
 
 import logging
-from multiprocessing import Process, Queue
-# add workspace dir to system path, otherwise cannot import project modules
 import os
+from multiprocessing import Process, Queue
 import sys
-proj_root_path = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), os.pardir
-)
-sys.path.append(proj_root_path)
 from typing import Tuple
 
 from fastapi import FastAPI, Response, status
 
-import __init__
-from main import run as go_shiny_hunt
-from emulator import Emulator
-from encounter import StaticEncounter
-from pokemon import Pokemon
-from helpers.log import mod_fname
+# add workspace dir to system path, otherwise cannot import project modules
+proj_root_path = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), os.pardir
+)
+sys.path.append(proj_root_path)
+import __init__  # noqa: E402, F401
+from main import run as go_shiny_hunt  # noqa: E402
+from emulator import Emulator  # noqa: E402
+from encounter import StaticEncounter  # noqa: E402
+from pokemon import Pokemon  # noqa: E402
+from helpers.log import mod_fname  # noqa: E402
 logger = logging.getLogger(mod_fname(__file__))
 
 

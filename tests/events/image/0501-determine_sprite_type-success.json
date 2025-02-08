@@ -1,0 +1,8 @@
+{
+    "description": "Verify sprite type determined from cropped image 1 matches expected sprite type",
+    "input": {
+        "pokemon_name": "Gyarados",
+        "image": "cropped_poke_battle_img_1.png"
+    },
+    "expected_output": "shiny"
+}

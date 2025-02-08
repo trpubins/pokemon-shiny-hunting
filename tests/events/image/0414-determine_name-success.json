@@ -1,0 +1,7 @@
+{
+    "description": "Verify name determined from battle image 14 matches expected output",
+    "input": {
+        "image": "battle_img_14.png"
+    },
+    "expected_output": "nidoran f"
+}

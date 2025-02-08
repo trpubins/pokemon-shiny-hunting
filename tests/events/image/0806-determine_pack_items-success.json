@@ -1,0 +1,29 @@
+{
+    "description": "Verify pack items determined for items matches expected output",
+    "input": {
+        "get_qty": true,
+        "image": "items_items.png"
+    },
+    "expected_output": [
+        {
+            "name": "superpotion",
+            "qty": 1
+        },
+        {
+            "name": "fullheal",
+            "qty": 16
+        },
+        {
+            "name": "fullrestore",
+            "qty": 2
+        },
+        {
+            "name": "hyperpotion",
+            "qty": 29
+        },
+        {
+            "name": "nevermeltice",
+            "qty": 1
+        }
+    ]
+}

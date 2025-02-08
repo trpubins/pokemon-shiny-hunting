@@ -1,0 +1,7 @@
+{
+    "description": "Verify menu type determined from Windows items image matches expected output",
+    "input": {
+        "image": "menu_items_win.png"
+    },
+    "expected_output": "items"
+}

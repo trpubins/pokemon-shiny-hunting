@@ -1,0 +1,9 @@
+{
+    "description": "Verify the filename created for normal pokemon matches expected filename",
+    "input": {
+        "game": "Crystal",
+        "name": "Gyarados",
+        "type": "normal"
+    },
+    "expected_output": "crystal/normal/130_gyarados.png"
+}

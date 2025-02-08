@@ -78,8 +78,12 @@ def send_notification(pokemon: Pokemon,
             attachment = MIMEBase("application", "octet-stream")
             attachment.set_payload(attached_file.read())
 
+        fn = os.path.basename(file).strip().replace(" ", "_")  # remove whitespace for proper attachment
         encoders.encode_base64(attachment)
-        attachment.add_header("Content-Disposition", f"attachment; filename={os.path.basename(file)}")
+        attachment.add_header(
+            "Content-Disposition",
+            f"attachment; filename={fn}",
+        )
         message.attach(attachment)
 
     context = ssl.create_default_context()

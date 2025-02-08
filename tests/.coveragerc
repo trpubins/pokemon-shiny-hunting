@@ -1,0 +1,9 @@
+[run]
+source = 
+    .
+
+[report]
+omit =
+    tests/*
+    misc/*
+    helpers/pil_util.py

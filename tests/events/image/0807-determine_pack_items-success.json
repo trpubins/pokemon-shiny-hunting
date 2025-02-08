@@ -1,0 +1,29 @@
+{
+    "description": "Verify pack items determined for key matches expected output",
+    "input": {
+        "get_qty": false,
+        "image": "items_key.png"
+    },
+    "expected_output": [
+        {
+            "name": "squirtbottle",
+            "qty": null
+        },
+        {
+            "name": "redscale",
+            "qty": null
+        },
+        {
+            "name": "basementkey",
+            "qty": null
+        },
+        {
+            "name": "cardkey",
+            "qty": null
+        },
+        {
+            "name": "clearbell",
+            "qty": null
+        }
+    ]
+}

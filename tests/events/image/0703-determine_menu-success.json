@@ -1,0 +1,7 @@
+{
+    "description": "Verify menu type determined from Mac continue image matches expected output",
+    "input": {
+        "image": "menu_continue_mac.png"
+    },
+    "expected_output": "continue"
+}

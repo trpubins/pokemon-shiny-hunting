@@ -1,57 +1,65 @@
 import os
 
-import click
+import pytest
 
-import __init__
-from config import SPRITES_DIR
-from pokemon import (
-    SpriteType, create_pokemon_sprite_fn, get_sprite_name
+from helpers.log import get_logger
+
+from conftest import get_json_files, print_section_break
+
+# ----------------------------------------------------------------------------#
+#                               --- Globals ---                               #
+# ----------------------------------------------------------------------------#
+from __setup__ import TEST_EVENTS_PATH
+
+MODULE = "pokemon"
+MODULE_EVENTS_DIR = os.path.join(TEST_EVENTS_PATH, MODULE)
+
+# ----------------------------------------------------------------------------#
+#                               --- Logging ---                               #
+# ----------------------------------------------------------------------------#
+logger = get_logger(f"test_{MODULE}")
+
+# ----------------------------------------------------------------------------#
+#                           --- Module Imports ---                            #
+# ----------------------------------------------------------------------------#
+from pokemon import (  # noqa: E402
+    SPRITES_DIR,
+    SpriteType,
+    create_pokemon_sprite_fn,
+    get_sprite_name,
 )
-from helpers import test_util
-from helpers.log import get_logger, mod_fname
-logger = get_logger(mod_fname(__file__))
-
-MODULE = "pokemon.py"
 
 
-def test_1_get_sprite_name():
-    logger.info("Test 1 - get_sprite_name")
-    assert(get_sprite_name("Nidoran F") == "nidoran-f")
-    assert(get_sprite_name("Nidoran M") == "nidoran-m")
-    assert(get_sprite_name("Mr. Mime") == "mr-mime")
-    assert(get_sprite_name("Farfetch'd") == "farfetchd")
-    logger.info("Test 1 - success!")
-
-
-def test_2_create_pokemon_sprite_fn():
-    logger.info("Test 2 - create_pokemon_sprite_fn")
-    normal_fn = create_pokemon_sprite_fn(game="Crystal",
-                                         name= "Gyarados",
-                                         _type=SpriteType.NORMAL)
-    assert(normal_fn == os.path.join(SPRITES_DIR, "crystal", SpriteType.NORMAL, "130_gyarados.png"))
-    shiny_fn = create_pokemon_sprite_fn(game="Crystal",
-                                        name= "Gyarados",
-                                        _type=SpriteType.SHINY)
-    assert(shiny_fn == os.path.join(SPRITES_DIR, "crystal", SpriteType.SHINY, "130_gyarados.png"))
-    logger.info("Test 2 - success!")
-
-
-@click.command()
-@click.option("-n", "--test-number", required=False, type=int,
-              help="The test number to run.")
-def run_tests(test_number: int = None):
-    logger.info(f"----- Testing {MODULE} -----")
+# ----------------------------------------------------------------------------#
+#                                --- TESTS ---                                #
+# ----------------------------------------------------------------------------#
+@pytest.mark.happy
+@pytest.mark.parametrize("event_dir", [MODULE_EVENTS_DIR])
+@pytest.mark.parametrize(
+    "event_file", get_json_files(MODULE_EVENTS_DIR, ["get_sprite_name"])
+)
+def test_01_get_sprite_name(get_event_as_dict):
+    print_section_break()
+    logger.info(f"Test Description: {get_event_as_dict['description']}")
+    name: str = get_event_as_dict["input"]["name"]
+    expected_output: str = get_event_as_dict["expected_output"]
     
-    if test_number is None:
-        test_util.run_tests(module_name=__name__)
-    else:
-        try:
-            test_util.run_tests(module_name=__name__, test_number=test_number)
-        except ValueError as e:
-            logger.error(f"Invalid test_number specified: {test_number}")
-            raise e
-    logger.info("----- All tests pass! -----")
+    sprite_name = get_sprite_name(name)
+    assert (sprite_name == expected_output)
 
 
-if __name__ == "__main__":
-    run_tests()
+@pytest.mark.happy
+@pytest.mark.parametrize("event_dir", [MODULE_EVENTS_DIR])
+@pytest.mark.parametrize(
+    "event_file", get_json_files(MODULE_EVENTS_DIR, ["create_pokemon_sprite_fn"])
+)
+def test_02_create_pokemon_sprite_fn(get_event_as_dict):
+    print_section_break()
+    logger.info(f"Test Description: {get_event_as_dict['description']}")
+    game: str = get_event_as_dict["input"]["game"]
+    name: str = get_event_as_dict["input"]["name"]
+    _type: str = get_event_as_dict["input"]["type"]
+    expected_output: str = get_event_as_dict["expected_output"]
+    
+    sprite_fn = create_pokemon_sprite_fn(game, name, _type=SpriteType(_type))
+    assert (sprite_fn == os.path.join(SPRITES_DIR, expected_output))

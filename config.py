@@ -73,7 +73,7 @@ logger.info(f"LOG_LEVEL: {LOG_LEVEL}")
 logger.info(f"USERNAME: {USERNAME}")
 logger.info(f"RECEIVER_EMAIL: {RECEIVER_EMAIL}")
 logger.info(f"SENDER_EMAIL: {SENDER_EMAIL}")
-logger.info(f"SENDER_EMAIL_PASS: {SENDER_EMAIL_PASS}")
+logger.info("SENDER_EMAIL_PASS: *****")
 logger.info(f"DISP_BRIGHTNESS: {DISP_BRIGHTNESS}")
 
 # misc

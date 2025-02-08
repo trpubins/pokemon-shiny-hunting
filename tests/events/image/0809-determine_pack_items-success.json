@@ -1,0 +1,29 @@
+{
+    "description": "Verify pack items determined for tm matches expected output",
+    "input": {
+        "get_qty": true,
+        "image": "items_tm1.png"
+    },
+    "expected_output": [
+        {
+            "name": "rollout",
+            "qty": 1
+        },
+        {
+            "name": "shadowball",
+            "qty": 1
+        },
+        {
+            "name": "mud-slap",
+            "qty": 1
+        },
+        {
+            "name": "attract",
+            "qty": 1
+        },
+        {
+            "name": "furycutter",
+            "qty": 1
+        }
+    ]
+}

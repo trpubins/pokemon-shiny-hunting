@@ -3,14 +3,15 @@
 import glob
 import logging
 import os
-from typing import Any, List
+from typing import List
 
 import cv2
 from PIL import Image
 
-from config import LETTERS_DIR, NUM_DIR, RETROARCH_CFG
+from config import LETTERS_DIR, NUM_DIR
 from menu import MenuType, get_menu_fn
 from pokemon import Pokemon, SpriteType
+from helpers.file_mgmt import get_file_creation_time
 from helpers.opencv_util import (
     IMG_SIZE_VERY_SMALL,
     compare_img_color, compare_img_pixels,
@@ -37,7 +38,7 @@ def determine_sprite_type(pokemon: Pokemon, img: cv2.Mat) -> SpriteType:
     return sprite_type
 
 
-def determine_pack_items(pack_img_fn: str, get_qty: bool = True, del_png: bool = True) -> Any:
+def determine_pack_items(pack_img_fn: str, get_qty: bool = True, del_png: bool = True) -> List[tuple[str,int]]:
     """Determine the items and their associated quantities in the pack."""
     # TODO - update after creating pack module with PackType and
     # other custom classes
@@ -258,24 +259,21 @@ def determine_menu(img_fn: str, del_png: bool = True) -> MenuType:
     return menu_type
 
 
-def get_screenshots() -> List[str]:
-    """Retrieve all screenshots sorted by creation time."""
+def get_latest_png_fn(dir: str) -> str:
+    """Retrieve the most recent PNG (by creation timestamp)
+    from the specified directory."""
     # only grab PNG files
-    glob_pattern = os.path.join(RETROARCH_CFG.screenshot_dir, "*.png")
+    glob_pattern = os.path.join(dir, "*.png")
     files = list(filter(os.path.isfile, glob.glob(glob_pattern)))
     
     # sort by file creation time
-    files.sort(key=os.path.getctime)
-    return files
+    files.sort(key=lambda f: get_file_creation_time(f))
+    latest_file = files[-1]  # last element in list is most recent
 
-
-def get_latest_screenshot_fn() -> str:
-    """Retrieve the most recent screenshot."""
-    files = get_screenshots()
     if len(files) == 0:
-        logger.warning("No screenshots exist")
+        logger.warning(f"No PNGs exist in the specified directory: {dir}")
         return None
-    return files[-1]  # last element in list is most recent
+    return latest_file
 
 
 def crop_pokemon_in_battle(battle_img_fn: str, del_png: bool = True) -> cv2.Mat:

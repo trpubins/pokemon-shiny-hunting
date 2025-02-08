@@ -1,0 +1,9 @@
+{
+    "description": "Verify the email notification is drafted when a shiny is NOT found",
+    "input": {
+        "name": "Charizard",
+        "n_attempts": 8000,
+        "shiny_found": false
+    },
+    "expected_output": null
+}

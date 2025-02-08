@@ -1,0 +1,9 @@
+{
+    "description": "Verify no differences in pixels from expected output when cropping battle image 1",
+    "input": {
+        "image": "battle_img_1.png"
+    },
+    "expected_output": {
+        "image": "cropped_poke_battle_img_1.png"
+    }
+}

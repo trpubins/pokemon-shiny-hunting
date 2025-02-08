@@ -1,0 +1,7 @@
+{
+    "description": "Verify menu type determined from Windows continue image matches expected output",
+    "input": {
+        "image": "menu_continue_win.png"
+    },
+    "expected_output": "continue"
+}
