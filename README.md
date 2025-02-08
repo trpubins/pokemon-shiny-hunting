@@ -8,7 +8,8 @@ Automate the shiny-hunting process for a Pokémon emulator.
 
 1. Python 3.9 | 3.10 | 3.11 installed on system
 
->WARNING: Dependency build errors occur with Python 3.12 or later.
+> [!WARNING]
+> Dependency build errors may occur with Python 3.12 or later.
 
 ### Set Up Environment
 
@@ -18,15 +19,29 @@ To create the dev environment, navigate to the project root directory and run th
 make setup [PYTHON3=python3]
 ```
 
->NOTE: This command creates a virtual environment to `./.venv` and downloads all the
-packages required to debug/test the source code as well as other developer tools. Specify
-a minor version of Python 3 using the `PYTHON3=python3.<minor>` arg.
+> [!NOTE]
+> This command creates a virtual environment to `./.venv` and downloads all the
+> packages required to debug/test the source code as well as other developer tools. Specify
+> a minor version of Python 3 using the `PYTHON3=python3.<minor>` arg.
 
 If the dev environment has already been setup, then the dependencies can be updated with
 
 ```bash
 make update [PYTHON3=python3]
 ```
+
+### Optional Dependencies
+
+If user is running on Mac and wants the application to set their display's brightness, they are required to install a CLI [display brightness utility](https://github.com/nriley/brightness) for macOS.
+It can be easily installed with Homebrew:
+
+```bash
+brew install brightness
+```
+
+> [!NOTE]
+> The `brightness` utility is optional.
+> Application will function fine without utilizing the display brightness feature.
 
 ### Project Config File
 
@@ -60,69 +75,41 @@ In order to successfully run the program, ensure the following RetroArch setting
 
 Lastly, ensure that all controls mapped to the keyboard work as expected when the game is running in the emulator. See Input > Port 1 Controls in RetroArch settings.
 
-## Dependencies
-
-### Python environment
-
-First ensure your python environment is up to date.
-
-```bash
-pip install -r requirements.txt
-```
-
-### Other packages
-
-If user is running on Mac and wants the application to set their display's brightness, they are required to install a CLI [display brightness utility](https://github.com/nriley/brightness) for macOS.
-It can be easily installed with Homebrew:
-
-```bash
-brew install brightness
-```
-
-Note: the `brightness` utility is optional. Application will function fine without utilizing the display brightness feature.
-
 ## Usage
 
-***Important❗***: ALL scripts must be executed from the project root directory.
+> [!IMPORTANT]
+> ALL scripts must be executed from the project root directory.
 
 ```bash
 cd <path-to>/pokemon-shiny-hunting
 ```
 
+### tests
+
+The project leverages `pytest` for running unit tests. Tests are executed with statement coverage reported by running one of the following commands:
+
+```bash
+# runs test scripts that are NOT marked "emulator"
+make test
+```
+
+```bash
+# runs all test scripts
+make test-all
+```
+
 ### main
 
-The `main.py` script is the primary application, making use of the other modules. Activate your python environment first and run:
+The `main.py` script is the application entrypoint, making use of the other modules. Activate the python environment first and run:
 
 ```bash
 python main.py
 ```
 
-### tests
-
-Use the test scripts to perform unit testing. After developing new functionality, add new test(s). Create a new function in an existing test script or create a new test script entirely if a new module was created. For test function names, strictly follow the format: `test_n_<function_name>` where `n` is the test number in the test script.
-
-By default, a given test script executes all the tests in that script. Optionally, provide `--test-number` at the command line to run a specific test.
-
-```bash
-# runs all tests in the specified script
-python tests/test_image.py
-```
-
-```bash
-# runs only test 4 in the specified script
-python tests/test_image.py --test-number 4
-```
-
-You can also run all test scripts at once with:
-
-```bash
-# runs all test scripts
-python tests/test_all.py
-```
-
 ### server
 
->Note: server shell scripts are written for bash shell environments
+> [!NOTE]
+> Server shell scripts are written for bash shell environments.
 
 As an added feature, an Asynchronous Server Gateway Interface (ASGI) server has been designed with API endpoints available to run, status, and stop the `main` shiny hunting application. The endpoints are as follows:
 
