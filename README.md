@@ -1,6 +1,10 @@
 # pokemon-shiny-hunting
 
-Automate the shiny-hunting process for a Pokémon emulator.
+Automate the shiny-hunting process using a Pokémon emulator. Works on macOS and Windows.
+
+| | |
+| --- | --- |
+| Testing | [![CI - Test](https://github.com/trpubins/pokemon-shiny-hunting/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/trpubins/pokemon-shiny-hunting/actions/workflows/unit-tests.yaml) |
 
 ## Getting Started
 
