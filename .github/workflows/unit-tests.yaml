@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  unit-test-xplatform-python3:
+  unit-test-python3:
     runs-on: ${{ matrix.os }}
 
     strategy:
