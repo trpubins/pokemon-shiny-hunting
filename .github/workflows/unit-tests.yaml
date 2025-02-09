@@ -32,5 +32,8 @@ jobs:
       - name: Setup dev environment
         run: make setup
 
+      - name: Create config.ini file
+        run: echo "[DEFAULT]" > config.ini
+
       - name: Run unit tests with pytest
         run: make test
