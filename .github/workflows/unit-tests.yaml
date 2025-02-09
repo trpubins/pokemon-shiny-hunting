@@ -39,10 +39,10 @@ jobs:
           RETROARCH_DIR: ./tests/retroarch
           RETROARCH_CFG_FP: %(RETROARCH_DIR)s/retroarch.cfg
           RETROARCH_APP_FP: /Applications/RetroArch.app
-          EMULATOR_CORE_AVG_FPS: 0
-          ROM_NAME: test_rom
-          POKEMON_GAME: test_game
-          POKEMON_STATIC_ENCOUNTER: test_pokemon
+          EMULATOR_CORE_AVG_FPS: 220
+          ROM_NAME: Pokemon - Crystal Version (UE) (V1.1) [C][!]
+          POKEMON_GAME: Crystal
+          POKEMON_STATIC_ENCOUNTER: Gyarados
           EOF
 
       - name: Run unit tests with pytest
