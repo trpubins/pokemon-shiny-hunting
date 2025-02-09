@@ -1,0 +1,48 @@
+name: Unit Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  unit-test-python3:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+        python-ver: ['3.11', '3.10', '3.9']
+
+    steps:
+      - name: Check OS and Python
+        run: echo "Running on ${{ matrix.os }} with Python ${{ matrix.python-ver }}"
+
+      - name: Check out repo  # for deps, source code and unit tests
+        uses: actions/checkout@v4
+
+      - name: Setup Python ${{ matrix.python-ver }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-ver }}
+
+      - name: Setup dev environment
+        run: make setup
+
+      - name: Create config.ini file
+        shell: bash
+        run: |
+          echo "[DEFAULT]" > config.ini
+          echo "RETROARCH_DIR: $GITHUB_WORKSPACE/tests/retroarch" >> config.ini
+          echo "RETROARCH_CFG_FP: %(RETROARCH_DIR)s/retroarch.cfg" >> config.ini
+          echo "RETROARCH_APP_FP: /Applications/RetroArch.app" >> config.ini
+          echo "EMULATOR_CORE_AVG_FPS: 220" >> config.ini
+          echo "ROM_NAME: Pokemon - Crystal Version (UE) (V1.1) [C][!]" >> config.ini
+          echo "POKEMON_GAME: Crystal" >> config.ini
+          echo "POKEMON_STATIC_ENCOUNTER: Gyarados" >> config.ini
+
+      - name: Run unit tests with pytest
+        run: make test

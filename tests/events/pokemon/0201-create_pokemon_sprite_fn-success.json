@@ -5,5 +5,7 @@
         "name": "Gyarados",
         "type": "normal"
     },
-    "expected_output": "crystal/normal/130_gyarados.png"
+    "expected_output": [
+        "crystal", "normal", "130_gyarados.png"
+    ]
 }
