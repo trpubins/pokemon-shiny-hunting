@@ -36,19 +36,13 @@ jobs:
         run: |
           cat <<EOF > config.ini
           [DEFAULT]
-          RETROARCH_DIR:
-          RETROARCH_CFG_FP:
-          RETROARCH_APP_FP:
-          EMULATOR_CORE_AVG_FPS:
-          ROM_NAME:
-          POKEMON_GAME:
-          POKEMON_STATIC_ENCOUNTER:
-          LOG_LEVEL:
-          USERNAME:
-          RECEIVER_EMAIL:
-          SENDER_EMAIL:
-          SENDER_EMAIL_PASS:
-          DISP_BRIGHTNESS:
+          RETROARCH_DIR: ./tests/retroarch
+          RETROARCH_CFG_FP: %(RETROARCH_DIR)s/retroarch.cfg
+          RETROARCH_APP_FP: /Applications/RetroArch.app
+          EMULATOR_CORE_AVG_FPS: 0
+          ROM_NAME: test_rom
+          POKEMON_GAME: test_game
+          POKEMON_STATIC_ENCOUNTER: test_pokemon
           EOF
 
       - name: Run unit tests with pytest
