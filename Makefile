@@ -32,12 +32,12 @@ $(VENV_EXE_DIR)/activate:
 
 pip-install:
 	@echo "Upgrading pip..."
-	$(VENV_EXE_DIR)/pip install --upgrade pip
+	$(VENV_EXE_DIR)/$(PYTHON3) -m pip install --upgrade pip
 	@echo "Installing required Python packages..."
 	@find $(PROJ_ROOT_DIR) \
 		-path '*/misc' -prune -o \
 		-name 'requirements.txt' -print0 | \
-		xargs -0 -I {} sh -c '$(VENV_EXE_DIR)/pip install -r "$$1"' _ {}
+		xargs -0 -I {} sh -c '$(VENV_EXE_DIR)/$(PYTHON3) -m pip install -r "$$1"' _ {}
 
 # Clean target to remove the virtual environment
 clean:
