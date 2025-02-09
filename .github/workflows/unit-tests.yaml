@@ -1,0 +1,36 @@
+name: Unit Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  unit-test-xplatform-python3:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+        python-ver: ['3.11', '3.10', '3.9']
+
+    steps:
+      - name: Check OS and Python
+        run: echo "Running on ${{ matrix.os }} with Python ${{ matrix.python-ver }}"
+
+      - name: Check out repo  # for deps, source code and unit tests
+        uses: actions/checkout@v4
+
+      - name: Setup Python ${{ matrix.python-ver }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-ver }}
+
+      - name: Setup dev environment
+        run: make setup
+
+      - name: Run unit tests with pytest
+        run: make test
