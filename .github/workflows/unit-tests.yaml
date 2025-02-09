@@ -33,7 +33,23 @@ jobs:
         run: make setup
 
       - name: Create config.ini file
-        run: echo "[DEFAULT]" > config.ini
+        run: |
+          cat <<EOF > config.ini
+          [DEFAULT]
+          RETROARCH_DIR:
+          RETROARCH_CFG_FP:
+          RETROARCH_APP_FP:
+          EMULATOR_CORE_AVG_FPS:
+          ROM_NAME:
+          POKEMON_GAME:
+          POKEMON_STATIC_ENCOUNTER:
+          LOG_LEVEL:
+          USERNAME:
+          RECEIVER_EMAIL:
+          SENDER_EMAIL:
+          SENDER_EMAIL_PASS:
+          DISP_BRIGHTNESS:
+          EOF
 
       - name: Run unit tests with pytest
         run: make test
