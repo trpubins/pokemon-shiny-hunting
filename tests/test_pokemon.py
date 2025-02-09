@@ -59,7 +59,8 @@ def test_02_create_pokemon_sprite_fn(get_event_as_dict):
     game: str = get_event_as_dict["input"]["game"]
     name: str = get_event_as_dict["input"]["name"]
     _type: str = get_event_as_dict["input"]["type"]
-    expected_output: str = get_event_as_dict["expected_output"]
+    expected_output: list[str] = get_event_as_dict["expected_output"]
     
     sprite_fn = create_pokemon_sprite_fn(game, name, _type=SpriteType(_type))
-    assert (sprite_fn == os.path.join(SPRITES_DIR, expected_output))
+    expected_paths = [SPRITES_DIR, *expected_output]
+    assert (sprite_fn == os.path.join(*expected_paths))

@@ -5,5 +5,7 @@
         "name": "Gyarados",
         "type": "shiny"
     },
-    "expected_output": "crystal/shiny/130_gyarados.png"
+    "expected_output": [
+        "crystal", "shiny", "130_gyarados.png"
+    ]
 }
